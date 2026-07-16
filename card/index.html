@@ -47,14 +47,13 @@
     background:var(--sky2);display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer}
   .avatar img{width:100%;height:100%;object-fit:cover;display:block}
   .avatar .ph{color:var(--acc-d);font-size:12px;font-weight:700;text-align:center;padding:8px;line-height:1.5}
-  .party{flex:1;display:flex;align-items:flex-end;justify-content:center;gap:0;min-height:108px;
-    border-bottom:2px solid var(--sky)}
-  .pslot{flex:none;display:flex;align-items:flex-end;justify-content:center;
-    cursor:pointer;position:relative;padding-bottom:2px}
-  .pslot img.spr{height:92px;width:auto;max-width:100%;image-rendering:pixelated;object-fit:contain;display:block}
-  .pslot.empty{opacity:.55}
-  .pslot .eph{width:50px;height:50px;border:2px dashed var(--line);border-radius:50%;
-    display:flex;align-items:center;justify-content:center;color:var(--line);font-size:22px;font-weight:800;margin:0 4px 16px}
+  .party{flex:1;position:relative;min-height:162px;border-bottom:2px solid var(--sky);overflow:hidden}
+  .party-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#a7bcd8;
+    font-size:13px;font-weight:600;text-align:center;padding:0 10px;pointer-events:none}
+  .pmon{position:absolute;cursor:grab;touch-action:none;user-select:none;line-height:0}
+  .pmon img.spr{height:120px;width:auto;image-rendering:pixelated;display:block;pointer-events:none;-webkit-user-drag:none}
+  .pmon .tools{position:absolute;top:0;right:0;display:flex;gap:3px;opacity:0;transition:.1s}
+  .pmon:hover .tools{opacity:1}
   .pslot .tools{position:absolute;top:0;right:6px;display:flex;gap:3px;opacity:0;transition:.1s}
   .pslot:hover .tools{opacity:1}
   .tb{width:20px;height:20px;border-radius:6px;border:none;background:rgba(255,255,255,.92);
@@ -69,10 +68,16 @@
   .sec{margin-top:15px}
   .sec>.lab{display:block;margin-bottom:7px}
   .chips{display:flex;flex-wrap:wrap;gap:7px}
-  .chip{padding:6px 12px;border-radius:999px;background:var(--sky2);border:1.5px solid var(--line);
+  .chip{display:inline-flex;align-items:center;justify-content:center;line-height:1;padding:8px 13px;
+    border-radius:999px;background:var(--sky2);border:1.5px solid var(--line);
     color:var(--ink2);font-size:13px;font-weight:700;cursor:pointer;user-select:none;transition:.08s}
   .chip.on{background:var(--acc-d);border-color:var(--acc-d);color:#fff}
-  .gens .chip{min-width:34px;text-align:center;padding:6px 9px}
+  .chip.yes{background:var(--acc-d);border-color:var(--acc-d);color:#fff}
+  .chip.yes:before{content:'\2713 '}
+  .chip.no{background:#fdeaea;border-color:#f3b6b6;color:#c53030}
+  .chip.no:before{content:'\2715 '}
+  .gens .chip{min-width:34px;padding:8px 10px}
+  .leg{font-size:11px;font-weight:600;color:#a7bcd8;margin-left:6px}
   .intro{margin-top:15px}
   .intro .box{margin-top:7px;min-height:110px;border:2px solid var(--sky);border-radius:14px;background:var(--sky2);
     padding:12px 14px;font-size:14px;line-height:1.7;font-weight:500;outline:none;white-space:pre-wrap}
@@ -120,7 +125,7 @@
     <div class="themes" id="themes"></div>
   </div>
 
-  <div class="hint">칸을 눌러 직접 입력하고, 태그를 눌러 선택하세요. 프로필 옆 슬롯을 누르면 포켓몬을 검색해 넣을 수 있어요.</div>
+  <div class="hint">칸을 눌러 입력하고, 성향 태그는 탭할수록 없음 → ✓YES → ✕NO로 바뀝니다. '포켓몬 추가'로 넣고 끌어서 자유롭게 배치하세요.</div>
 
   <div id="card">
     <div class="card-head">
@@ -132,7 +137,7 @@
       <div class="avatar" id="avatar">
         <div class="ph">프로필 이미지<br>(눌러서 추가)</div>
       </div>
-      <div class="party" id="team"></div>
+      <div class="party" id="party"><div class="party-hint" id="partyHint">＋ '포켓몬 추가'로 넣고, 끌어서 자유롭게 배치하세요 (최대 6)</div></div>
     </div>
 
     <div class="info">
@@ -149,16 +154,16 @@
       </div>
     </div>
 
-    <div class="sec"><span class="lab">덕질 성향</span>
-      <div class="chips" data-mode="multi">
+    <div class="sec"><span class="lab">덕질 성향<span class="leg">탭: 없음 → ✓YES → ✕NO</span></span>
+      <div class="chips" data-mode="tri">
         <span class="chip">글</span><span class="chip">그림</span><span class="chip">캘리</span><span class="chip">코스프레</span>
         <span class="chip">녹음</span><span class="chip">작곡</span><span class="chip">디자인</span><span class="chip">소비</span>
-        <span class="chip">드림</span><span class="chip">그 외</span>
+        <span class="chip">굿즈</span><span class="chip">드림</span><span class="chip">그 외</span>
       </div>
     </div>
 
-    <div class="sec"><span class="lab">커플링 성향</span>
-      <div class="chips" data-mode="multi">
+    <div class="sec"><span class="lab">커플링 성향<span class="leg">탭: 없음 → ✓YES → ✕NO</span></span>
+      <div class="chips" data-mode="tri">
         <span class="chip">논커플링</span><span class="chip">HL</span><span class="chip">GL</span><span class="chip">BL</span>
         <span class="chip">드림</span><span class="chip">리버시블</span><span class="chip">논리버시블</span>
       </div>
@@ -209,7 +214,7 @@
     {ko:'바위',c:'#b6a53e',i:13},{ko:'고스트',c:'#6b5a92',i:14},{ko:'드래곤',c:'#6a5ae0',i:15},
     {ko:'악',c:'#5a5152',i:16},{ko:'강철',c:'#7fa0b5',i:17},{ko:'페어리',c:'#e488c0',i:18}
   ];
-  var TEAM=new Array(6).fill(null), POKE=[], pickTarget=0;
+  var TEAM=[], POKE=[];   // TEAM: {p,shiny,dataUrl,x,y}
 
   // ---------- theme ----------
   function h2r(h){h=h.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
@@ -253,6 +258,10 @@
         var was=chip.classList.contains('on');
         group.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});
         if(!was) chip.classList.add('on');
+      } else if(mode==='tri'){
+        if(chip.classList.contains('yes')){chip.classList.remove('yes');chip.classList.add('no');}
+        else if(chip.classList.contains('no')){chip.classList.remove('no');}
+        else chip.classList.add('yes');
       } else chip.classList.toggle('on');
     });
   });
@@ -267,41 +276,64 @@
   };
 
   // ---------- team ----------
-  var teamEl=document.getElementById('team');
+  var party=document.getElementById('party'), partyHint=document.getElementById('partyHint');
   function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-  function loadSprite(slot,cb){
-    var url=slot.shiny?slot.p.front_shiny:slot.p.front_default;
+  function loadSprite(m,cb){
+    var url=m.shiny?m.p.front_shiny:m.p.front_default;
     fetch(url).then(function(r){return r.blob();}).then(function(b){
-      var fr=new FileReader(); fr.onload=function(){slot.dataUrl=fr.result;cb&&cb();}; fr.readAsDataURL(b);
-    }).catch(function(){slot.dataUrl=null;cb&&cb();});
+      var fr=new FileReader(); fr.onload=function(){m.dataUrl=fr.result;cb&&cb();}; fr.readAsDataURL(b);
+    }).catch(function(){m.dataUrl=null;cb&&cb();});
+  }
+  function defaultPos(n){
+    var W=party.clientWidth||520, H=party.clientHeight||162, sw=96;
+    var step=Math.min(sw+4,(W-16)/6);
+    var x=8+n*step; if(x>W-sw-2) x=W-sw-2; if(x<0)x=0;
+    var y=H-128; if(y<4)y=4;
+    return {x:x,y:y};
+  }
+  function makeDrag(el,m){
+    el.addEventListener('pointerdown',function(e){
+      if(e.target.closest('.tb')) return;
+      e.preventDefault();
+      try{el.setPointerCapture(e.pointerId);}catch(_){}
+      var pr=party.getBoundingClientRect(), er=el.getBoundingClientRect();
+      var offx=e.clientX-er.left, offy=e.clientY-er.top, ew=er.width, eh=er.height;
+      el.style.cursor='grabbing'; el.style.zIndex=99;
+      function move(ev){
+        var x=ev.clientX-pr.left-offx, y=ev.clientY-pr.top-offy;
+        x=Math.max(0,Math.min(pr.width-ew,x)); y=Math.max(0,Math.min(pr.height-eh,y));
+        el.style.left=x+'px'; el.style.top=y+'px'; m.x=x; m.y=y;
+      }
+      function up(){ try{el.releasePointerCapture(e.pointerId);}catch(_){} el.removeEventListener('pointermove',move); el.removeEventListener('pointerup',up); el.style.cursor='grab'; }
+      el.addEventListener('pointermove',move); el.addEventListener('pointerup',up);
+    });
   }
   function render(){
-    teamEl.innerHTML='';
-    for(var i=0;i<6;i++){(function(i){
-      var s=TEAM[i], div=document.createElement('div');
-      div.className='pslot'+(s?'':' empty');
-      if(s){
-        var src=s.dataUrl||(s.shiny?s.p.front_shiny:s.p.front_default);
-        div.innerHTML='<div class="tools"><button class="tb tshine'+(s.shiny?' on':'')+'" title="색이 다른 포켓몬">✨</button>'+
-          '<button class="tb tdel" title="삭제">×</button></div>'+
-          '<img class="spr" src="'+src+'" alt="">';
-        if(TEAM[i-1]) div.style.marginLeft='-14px';   // overlap consecutive pokemon so they cluster
-        div.querySelector('.tdel').onclick=function(ev){ev.stopPropagation();TEAM[i]=null;render();};
-        div.querySelector('.tshine').onclick=function(ev){ev.stopPropagation();TEAM[i].shiny=!TEAM[i].shiny;loadSprite(TEAM[i],render);};
-      } else {
-        div.innerHTML='<div class="eph">+</div>';
-      }
-      div.onclick=function(){openPicker(i);};
-      teamEl.appendChild(div);
-    })(i);}
+    [].slice.call(party.querySelectorAll('.pmon')).forEach(function(el){el.remove();});
+    partyHint.style.display=TEAM.length?'none':'flex';
+    TEAM.forEach(function(m,idx){
+      var el=document.createElement('div'); el.className='pmon';
+      el.style.left=(m.x||0)+'px'; el.style.top=(m.y||0)+'px'; el.style.zIndex=idx+1;
+      var src=m.dataUrl||(m.shiny?m.p.front_shiny:m.p.front_default);
+      el.innerHTML='<div class="tools"><button class="tb tshine'+(m.shiny?' on':'')+'" title="색이 다른 포켓몬">✨</button>'+
+        '<button class="tb tdel" title="삭제">×</button></div><img class="spr" src="'+src+'" alt="">';
+      el.querySelector('.tdel').onclick=function(ev){ev.stopPropagation();var i=TEAM.indexOf(m);if(i>=0)TEAM.splice(i,1);render();};
+      el.querySelector('.tshine').onclick=function(ev){ev.stopPropagation();m.shiny=!m.shiny;loadSprite(m,render);};
+      makeDrag(el,m);
+      party.appendChild(el);
+    });
   }
 
   // ---------- picker ----------
   var mask=document.getElementById('mask'), results=document.getElementById('results'), q=document.getElementById('q');
-  document.getElementById('btnAdd').onclick=function(){var idx=TEAM.findIndex(function(x){return !x;});openPicker(idx<0?0:idx);};
+  document.getElementById('btnAdd').onclick=openPicker;
+  party.addEventListener('click',function(e){ if(e.target===party) openPicker(); });
   document.getElementById('modalX').onclick=closePicker;
   mask.onclick=function(e){if(e.target===mask)closePicker();};
-  function openPicker(i){pickTarget=i;mask.classList.add('show');q.value='';renderResults('');setTimeout(function(){q.focus();},30);}
+  function openPicker(){
+    if(TEAM.length>=6){ alert('최대 6마리까지 넣을 수 있어요.'); return; }
+    mask.classList.add('show');q.value='';renderResults('');setTimeout(function(){q.focus();},30);
+  }
   function closePicker(){mask.classList.remove('show');}
   q.oninput=function(){renderResults(q.value.trim());};
   function renderResults(term){
@@ -312,7 +344,11 @@
     list.forEach(function(p){
       var d=document.createElement('div'); d.className='pick';
       d.innerHTML='<img src="'+p.front_default+'" loading="lazy" alt=""><span>'+esc(p.name_ja)+'</span>';
-      d.onclick=function(){var slot={p:p,shiny:false,dataUrl:null};TEAM[pickTarget]=slot;render();loadSprite(slot,render);closePicker();};
+      d.onclick=function(){
+        if(TEAM.length>=6){closePicker();return;}
+        var pos=defaultPos(TEAM.length), m={p:p,shiny:false,dataUrl:null,x:pos.x,y:pos.y};
+        TEAM.push(m); render(); loadSprite(m,render); closePicker();
+      };
       results.appendChild(d);
     });
     if(!list.length) results.innerHTML='<div style="grid-column:1/-1;text-align:center;color:#a7bcd8;padding:20px">검색 결과 없음</div>';
@@ -321,8 +357,8 @@
   // ---------- reset ----------
   document.getElementById('btnReset').onclick=function(){
     if(!confirm('입력한 내용을 모두 지울까요?')) return;
-    TEAM=new Array(6).fill(null); render();
-    document.querySelectorAll('.chip.on').forEach(function(c){c.classList.remove('on');});
+    TEAM=[]; render();
+    document.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on','yes','no');});
     document.querySelectorAll('#card [contenteditable]').forEach(function(el){el.textContent='';});
     avatar.innerHTML='<div class="ph">프로필 이미지<br>(눌러서 추가)</div>';
   };
