@@ -79,6 +79,15 @@
   .chip.no:before{content:'\2715 '}
   .gens .chip{min-width:34px;padding:8px 10px}
   .leg{font-size:11px;font-weight:600;color:#a7bcd8;margin-left:6px}
+  .sec,.intro{position:relative}
+  .sec-x{position:absolute;top:-3px;right:0;width:23px;height:23px;border:none;background:#eef2f7;border-radius:7px;
+    color:#9aa8ba;font-size:15px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .sec-x:hover{background:#fde3e3;color:#c53030}
+  .sec.hidden,.intro.hidden{display:none}
+  #restoreBar{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:-4px 0 16px}
+  #restoreBar:empty{display:none}
+  #restoreBar .rb{padding:6px 12px;border-radius:999px;border:1.5px dashed var(--line);background:#fff;
+    color:var(--ink2);font-size:12.5px;font-weight:700;cursor:pointer}
   .intro{margin-top:15px}
   .intro .box{margin-top:7px;min-height:110px;border:2px solid var(--sky);border-radius:14px;background:var(--sky2);
     padding:12px 14px;font-size:14px;line-height:1.7;font-weight:500;outline:none;white-space:pre-wrap}
@@ -126,7 +135,8 @@
     <div class="themes" id="themes"></div>
   </div>
 
-  <div class="hint">칸을 눌러 입력하고, 성향 태그는 탭할수록 없음 → ✓YES → ✕NO로 바뀝니다. '포켓몬 추가'로 넣고 끌어서 자유롭게 배치하세요.</div>
+  <div class="hint">칸을 눌러 입력하고, 성향 태그는 탭할수록 없음 → ✓YES → ✕NO로 바뀝니다. 저장하면 YES/NO만 남아요. 섹션 오른쪽 ×로 통째로 숨길 수 있어요.</div>
+  <div id="restoreBar"></div>
 
   <div id="card">
     <div class="card-head">
@@ -267,6 +277,21 @@
     });
   });
 
+  // ---------- section show / hide ----------
+  var restoreBar=document.getElementById('restoreBar');
+  function addRestore(sec,name){
+    var b=document.createElement('button'); b.className='rb'; b.type='button'; b.textContent='＋ '+name;
+    b.onclick=function(){ sec.classList.remove('hidden'); b.remove(); };
+    restoreBar.appendChild(b);
+  }
+  document.querySelectorAll('#card .sec, #card .intro').forEach(function(sec){
+    var lab=sec.querySelector('.lab'); if(!lab) return;
+    var name=((lab.firstChild&&lab.firstChild.textContent)||lab.textContent).trim();
+    var x=document.createElement('button'); x.className='sec-x'; x.type='button'; x.textContent='×'; x.title='이 섹션 숨기기';
+    x.onclick=function(){ sec.classList.add('hidden'); addRestore(sec,name); };
+    sec.appendChild(x);
+  });
+
   // ---------- profile ----------
   var fileP=document.getElementById('fileProfile'), avatar=document.getElementById('avatar');
   document.getElementById('btnProfile').onclick=function(){fileP.click();};
@@ -361,6 +386,8 @@
     TEAM=[]; render();
     document.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on','yes','no');});
     document.querySelectorAll('#card [contenteditable]').forEach(function(el){el.textContent='';});
+    document.querySelectorAll('#card .sec, #card .intro').forEach(function(s){s.classList.remove('hidden');});
+    restoreBar.innerHTML='';
     avatar.innerHTML='<div class="ph">프로필 이미지<br>(눌러서 추가)</div>';
   };
 
@@ -369,7 +396,16 @@
     var btn=this, old=btn.textContent; btn.textContent='저장 중...'; btn.disabled=true;
     if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
     var card=document.getElementById('card');
-    htmlToImage.toPng(card,{pixelRatio:2,cacheBust:true,backgroundColor:'#ffffff',width:card.offsetWidth,height:card.offsetHeight})
+    htmlToImage.toPng(card,{pixelRatio:2,cacheBust:true,backgroundColor:'#ffffff',width:card.offsetWidth,height:card.offsetHeight,
+      filter:function(n){
+        if(n.nodeType!==1||!n.classList) return true;
+        var c=n.classList;
+        if(c.contains('sec-x')||c.contains('leg')||c.contains('hidden')) return false;
+        if(c.contains('chip')&&!c.contains('yes')&&!c.contains('no')){
+          var g=n.parentElement; if(g&&g.getAttribute('data-mode')==='tri') return false;
+        }
+        return true;
+      }})
     .then(function(url){var a=document.createElement('a');a.href=url;a.download='pokemon-card.png';a.click();})
     .catch(function(e){console.error(e);alert('이미지 저장에 실패했어요. 다시 시도해 주세요.');})
     .then(function(){btn.textContent=old;btn.disabled=false;});
