@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>포켓몬 트친소 카드 메이커</title>
+<meta name="description" content="포켓몬 트친소/자기소개 카드를 만들어 이미지로 저장하세요. 최애 포켓몬 6마리까지!" />
+<link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+<meta property="og:title" content="포켓몬 트친소 카드 메이커" />
+<meta property="og:description" content="최애 포켓몬 6마리를 넣어 나만의 트친소 카드를 만들어보세요!" />
+<style>
+  :root{
+    --acc:#6890f0; --acc-d:#3f63c4; --line:#c9dcf6; --sky:#e4eefb; --sky2:#f1f7fe;
+    --ink:#334155; --ink2:#7a8ba0; --card:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+    color:var(--ink);background:linear-gradient(160deg,#eef5ff,#f8fbff);-webkit-font-smoothing:antialiased}
+  .wrap{max-width:980px;margin:0 auto;padding:16px}
+  .nav{display:flex;gap:8px;justify-content:center;margin:6px 0 16px}
+  .nav a{padding:9px 16px;border-radius:999px;background:#fff;border:1.5px solid var(--line);
+    color:var(--ink2);text-decoration:none;font-weight:700;font-size:14px}
+  .nav a.active{background:var(--acc);border-color:var(--acc);color:#fff}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px}
+  .btn{padding:11px 18px;border-radius:12px;border:none;font-weight:800;font-size:14px;cursor:pointer}
+  .btn-primary{background:#141414;color:#fff}
+  .btn-ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+  .btn:active{transform:translateY(1px)}
+  .themebar{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:14px}
+  .themebar .t-lab{font-size:12.5px;color:var(--ink2);font-weight:700}
+  .themes{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;max-width:640px}
+  .sw{width:34px;height:34px;border-radius:9px;border:2px solid transparent;background:#fff;padding:2px;cursor:pointer}
+  .sw img{width:100%;height:100%;display:block}
+  .sw.on{border-color:#141414;box-shadow:0 0 0 2px #fff inset}
+  .hint{text-align:center;color:var(--ink2);font-size:12.5px;margin:0 0 16px}
+  /* card */
+  #card{width:900px;max-width:100%;margin:0 auto;background:var(--card);border-radius:22px;
+    border:2px solid var(--line);padding:26px 28px 22px;box-shadow:0 10px 40px rgba(80,120,200,.14)}
+  .card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .card-title{font-size:26px;font-weight:900;color:var(--acc-d);letter-spacing:-.5px}
+  .card-title small{display:block;font-size:12px;color:var(--ink2);font-weight:700;letter-spacing:1px;margin-top:2px}
+  .emblem{width:56px;height:56px;flex:none}
+  .emblem img{width:100%;height:100%;display:block}
+  /* banner: profile + party in a row */
+  .banner{display:flex;gap:16px;align-items:flex-end;margin-bottom:16px}
+  .avatar{width:126px;height:150px;flex:none;border-radius:16px;border:3px solid var(--acc);overflow:hidden;
+    background:var(--sky2);display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer}
+  .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+  .avatar .ph{color:var(--acc-d);font-size:12px;font-weight:700;text-align:center;padding:8px;line-height:1.5}
+  .party{flex:1;display:flex;align-items:flex-end;justify-content:space-around;gap:2px;min-height:118px;
+    border-bottom:2px solid var(--sky)}
+  .pslot{flex:1;max-width:130px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+    cursor:pointer;position:relative;padding-bottom:2px}
+  .pslot img.spr{height:82px;width:auto;max-width:100%;image-rendering:pixelated;object-fit:contain;display:block}
+  .pslot .nm{font-size:11px;font-weight:700;color:var(--ink);text-align:center;line-height:1.15;margin-top:2px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  .pslot.empty{opacity:.6}
+  .pslot .eph{width:52px;height:52px;border:2px dashed var(--line);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;color:var(--line);font-size:22px;font-weight:800;margin-bottom:20px}
+  .pslot .tools{position:absolute;top:0;right:6px;display:flex;gap:3px;opacity:0;transition:.1s}
+  .pslot:hover .tools{opacity:1}
+  .tb{width:20px;height:20px;border-radius:6px;border:none;background:rgba(255,255,255,.92);
+    box-shadow:0 1px 4px rgba(0,0,0,.18);cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center}
+  .tb.on{background:#ffe066}
+  /* info + sections */
+  .info{display:flex;flex-direction:column;gap:11px;margin-bottom:4px}
+  .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .lab{font-weight:800;color:var(--ink);font-size:14px;min-width:74px}
+  .val{min-width:120px;border-bottom:2px solid var(--sky);padding:2px 6px;font-size:15px;font-weight:600;outline:none}
+  .val:empty:before{content:attr(data-ph);color:#a7bcd8;font-weight:500}
+  .sec{margin-top:15px}
+  .sec>.lab{display:block;margin-bottom:7px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{padding:6px 12px;border-radius:999px;background:var(--sky2);border:1.5px solid var(--line);
+    color:var(--ink2);font-size:13px;font-weight:700;cursor:pointer;user-select:none;transition:.08s}
+  .chip.on{background:var(--acc-d);border-color:var(--acc-d);color:#fff}
+  .gens .chip{min-width:34px;text-align:center;padding:6px 9px}
+  .intro{margin-top:15px}
+  .intro .box{margin-top:7px;min-height:110px;border:2px solid var(--sky);border-radius:14px;background:var(--sky2);
+    padding:12px 14px;font-size:14px;line-height:1.7;font-weight:500;outline:none;white-space:pre-wrap}
+  .intro .box:empty:before{content:attr(data-ph);color:#a7bcd8}
+  .foot{margin-top:14px;text-align:right;color:#a7bcd8;font-size:11px}
+  /* modal */
+  .mask{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+  .mask.show{display:flex}
+  .modal{background:#fff;border-radius:18px;width:560px;max-width:100%;max-height:86vh;display:flex;flex-direction:column;overflow:hidden;position:relative}
+  .modal h3{margin:0;padding:16px 18px 10px;font-size:17px}
+  .search{margin:0 18px 10px;display:flex;gap:8px}
+  .search input{flex:1;padding:11px 13px;border-radius:12px;border:1.5px solid var(--line);font-size:15px;outline:none}
+  .results{overflow:auto;padding:4px 12px 14px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .pick{display:flex;flex-direction:column;align-items:center;padding:6px 2px;border-radius:12px;cursor:pointer;border:1.5px solid transparent}
+  .pick:hover{background:var(--sky2);border-color:var(--line)}
+  .pick img{width:64px;height:64px;image-rendering:pixelated}
+  .pick span{font-size:11.5px;font-weight:700;text-align:center;color:var(--ink);line-height:1.15}
+  .modal .x{position:absolute;top:14px;right:16px;border:none;background:none;font-size:20px;cursor:pointer;color:var(--ink2)}
+  @media(max-width:640px){
+    .banner{flex-direction:column;align-items:center}
+    .party{width:100%}
+    .results{grid-template-columns:repeat(3,1fr)}
+    #card{padding:18px 16px}
+    .card-title{font-size:21px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="../">타입별 최애 메이커</a>
+    <a href="./" class="active">트친소 카드</a>
+  </nav>
+
+  <div class="controls">
+    <button class="btn btn-ghost" id="btnProfile">프로필 이미지 넣기</button>
+    <button class="btn btn-ghost" id="btnAdd">포켓몬 추가</button>
+    <button class="btn btn-ghost" id="btnReset">전체 초기화</button>
+    <button class="btn btn-primary" id="btnSave">이미지로 저장</button>
+    <input type="file" id="fileProfile" accept="image/*" hidden />
+  </div>
+
+  <div class="themebar">
+    <div class="t-lab">테마 색 (타입)</div>
+    <div class="themes" id="themes"></div>
+  </div>
+
+  <div class="hint">칸을 눌러 직접 입력하고, 태그를 눌러 선택하세요. 프로필 옆 슬롯을 누르면 포켓몬을 검색해 넣을 수 있어요.</div>
+
+  <div id="card">
+    <div class="card-head">
+      <div class="card-title">포켓몬 트친소<small>SELF INTRODUCTION</small></div>
+      <div class="emblem"><img id="emblem" src="../icon_type/icon_type_3.svg" alt="type"></div>
+    </div>
+
+    <div class="banner">
+      <div class="avatar" id="avatar">
+        <div class="ph">프로필 이미지<br>(눌러서 추가)</div>
+      </div>
+      <div class="party" id="team"></div>
+    </div>
+
+    <div class="info">
+      <div class="row"><span class="lab">닉네임</span><span class="val" contenteditable data-ph="닉네임"></span></div>
+      <div class="row"><span class="lab">친구코드</span><span class="val" contenteditable data-ph="SW-0000-0000-0000" style="min-width:210px"></span></div>
+      <div class="row"><span class="lab">나이</span>
+        <span class="chips" data-mode="single"><span class="chip">미성년자</span><span class="chip">성인</span><span class="chip">비공개</span></span>
+      </div>
+      <div class="row"><span class="lab">이별</span>
+        <span class="chips" data-mode="single"><span class="chip">블락</span><span class="chip">블언블</span><span class="chip">언팔로우</span></span>
+      </div>
+      <div class="row"><span class="lab">타장르 언급</span>
+        <span class="chips" data-mode="single"><span class="chip">O</span><span class="chip">X</span></span>
+      </div>
+    </div>
+
+    <div class="sec"><span class="lab">덕질 성향</span>
+      <div class="chips" data-mode="multi">
+        <span class="chip">글</span><span class="chip">그림</span><span class="chip">캘리</span><span class="chip">코스프레</span>
+        <span class="chip">녹음</span><span class="chip">작곡</span><span class="chip">디자인</span><span class="chip">소비</span>
+        <span class="chip">드림</span><span class="chip">그 외</span>
+      </div>
+    </div>
+
+    <div class="sec"><span class="lab">커플링 성향</span>
+      <div class="chips" data-mode="multi">
+        <span class="chip">논커플링</span><span class="chip">HL</span><span class="chip">GL</span><span class="chip">BL</span>
+        <span class="chip">드림</span><span class="chip">리버시블</span><span class="chip">논리버시블</span>
+      </div>
+    </div>
+
+    <div class="sec"><span class="lab">주력 장르</span>
+      <div class="chips" data-mode="multi">
+        <span class="chip">본가</span><span class="chip">불가사의 던전</span><span class="chip">포켓몬 스냅</span>
+        <span class="chip">포켓몬 유나이트</span><span class="chip">포켓몬스터 스페셜</span><span class="chip">TCG</span>
+        <span class="chip">애니메이션</span><span class="chip">포켓몬 Champions</span><span class="chip">포켓몬 GO</span>
+        <span class="chip">포켓몬 마스터즈 EX</span><span class="chip">Pokémon Cafe Mix</span><span class="chip">포켓몬 Sleep</span>
+        <span class="chip">포코피아</span><span class="chip">그 외</span>
+      </div>
+    </div>
+
+    <div class="sec gens"><span class="lab">주력 세대</span>
+      <div class="chips" data-mode="multi">
+        <span class="chip">1</span><span class="chip">2</span><span class="chip">3</span><span class="chip">4</span><span class="chip">5</span>
+        <span class="chip">6</span><span class="chip">7</span><span class="chip">8</span><span class="chip">9</span><span class="chip">10</span>
+      </div>
+    </div>
+
+    <div class="intro"><span class="lab">소개</span>
+      <div class="box" contenteditable data-ph="자유롭게 자기소개를 적어주세요! ㅎ^ㅎ"></div>
+    </div>
+
+    <div class="foot">made with 포켓몬 트친소 카드 메이커</div>
+  </div>
+</div>
+
+<div class="mask" id="mask">
+  <div class="modal">
+    <button class="x" id="modalX">×</button>
+    <h3>포켓몬 검색</h3>
+    <div class="search"><input id="q" placeholder="한글 이름으로 검색 (예: 개굴닌자)" autocomplete="off" /></div>
+    <div class="results" id="results"></div>
+  </div>
+</div>
+
+<script src="../vendor/html-to-image.js"></script>
+<script>
+(function(){
+  var TYPES=[
+    {ko:'노말',c:'#9099a1',i:1},{ko:'불꽃',c:'#f0803c',i:2},{ko:'물',c:'#6890f0',i:3},
+    {ko:'풀',c:'#5fbf5f',i:4},{ko:'전기',c:'#f2c94c',i:5},{ko:'얼음',c:'#7fd3d0',i:6},
+    {ko:'격투',c:'#d24d4d',i:7},{ko:'독',c:'#a35bb8',i:8},{ko:'땅',c:'#d8b45a',i:9},
+    {ko:'비행',c:'#90a7e8',i:10},{ko:'에스퍼',c:'#f06592',i:11},{ko:'벌레',c:'#a4b23a',i:12},
+    {ko:'바위',c:'#b6a53e',i:13},{ko:'고스트',c:'#6b5a92',i:14},{ko:'드래곤',c:'#6a5ae0',i:15},
+    {ko:'악',c:'#5a5152',i:16},{ko:'강철',c:'#7fa0b5',i:17},{ko:'페어리',c:'#e488c0',i:18}
+  ];
+  var TEAM=new Array(6).fill(null), POKE=[], pickTarget=0;
+
+  // ---------- theme ----------
+  function h2r(h){h=h.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+  function toHex(a){return '#'+a.map(function(c){c=Math.max(0,Math.min(255,c));return c.toString(16).padStart(2,'0');}).join('');}
+  function mix(rgb,w){return rgb.map(function(c){return Math.round(c+(255-c)*w);});}      // toward white
+  function dark(rgb,d){return rgb.map(function(c){return Math.round(c*(1-d));});}
+  function lum(a){return .299*a[0]+.587*a[1]+.114*a[2];}
+  function applyTheme(hex){
+    var rgb=h2r(hex), d=dark(rgb,.18);
+    if(lum(d)>150){var f=150/lum(d);d=d.map(function(c){return Math.round(c*f);});}
+    var S=document.documentElement.style;
+    S.setProperty('--acc',hex);
+    S.setProperty('--acc-d',toHex(d));
+    S.setProperty('--line',toHex(mix(rgb,.60)));
+    S.setProperty('--sky',toHex(mix(rgb,.82)));
+    S.setProperty('--sky2',toHex(mix(rgb,.90)));
+  }
+  var emblem=document.getElementById('emblem'), themesEl=document.getElementById('themes');
+  function setType(idx){
+    var t=TYPES[idx];
+    applyTheme(t.c);
+    emblem.src='../icon_type/icon_type_'+t.i+'.svg';
+    [].forEach.call(themesEl.children,function(el,k){el.classList.toggle('on',k===idx);});
+    try{localStorage.setItem('cardTheme',idx);}catch(e){}
+  }
+  TYPES.forEach(function(t,idx){
+    var b=document.createElement('button'); b.className='sw'; b.title=t.ko;
+    b.innerHTML='<img src="../icon_type/icon_type_'+t.i+'.svg" alt="'+t.ko+'">';
+    b.onclick=function(){setType(idx);};
+    themesEl.appendChild(b);
+  });
+  var savedT=2; try{var s=parseInt(localStorage.getItem('cardTheme'));if(s>=0&&s<18)savedT=s;}catch(e){}
+  setType(savedT);
+
+  // ---------- chips ----------
+  document.querySelectorAll('.chips').forEach(function(group){
+    var mode=group.getAttribute('data-mode')||'multi';
+    group.addEventListener('click',function(e){
+      var chip=e.target.closest('.chip'); if(!chip) return;
+      if(mode==='single'){
+        var was=chip.classList.contains('on');
+        group.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});
+        if(!was) chip.classList.add('on');
+      } else chip.classList.toggle('on');
+    });
+  });
+
+  // ---------- profile ----------
+  var fileP=document.getElementById('fileProfile'), avatar=document.getElementById('avatar');
+  document.getElementById('btnProfile').onclick=function(){fileP.click();};
+  avatar.onclick=function(){fileP.click();};
+  fileP.onchange=function(){
+    var f=fileP.files&&fileP.files[0]; if(!f) return;
+    var r=new FileReader(); r.onload=function(){avatar.innerHTML='<img src="'+r.result+'" alt="profile">';}; r.readAsDataURL(f);
+  };
+
+  // ---------- team ----------
+  var teamEl=document.getElementById('team');
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function loadSprite(slot,cb){
+    var url=slot.shiny?slot.p.front_shiny:slot.p.front_default;
+    fetch(url).then(function(r){return r.blob();}).then(function(b){
+      var fr=new FileReader(); fr.onload=function(){slot.dataUrl=fr.result;cb&&cb();}; fr.readAsDataURL(b);
+    }).catch(function(){slot.dataUrl=null;cb&&cb();});
+  }
+  function render(){
+    teamEl.innerHTML='';
+    for(var i=0;i<6;i++){(function(i){
+      var s=TEAM[i], div=document.createElement('div');
+      div.className='pslot'+(s?'':' empty');
+      if(s){
+        var src=s.dataUrl||(s.shiny?s.p.front_shiny:s.p.front_default);
+        div.innerHTML='<div class="tools"><button class="tb tshine'+(s.shiny?' on':'')+'" title="색이 다른 포켓몬">✨</button>'+
+          '<button class="tb tdel" title="삭제">×</button></div>'+
+          '<img class="spr" src="'+src+'" alt=""><div class="nm">'+esc(s.p.name_ja)+'</div>';
+        div.querySelector('.tdel').onclick=function(ev){ev.stopPropagation();TEAM[i]=null;render();};
+        div.querySelector('.tshine').onclick=function(ev){ev.stopPropagation();TEAM[i].shiny=!TEAM[i].shiny;loadSprite(TEAM[i],render);};
+      } else {
+        div.innerHTML='<div class="eph">+</div>';
+      }
+      div.onclick=function(){openPicker(i);};
+      teamEl.appendChild(div);
+    })(i);}
+  }
+
+  // ---------- picker ----------
+  var mask=document.getElementById('mask'), results=document.getElementById('results'), q=document.getElementById('q');
+  document.getElementById('btnAdd').onclick=function(){var idx=TEAM.findIndex(function(x){return !x;});openPicker(idx<0?0:idx);};
+  document.getElementById('modalX').onclick=closePicker;
+  mask.onclick=function(e){if(e.target===mask)closePicker();};
+  function openPicker(i){pickTarget=i;mask.classList.add('show');q.value='';renderResults('');setTimeout(function(){q.focus();},30);}
+  function closePicker(){mask.classList.remove('show');}
+  q.oninput=function(){renderResults(q.value.trim());};
+  function renderResults(term){
+    var list;
+    if(!term) list=POKE.slice(0,60);
+    else {var t=term.toLowerCase();list=POKE.filter(function(p){return p.name_ja.indexOf(term)>=0||(p.name_en&&p.name_en.indexOf(t)>=0);}).slice(0,60);}
+    results.innerHTML='';
+    list.forEach(function(p){
+      var d=document.createElement('div'); d.className='pick';
+      d.innerHTML='<img src="'+p.front_default+'" loading="lazy" alt=""><span>'+esc(p.name_ja)+'</span>';
+      d.onclick=function(){var slot={p:p,shiny:false,dataUrl:null};TEAM[pickTarget]=slot;render();loadSprite(slot,render);closePicker();};
+      results.appendChild(d);
+    });
+    if(!list.length) results.innerHTML='<div style="grid-column:1/-1;text-align:center;color:#a7bcd8;padding:20px">검색 결과 없음</div>';
+  }
+
+  // ---------- reset ----------
+  document.getElementById('btnReset').onclick=function(){
+    if(!confirm('입력한 내용을 모두 지울까요?')) return;
+    TEAM=new Array(6).fill(null); render();
+    document.querySelectorAll('.chip.on').forEach(function(c){c.classList.remove('on');});
+    document.querySelectorAll('#card [contenteditable]').forEach(function(el){el.textContent='';});
+    avatar.innerHTML='<div class="ph">프로필 이미지<br>(눌러서 추가)</div>';
+  };
+
+  // ---------- export ----------
+  document.getElementById('btnSave').onclick=function(){
+    var btn=this, old=btn.textContent; btn.textContent='저장 중...'; btn.disabled=true;
+    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
+    var card=document.getElementById('card');
+    htmlToImage.toPng(card,{pixelRatio:2,cacheBust:true,backgroundColor:'#ffffff',width:card.offsetWidth,height:card.offsetHeight})
+    .then(function(url){var a=document.createElement('a');a.href=url;a.download='pokemon-card.png';a.click();})
+    .catch(function(e){console.error(e);alert('이미지 저장에 실패했어요. 다시 시도해 주세요.');})
+    .then(function(){btn.textContent=old;btn.disabled=false;});
+  };
+
+  // ---------- data ----------
+  fetch('../pokemon_by_type.json').then(function(r){return r.json();}).then(function(data){
+    var seen={};
+    Object.keys(data).forEach(function(t){data[t].forEach(function(p){if(!seen[p.id]){seen[p.id]=1;POKE.push(p);}});});
+    POKE.sort(function(a,b){return a.id-b.id;});
+  });
+  render();
+})();
+</script>
+</body>
+</html>
