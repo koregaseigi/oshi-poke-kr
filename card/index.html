@@ -47,16 +47,14 @@
     background:var(--sky2);display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer}
   .avatar img{width:100%;height:100%;object-fit:cover;display:block}
   .avatar .ph{color:var(--acc-d);font-size:12px;font-weight:700;text-align:center;padding:8px;line-height:1.5}
-  .party{flex:1;display:flex;align-items:flex-end;justify-content:space-around;gap:2px;min-height:118px;
+  .party{flex:1;display:flex;align-items:flex-end;justify-content:center;gap:0;min-height:108px;
     border-bottom:2px solid var(--sky)}
-  .pslot{flex:1;max-width:130px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  .pslot{flex:none;display:flex;align-items:flex-end;justify-content:center;
     cursor:pointer;position:relative;padding-bottom:2px}
-  .pslot img.spr{height:82px;width:auto;max-width:100%;image-rendering:pixelated;object-fit:contain;display:block}
-  .pslot .nm{font-size:11px;font-weight:700;color:var(--ink);text-align:center;line-height:1.15;margin-top:2px;
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-  .pslot.empty{opacity:.6}
-  .pslot .eph{width:52px;height:52px;border:2px dashed var(--line);border-radius:50%;
-    display:flex;align-items:center;justify-content:center;color:var(--line);font-size:22px;font-weight:800;margin-bottom:20px}
+  .pslot img.spr{height:92px;width:auto;max-width:100%;image-rendering:pixelated;object-fit:contain;display:block}
+  .pslot.empty{opacity:.55}
+  .pslot .eph{width:50px;height:50px;border:2px dashed var(--line);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;color:var(--line);font-size:22px;font-weight:800;margin:0 4px 16px}
   .pslot .tools{position:absolute;top:0;right:6px;display:flex;gap:3px;opacity:0;transition:.1s}
   .pslot:hover .tools{opacity:1}
   .tb{width:20px;height:20px;border-radius:6px;border:none;background:rgba(255,255,255,.92);
@@ -126,7 +124,7 @@
 
   <div id="card">
     <div class="card-head">
-      <div class="card-title">포켓몬 트친소<small>SELF INTRODUCTION</small></div>
+      <div class="card-title">포켓몬 트친소</div>
       <div class="emblem"><img id="emblem" src="../icon_type/icon_type_3.svg" alt="type"></div>
     </div>
 
@@ -286,7 +284,8 @@
         var src=s.dataUrl||(s.shiny?s.p.front_shiny:s.p.front_default);
         div.innerHTML='<div class="tools"><button class="tb tshine'+(s.shiny?' on':'')+'" title="색이 다른 포켓몬">✨</button>'+
           '<button class="tb tdel" title="삭제">×</button></div>'+
-          '<img class="spr" src="'+src+'" alt=""><div class="nm">'+esc(s.p.name_ja)+'</div>';
+          '<img class="spr" src="'+src+'" alt="">';
+        if(TEAM[i-1]) div.style.marginLeft='-14px';   // overlap consecutive pokemon so they cluster
         div.querySelector('.tdel').onclick=function(ev){ev.stopPropagation();TEAM[i]=null;render();};
         div.querySelector('.tshine').onclick=function(ev){ev.stopPropagation();TEAM[i].shiny=!TEAM[i].shiny;loadSprite(TEAM[i],render);};
       } else {
