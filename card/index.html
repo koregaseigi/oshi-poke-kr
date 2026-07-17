@@ -310,6 +310,21 @@
   </div>
 </div>
 
+<div class="mask" id="resMask">
+  <div class="modal" style="max-width:600px">
+    <button class="x" id="resX">×</button>
+    <h3>이미지 저장</h3>
+    <div style="padding:0 18px 18px;overflow:auto">
+      <p style="margin:0 0 12px;font-size:13px;line-height:1.6;color:#64748b">이미지를 <b>길게 눌러</b> '사진에 저장'을 선택하세요.<br>안 되면 아래 <b>새 탭에서 열기</b>로 연 뒤 저장하면 돼요.</p>
+      <img id="resImg" alt="저장할 이미지" style="max-width:100%;display:block;margin:0 auto;border-radius:10px;border:1px solid #e5eefb" />
+      <div style="margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <a id="resOpen" target="_blank" rel="noopener" class="btn btn-ghost" style="display:inline-flex;align-items:center;text-decoration:none">새 탭에서 열기</a>
+        <a id="resDl" class="btn btn-primary" style="display:inline-flex;align-items:center;text-decoration:none">다운로드</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="mask" id="bgMask">
   <div class="modal" style="max-width:360px;text-align:center">
     <button class="x" id="bgX">×</button>
@@ -632,6 +647,28 @@
     avatar.innerHTML='<div class="ph">프로필 이미지<br>(눌러서 추가)</div>';
   };
 
+  // ---------- image delivery (download, with in-app / iOS fallback) ----------
+  function isInApp(){ return /KAKAOTALK|Instagram|FBAN|FBAV|FB_IAB|Line\/|NAVER|DaumApps|Snapchat|TwitterAndroid|musical_ly|TikTok|Whale/i.test(navigator.userAgent||''); }
+  function isIOS(){ var ua=navigator.userAgent||''; return /iPhone|iPad|iPod/i.test(ua) || (/Macintosh/.test(ua) && 'ontouchend' in document); }
+  function canDownload(){ var a=document.createElement('a'); return ('download' in a) && !isIOS() && !isInApp(); }
+  function dataURLtoBlob(u){ var arr=u.split(','), mime=(arr[0].match(/:(.*?);/)||[])[1]||'image/png', bin=atob(arr[1]), n=bin.length, u8=new Uint8Array(n); while(n--) u8[n]=bin.charCodeAt(n); return new Blob([u8],{type:mime}); }
+  var resMask=document.getElementById('resMask'), curObjURL=null;
+  function revokeObj(){ if(curObjURL){ try{URL.revokeObjectURL(curObjURL);}catch(e){} curObjURL=null; } }
+  function deliverImage(url, filename){
+    if(canDownload()){
+      var a=document.createElement('a'); a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove(); return;
+    }
+    // iOS / in-app browsers: auto-download is unreliable, so show the image to long-press-save
+    revokeObj();
+    var obj=url; try{ obj=URL.createObjectURL(dataURLtoBlob(url)); curObjURL=obj; }catch(e){}
+    document.getElementById('resImg').src=obj;
+    var op=document.getElementById('resOpen'); op.href=obj;
+    var dl=document.getElementById('resDl'); dl.href=url; dl.download=filename;
+    resMask.classList.add('show');
+  }
+  document.getElementById('resX').onclick=function(){ resMask.classList.remove('show'); revokeObj(); };
+  resMask.onclick=function(e){ if(e.target===resMask){ resMask.classList.remove('show'); revokeObj(); } };
+
   // ---------- export ----------
   document.getElementById('btnSave').onclick=function(){
     var btn=this, old=btn.textContent; btn.textContent='저장 중...'; btn.disabled=true;
@@ -672,7 +709,7 @@
         }
         return true;
       }})
-    .then(function(url){var a=document.createElement('a');a.href=url;a.download='pokemon-card.png';a.click();})
+    .then(function(url){ deliverImage(url,'pokemon-card.png'); })
     .catch(function(e){console.error(e);alert('이미지 저장에 실패했어요. 다시 시도해 주세요.');})
     .then(function(){restore();btn.textContent=old;btn.disabled=false;});
   };
@@ -712,7 +749,7 @@
     var opts={pixelRatio:2,cacheBust:true,width:1500,height:500};
     if(bg) opts.backgroundColor=bg;   // omit -> transparent alpha (works regardless of dark mode)
     htmlToImage.toPng(stage,opts)
-    .then(function(url){ var a=document.createElement('a'); a.href=url; a.download='pokemon-twitter-header.png'; a.click(); })
+    .then(function(url){ deliverImage(url,'pokemon-twitter-header.png'); })
     .catch(function(e){ console.error(e); alert('헤더 저장에 실패했어요. 다시 시도해 주세요.'); })
     .then(function(){ stage.remove(); btn.textContent=old; btn.disabled=false; });
   }
