@@ -40,7 +40,7 @@
     border:2px solid var(--line);padding:0;box-shadow:0 10px 40px rgba(80,120,200,.14)}
   .card-inner{padding:26px 28px 22px}
   .card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
-  .card-title{font-size:26px;font-weight:900;color:var(--acc-d);letter-spacing:-.5px}
+  .card-title{font-size:33px;font-weight:900;color:var(--acc-d);letter-spacing:-.5px}
   .card-title small{display:block;font-size:12px;color:var(--ink2);font-weight:700;letter-spacing:1px;margin-top:2px}
   .emblem{width:56px;height:56px;flex:none}
   .emblem img{width:100%;height:100%;display:block}
@@ -109,7 +109,11 @@
   .sec-x{position:absolute;top:-3px;right:0;width:23px;height:23px;border:none;background:#eef2f7;border-radius:7px;
     color:#9aa8ba;font-size:15px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
   .sec-x:hover{background:#fde3e3;color:#c53030}
-  .sec.hidden,.intro.hidden{display:none}
+  .sec.hidden,.intro.hidden,.row.hidden{display:none}
+  .row-x{margin-left:6px;width:20px;height:20px;border:none;background:#eef2f7;border-radius:6px;
+    color:#9aa8ba;font-size:13px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex:none}
+  .row-x:hover{background:#fde3e3;color:#c53030}
+  .sw-none{width:auto;padding:0 11px;font-size:11px;font-weight:800;color:#7c8698;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}
   #restoreBar{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:-4px 0 16px}
   #restoreBar:empty{display:none}
   #restoreBar .rb{padding:6px 12px;border-radius:999px;border:1.5px dashed var(--line);background:#fff;
@@ -139,7 +143,7 @@
     .card-ribbons img{width:34px;height:34px}
     .results{grid-template-columns:repeat(3,1fr)}
     #card{padding:18px 16px}
-    .card-title{font-size:21px}
+    .card-title{font-size:27px}
   }
 </style>
 </head>
@@ -189,13 +193,13 @@
       <div class="card-ribbons" id="cardRibbons"></div>
       <div class="row"><span class="lab">닉네임</span><span class="val" contenteditable data-ph="닉네임"></span></div>
       <div class="row"><span class="lab">친구코드</span><span class="val" contenteditable data-ph="SW-0000-0000-0000" style="min-width:210px"></span></div>
-      <div class="row"><span class="lab">나이</span>
+      <div class="row optrow"><span class="lab">나이</span>
         <span class="chips" data-mode="single"><span class="chip">미성년자</span><span class="chip">성인</span><span class="chip">비공개</span></span>
       </div>
-      <div class="row"><span class="lab">이별</span>
+      <div class="row optrow"><span class="lab">이별</span>
         <span class="chips" data-mode="single"><span class="chip">블락</span><span class="chip">블언블</span><span class="chip">언팔로우</span></span>
       </div>
-      <div class="row"><span class="lab">타장르 언급</span>
+      <div class="row optrow"><span class="lab">타장르 언급</span>
         <span class="chips" data-mode="single"><span class="chip">O</span><span class="chip">X</span></span>
       </div>
     </div>
@@ -344,13 +348,22 @@
     S.setProperty('--sky',toHex(mix(rgb,.82)));
     S.setProperty('--sky2',toHex(mix(rgb,.90)));
   }
-  var emblem=document.getElementById('emblem'), themesEl=document.getElementById('themes');
+  var emblem=document.getElementById('emblem'), emblemBox=document.querySelector('.emblem'), themesEl=document.getElementById('themes');
+  var noneBtn;
   function setType(idx){
     var t=TYPES[idx];
     applyTheme(t.c);
     emblem.src='../icon_type/icon_type_'+t.i+'.svg';
+    emblemBox.style.display='';
     [].forEach.call(themesEl.children,function(el,k){el.classList.toggle('on',k===idx);});
     try{localStorage.setItem('cardTheme',idx);}catch(e){}
+  }
+  function setNoType(){          // for people who don't want a type theme at all
+    applyTheme('#8b95a7');       // neutral slate
+    emblemBox.style.display='none';
+    [].forEach.call(themesEl.children,function(el){el.classList.remove('on');});
+    if(noneBtn) noneBtn.classList.add('on');
+    try{localStorage.setItem('cardTheme','none');}catch(e){}
   }
   TYPES.forEach(function(t,idx){
     var b=document.createElement('button'); b.className='sw'; b.title=t.ko;
@@ -358,8 +371,13 @@
     b.onclick=function(){setType(idx);};
     themesEl.appendChild(b);
   });
-  var savedT=2; try{var s=parseInt(localStorage.getItem('cardTheme'));if(s>=0&&s<18)savedT=s;}catch(e){}
-  setType(savedT);
+  noneBtn=document.createElement('button'); noneBtn.className='sw sw-none'; noneBtn.type='button';
+  noneBtn.title='타입 선택 안 함'; noneBtn.textContent='타입선택 X';
+  noneBtn.onclick=function(){setNoType();};
+  themesEl.appendChild(noneBtn);
+  var rawT=null; try{rawT=localStorage.getItem('cardTheme');}catch(e){}
+  if(rawT==='none'){ setNoType(); }
+  else { var s=parseInt(rawT); setType((s>=0&&s<18)?s:2); }
 
   // ---------- champion ribbons ----------
   var RIBBONS=[
@@ -464,6 +482,14 @@
     var x=document.createElement('button'); x.className='sec-x'; x.type='button'; x.textContent='×'; x.title='이 섹션 숨기기';
     x.onclick=function(){ sec.classList.add('hidden'); addRestore(sec,name); };
     sec.appendChild(x);
+  });
+  // removable info rows (나이 / 이별 / 타장르 언급)
+  document.querySelectorAll('#card .optrow').forEach(function(row){
+    var lab=row.querySelector('.lab'); if(!lab) return;
+    var name=lab.textContent.trim();
+    var x=document.createElement('button'); x.className='row-x'; x.type='button'; x.textContent='×'; x.title='이 항목 숨기기';
+    x.onclick=function(){ row.classList.add('hidden'); addRestore(row,name); };
+    row.appendChild(x);
   });
 
   // ---------- profile ----------
@@ -588,7 +614,7 @@
     TEAM=[]; render();
     document.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on','yes','no');});
     document.querySelectorAll('#card [contenteditable]').forEach(function(el){el.textContent='';});
-    document.querySelectorAll('#card .sec, #card .intro').forEach(function(s){s.classList.remove('hidden');});
+    document.querySelectorAll('#card .sec, #card .intro, #card .optrow').forEach(function(s){s.classList.remove('hidden');});
     restoreBar.innerHTML='';
     ribbonSel={}; document.querySelectorAll('.ribbon-opt.on').forEach(function(b){b.classList.remove('on');}); renderRibbons();
     ballState=new Array(6).fill(null); renderBalls();
@@ -628,7 +654,7 @@
       filter:function(n){
         if(n.nodeType!==1||!n.classList) return true;
         var c=n.classList;
-        if(c.contains('sec-x')||c.contains('leg')||c.contains('hidden')) return false;
+        if(c.contains('sec-x')||c.contains('row-x')||c.contains('leg')||c.contains('hidden')) return false;
         if(c.contains('ball-slot')&&c.contains('empty')) return false;
         if(c.contains('chip')&&!c.contains('yes')&&!c.contains('no')){
           var g=n.parentElement; if(g&&g.getAttribute('data-mode')==='tri') return false;
