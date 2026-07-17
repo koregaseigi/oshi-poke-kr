@@ -310,6 +310,17 @@
   </div>
 </div>
 
+<div class="mask" id="bgMask">
+  <div class="modal" style="max-width:360px;text-align:center">
+    <button class="x" id="bgX">×</button>
+    <h3>헤더 배경 선택</h3>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:4px">
+      <button class="btn btn-ghost" id="bgTransparent">투명 배경</button>
+      <button class="btn btn-primary" id="bgWhite">흰색 배경</button>
+    </div>
+  </div>
+</div>
+
 <div class="mask" id="mask">
   <div class="modal">
     <button class="x" id="modalX">×</button>
@@ -666,10 +677,19 @@
     .then(function(){restore();btn.textContent=old;btn.disabled=false;});
   };
 
-  // ---------- twitter header export (1500x500, transparent) ----------
+  // ---------- twitter header export (1500x500) — transparent or white bg ----------
+  var bgMask=document.getElementById('bgMask');
   document.getElementById('btnHeader').onclick=function(){
     if(!TEAM.length){ alert('먼저 포켓몬을 넣어주세요.'); return; }
-    var btn=this, old=btn.textContent; btn.textContent='저장 중...'; btn.disabled=true;
+    bgMask.classList.add('show');
+  };
+  document.getElementById('bgX').onclick=function(){ bgMask.classList.remove('show'); };
+  bgMask.onclick=function(e){ if(e.target===bgMask) bgMask.classList.remove('show'); };
+  document.getElementById('bgTransparent').onclick=function(){ bgMask.classList.remove('show'); exportHeader(null); };
+  document.getElementById('bgWhite').onclick=function(){ bgMask.classList.remove('show'); exportHeader('#ffffff'); };
+  function exportHeader(bg){
+    if(!TEAM.length){ alert('먼저 포켓몬을 넣어주세요.'); return; }
+    var btn=document.getElementById('btnHeader'), old=btn.textContent; btn.textContent='저장 중...'; btn.disabled=true;
     var stage=document.createElement('div');
     stage.style.cssText='position:fixed;left:0;top:0;z-index:-1;width:1500px;height:500px;display:flex;flex-direction:column;justify-content:center;align-items:center;box-sizing:border-box';
     var prow=document.createElement('div');
@@ -689,11 +709,13 @@
       stage.appendChild(brow);
     }
     document.body.appendChild(stage);
-    htmlToImage.toPng(stage,{pixelRatio:2,cacheBust:true,width:1500,height:500})
+    var opts={pixelRatio:2,cacheBust:true,width:1500,height:500};
+    if(bg) opts.backgroundColor=bg;   // omit -> transparent alpha (works regardless of dark mode)
+    htmlToImage.toPng(stage,opts)
     .then(function(url){ var a=document.createElement('a'); a.href=url; a.download='pokemon-twitter-header.png'; a.click(); })
     .catch(function(e){ console.error(e); alert('헤더 저장에 실패했어요. 다시 시도해 주세요.'); })
     .then(function(){ stage.remove(); btn.textContent=old; btn.disabled=false; });
-  };
+  }
 
   // ---------- data ----------
   fetch('../pokemon_by_type.json').then(function(r){return r.json();}).then(function(data){
