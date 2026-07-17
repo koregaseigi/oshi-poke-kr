@@ -3978,12 +3978,23 @@
     {
       "id": 422,
       "original_id": 422,
-      "name_ja": "깝질무",
+      "name_ja": "깝질무(서쪽의 모습)",
       "name_en": "shellos",
       "type1": "water",
       "type2": "",
       "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/422.png",
       "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/422.png",
+      "h": 3
+    },
+    {
+      "id": 100422,
+      "original_id": 422,
+      "name_ja": "깝질무(동쪽의 모습)",
+      "name_en": "shellos-east",
+      "type1": "water",
+      "type2": "",
+      "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/422-east.png",
+      "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/422-east.png",
       "h": 3
     },
     {
