@@ -387,7 +387,22 @@
   avatar.onclick=function(){fileP.click();};
   fileP.onchange=function(){
     var f=fileP.files&&fileP.files[0]; if(!f) return;
-    var r=new FileReader(); r.onload=function(){avatar.innerHTML='<img src="'+r.result+'" alt="profile">';}; r.readAsDataURL(f);
+    var r=new FileReader();
+    r.onload=function(){
+      var im=new Image();
+      im.onload=function(){
+        // downscale so the exported image stays within mobile Safari's canvas/SVG limits
+        var maxW=460, maxH=560, w=im.naturalWidth||1, h=im.naturalHeight||1;
+        var sc=Math.min(1, maxW/w, maxH/h), cw=Math.max(1,Math.round(w*sc)), ch=Math.max(1,Math.round(h*sc));
+        var cv=document.createElement('canvas'); cv.width=cw; cv.height=ch;
+        cv.getContext('2d').drawImage(im,0,0,cw,ch);
+        var url; try{url=cv.toDataURL('image/jpeg',0.86);}catch(e){url=r.result;}
+        avatar.innerHTML='<img src="'+url+'" alt="profile">';
+      };
+      im.onerror=function(){avatar.innerHTML='<img src="'+r.result+'" alt="profile">';};
+      im.src=r.result;
+    };
+    r.readAsDataURL(f);
   };
 
   // ---------- team ----------
