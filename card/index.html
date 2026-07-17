@@ -66,6 +66,11 @@
   /* during image export, always use the desktop (row) layout regardless of device */
   #card.exporting .banner{flex-direction:row;align-items:flex-end}
   #card.exporting .party{width:auto}
+  /* ribbons: keep the desktop right-aligned, on-the-nickname-line placement even on mobile */
+  #card.exporting .card-ribbons{position:absolute;right:0;top:-2px;justify-content:flex-end;max-width:56%;margin-top:0}
+  #card.exporting .card-ribbons img{width:40px;height:40px}
+  /* drop unselected tri chips from flow BEFORE capture so html-to-image freezes the compact height (no blank rows) */
+  #card.exporting .chips[data-mode="tri"] > .chip:not(.yes):not(.no){display:none}
   .party-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#a7bcd8;
     font-size:13px;font-weight:600;text-align:center;padding:0 10px;pointer-events:none}
   .pmon{position:absolute;cursor:grab;touch-action:none;user-select:none;line-height:0}
