@@ -3989,12 +3989,23 @@
     {
       "id": 423,
       "original_id": 423,
-      "name_ja": "트리토돈",
+      "name_ja": "트리토돈(서쪽의 모습)",
       "name_en": "gastrodon",
       "type1": "water",
       "type2": "ground",
       "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/423.png",
       "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/423.png",
+      "h": 9
+    },
+    {
+      "id": 100423,
+      "original_id": 423,
+      "name_ja": "트리토돈(동쪽의 모습)",
+      "name_en": "gastrodon-east",
+      "type1": "water",
+      "type2": "ground",
+      "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/423-east.png",
+      "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/423-east.png",
       "h": 9
     },
     {
@@ -11206,12 +11217,23 @@
     {
       "id": 423,
       "original_id": 423,
-      "name_ja": "트리토돈",
+      "name_ja": "트리토돈(서쪽의 모습)",
       "name_en": "gastrodon",
       "type1": "water",
       "type2": "ground",
       "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/423.png",
       "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/423.png",
+      "h": 9
+    },
+    {
+      "id": 100423,
+      "original_id": 423,
+      "name_ja": "트리토돈(동쪽의 모습)",
+      "name_en": "gastrodon-east",
+      "type1": "water",
+      "type2": "ground",
+      "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/423-east.png",
+      "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/423-east.png",
       "h": 9
     },
     {
