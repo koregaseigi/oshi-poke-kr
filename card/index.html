@@ -143,7 +143,8 @@
 
   <div class="controls">
     <button class="btn btn-ghost" id="btnReset">전체 초기화</button>
-    <button class="btn btn-primary" id="btnSave">이미지로 저장</button>
+    <button class="btn" id="btnHeader" style="background:#1d9bf0;color:#fff">트위터 헤더 저장</button>
+    <button class="btn btn-primary" id="btnSave">카드 이미지 저장</button>
     <input type="file" id="fileProfile" accept="image/*" hidden />
   </div>
 
@@ -540,6 +541,35 @@
     .then(function(url){var a=document.createElement('a');a.href=url;a.download='pokemon-card.png';a.click();})
     .catch(function(e){console.error(e);alert('이미지 저장에 실패했어요. 다시 시도해 주세요.');})
     .then(function(){restore();btn.textContent=old;btn.disabled=false;});
+  };
+
+  // ---------- twitter header export (1500x500, transparent) ----------
+  document.getElementById('btnHeader').onclick=function(){
+    if(!TEAM.length){ alert('먼저 포켓몬을 넣어주세요.'); return; }
+    var btn=this, old=btn.textContent; btn.textContent='저장 중...'; btn.disabled=true;
+    var stage=document.createElement('div');
+    stage.style.cssText='position:fixed;left:0;top:0;z-index:-1;width:1500px;height:500px;display:flex;flex-direction:column;justify-content:center;align-items:center;box-sizing:border-box';
+    var prow=document.createElement('div');
+    prow.style.cssText='width:100%;display:flex;justify-content:space-around;align-items:flex-end;padding:0 60px;box-sizing:border-box';
+    TEAM.forEach(function(m){
+      var img=document.createElement('img');
+      img.src=m.dataUrl||(m.shiny?m.p.front_shiny:m.p.front_default);
+      img.style.cssText='height:230px;width:auto;image-rendering:pixelated;-webkit-user-drag:none';
+      prow.appendChild(img);
+    });
+    stage.appendChild(prow);
+    var setBalls=ballState.filter(Boolean);
+    if(setBalls.length){
+      var brow=document.createElement('div');
+      brow.style.cssText='display:flex;justify-content:center;gap:40px;margin-top:16px';
+      setBalls.forEach(function(b){ var img=document.createElement('img'); img.src='../balls/'+b+'.png'; img.style.cssText='width:58px;height:58px;opacity:.95'; brow.appendChild(img); });
+      stage.appendChild(brow);
+    }
+    document.body.appendChild(stage);
+    htmlToImage.toPng(stage,{pixelRatio:2,cacheBust:true,width:1500,height:500})
+    .then(function(url){ var a=document.createElement('a'); a.href=url; a.download='pokemon-twitter-header.png'; a.click(); })
+    .catch(function(e){ console.error(e); alert('헤더 저장에 실패했어요. 다시 시도해 주세요.'); })
+    .then(function(){ stage.remove(); btn.textContent=old; btn.disabled=false; });
   };
 
   // ---------- data ----------
