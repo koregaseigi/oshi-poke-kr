@@ -455,7 +455,10 @@
   // ---------- picker ----------
   var mask=document.getElementById('mask'), results=document.getElementById('results'), q=document.getElementById('q');
   document.getElementById('btnAdd').onclick=openPicker;
-  party.addEventListener('click',function(e){ if(e.target===party) openPicker(); });
+  party.addEventListener('click',function(e){
+    var t=e.target;
+    if(t===party || (t.classList&&(t.classList.contains('stage')||t.classList.contains('party-hint')))) openPicker();
+  });
   document.getElementById('modalX').onclick=closePicker;
   mask.onclick=function(e){if(e.target===mask)closePicker();};
   function openPicker(){
