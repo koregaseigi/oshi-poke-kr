@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>포켓몬 트친소 카드 메이커</title>
-<meta name="description" content="포켓몬 트친소/자기소개 카드를 만들어 이미지로 저장하세요. 최애 포켓몬 6마리까지!" />
+<title>포켓몬 트레이너 카드 메이커</title>
+<meta name="description" content="나만의 포켓몬 트레이너 카드를 만들어 이미지로 저장하세요. 최애 포켓몬 6마리까지!" />
 <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
-<meta property="og:title" content="포켓몬 트친소 카드 메이커" />
+<meta property="og:title" content="포켓몬 트레이너 카드 메이커" />
 <meta property="og:description" content="최애 포켓몬 6마리를 넣어 나만의 트친소 카드를 만들어보세요!" />
 <style>
   @font-face{font-family:'YPairing';src:url('../vendor/fonts/YPairingFont-Bold.woff2') format('woff2');font-weight:400 900;font-display:swap}
@@ -34,6 +34,7 @@
   .sw img{width:100%;height:100%;display:block}
   .sw.on{border-color:#141414;box-shadow:0 0 0 2px #fff inset}
   .hint{text-align:center;color:var(--ink2);font-size:12.5px;margin:0 0 16px}
+  .savenote{color:var(--acc-d);font-weight:800;margin-top:-8px}
   /* card */
   #card{width:900px;max-width:100%;margin:0 auto;background:var(--card);border-radius:22px;
     border:2px solid var(--line);padding:0;box-shadow:0 10px 40px rgba(80,120,200,.14)}
@@ -44,12 +45,27 @@
   .emblem{width:56px;height:56px;flex:none}
   .emblem img{width:100%;height:100%;display:block}
   /* banner: profile + party in a row */
-  .banner{display:flex;gap:16px;align-items:flex-end;margin-bottom:16px}
+  .banner{display:flex;gap:16px;align-items:flex-end;margin-bottom:14px}
   .avatar{width:126px;height:150px;flex:none;border-radius:16px;border:3px solid var(--acc);overflow:hidden;
     background:var(--sky2);display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer}
   .avatar img{width:100%;height:100%;object-fit:cover;display:block}
   .avatar .ph{color:var(--acc-d);font-size:12px;font-weight:700;text-align:center;padding:8px;line-height:1.5}
-  .party{flex:1;position:relative;min-height:162px;border-bottom:2px solid var(--sky);overflow:hidden}
+  .card-ribbons{position:absolute;right:0;top:-2px;display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;max-width:56%}
+  .card-ribbons:empty{display:none}
+  .card-ribbons img{width:40px;height:40px;object-fit:contain}
+  .ribbon-picker{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;max-width:600px}
+  .ribbon-opt{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 5px;border-radius:10px;border:2px solid var(--line);background:#fff;cursor:pointer;font-size:10px;color:var(--ink2);font-weight:700;width:62px;text-align:center;line-height:1.1}
+  .ribbon-opt img{width:32px;height:32px;object-fit:contain}
+  .ribbon-opt.on{border-color:var(--acc-d);background:var(--sky2);color:var(--acc-d)}
+  .party{flex:1;position:relative;min-height:0;border-bottom:2px solid var(--sky);overflow:hidden}
+  .stage{position:relative;width:700px;height:172px;transform-origin:top left}
+  .ball-row{position:absolute;left:0;top:0;width:100%;display:flex;justify-content:center;gap:12px;z-index:5}
+  .ball-slot{width:31px;height:31px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .ball-slot img{width:100%;height:100%;opacity:.95}
+  .ball-slot.empty::before{content:'';width:18px;height:18px;border:2px dashed var(--line);border-radius:50%;opacity:.7}
+  /* during image export, always use the desktop (row) layout regardless of device */
+  #card.exporting .banner{flex-direction:row;align-items:flex-end}
+  #card.exporting .party{width:auto}
   .party-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#a7bcd8;
     font-size:13px;font-weight:600;text-align:center;padding:0 10px;pointer-events:none}
   .pmon{position:absolute;cursor:grab;touch-action:none;user-select:none;line-height:0}
@@ -62,7 +78,7 @@
     box-shadow:0 1px 4px rgba(0,0,0,.18);cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center}
   .tb.on{background:#ffe066}
   /* info + sections */
-  .info{display:flex;flex-direction:column;gap:11px;margin-bottom:4px}
+  .info{position:relative;display:flex;flex-direction:column;gap:11px;margin-bottom:4px}
   .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .lab{font-weight:800;color:var(--ink);font-size:14px;min-width:74px}
   .val{min-width:120px;border-bottom:2px solid var(--sky);padding:2px 6px;font-size:15px;font-weight:600;outline:none}
@@ -120,7 +136,7 @@
 <div class="wrap">
   <nav class="nav">
     <a href="../">타입별 최애 메이커</a>
-    <a href="./" class="active">트친소 카드</a>
+    <a href="./" class="active">트레이너 카드</a>
   </nav>
 
   <div class="controls">
@@ -136,13 +152,19 @@
     <div class="themes" id="themes"></div>
   </div>
 
+  <div class="themebar">
+    <div class="t-lab">챔피언 리본 (지역별 · 여러 개 선택 가능)</div>
+    <div class="ribbon-picker" id="ribbonPicker"></div>
+  </div>
+
   <div class="hint">칸을 눌러 입력하세요. 성향 태그는 누를 때마다 없음 → ✓YES → ✕NO로 정할 수 있어요 (저장하면 YES/NO만 남아요). 섹션 오른쪽 ×로 통째로 숨길 수 있어요.</div>
+  <div class="hint savenote">💾 저장 이미지는 화면 크기와 상관없이 <b>PC 가로 배치(풀사이즈)</b>로 저장돼요. 모바일 편집 화면과 다를 수 있어요.</div>
   <div id="restoreBar"></div>
 
   <div id="card">
    <div class="card-inner">
     <div class="card-head">
-      <div class="card-title">포켓몬 트친소</div>
+      <div class="card-title">트레이너 카드</div>
       <div class="emblem"><img id="emblem" src="../icon_type/icon_type_3.svg" alt="type"></div>
     </div>
 
@@ -154,6 +176,7 @@
     </div>
 
     <div class="info">
+      <div class="card-ribbons" id="cardRibbons"></div>
       <div class="row"><span class="lab">닉네임</span><span class="val" contenteditable data-ph="닉네임"></span></div>
       <div class="row"><span class="lab">친구코드</span><span class="val" contenteditable data-ph="SW-0000-0000-0000" style="min-width:210px"></span></div>
       <div class="row"><span class="lab">나이</span>
@@ -203,8 +226,16 @@
       <div class="box" contenteditable data-ph="자유롭게 자기소개를 적어주세요! ㅎ^ㅎ"></div>
     </div>
 
-    <div class="foot">made with 포켓몬 트친소 카드 메이커</div>
+    <div class="foot">made with 포켓몬 트레이너 카드 메이커</div>
    </div>
+  </div>
+</div>
+
+<div class="mask" id="ballMask">
+  <div class="modal">
+    <button class="x" id="ballX">×</button>
+    <h3>몬스터볼 선택</h3>
+    <div class="results" id="ballResults"></div>
   </div>
 </div>
 
@@ -263,6 +294,62 @@
   var savedT=2; try{var s=parseInt(localStorage.getItem('cardTheme'));if(s>=0&&s<18)savedT=s;}catch(e){}
   setType(savedT);
 
+  // ---------- champion ribbons ----------
+  var RIBBONS=[
+    {k:'champion',ko:'챔피언'},{k:'hoenn',ko:'호연'},{k:'sinnoh',ko:'신오'},
+    {k:'kalos',ko:'칼로스'},{k:'alola',ko:'알로라'},{k:'galar',ko:'가라르'},{k:'paldea',ko:'팔데아'}
+  ];
+  var ribbonPicker=document.getElementById('ribbonPicker'), cardRibbons=document.getElementById('cardRibbons'), ribbonSel={};
+  function renderRibbons(){
+    cardRibbons.innerHTML='';
+    RIBBONS.forEach(function(r){ if(ribbonSel[r.k]){ var im=document.createElement('img'); im.src='../ribbons/'+r.k+'.png'; im.alt=r.ko; cardRibbons.appendChild(im); } });
+  }
+  RIBBONS.forEach(function(r){
+    var b=document.createElement('button'); b.className='ribbon-opt'; b.type='button';
+    b.innerHTML='<img src="../ribbons/'+r.k+'.png" alt=""><span>'+r.ko+'</span>';
+    b.onclick=function(){ ribbonSel[r.k]=!ribbonSel[r.k]; b.classList.toggle('on',!!ribbonSel[r.k]); renderRibbons(); };
+    ribbonPicker.appendChild(b);
+  });
+
+  // ---------- poke balls (row above pokemon) ----------
+  var BALLS=[
+    {k:'poke-ball',ko:'몬스터볼'},{k:'great-ball',ko:'슈퍼볼'},{k:'ultra-ball',ko:'하이퍼볼'},{k:'master-ball',ko:'마스터볼'},
+    {k:'premier-ball',ko:'프리미어볼'},{k:'luxury-ball',ko:'럭셔리볼'},{k:'heal-ball',ko:'힐볼'},{k:'net-ball',ko:'네트볼'},
+    {k:'dive-ball',ko:'다이브볼'},{k:'nest-ball',ko:'네스트볼'},{k:'repeat-ball',ko:'리피트볼'},{k:'timer-ball',ko:'타이머볼'},
+    {k:'dusk-ball',ko:'다크볼'},{k:'quick-ball',ko:'퀵볼'},{k:'cherish-ball',ko:'프레셔스볼'},{k:'safari-ball',ko:'사파리볼'},
+    {k:'level-ball',ko:'레벨볼'},{k:'lure-ball',ko:'루어볼'},{k:'moon-ball',ko:'문볼'},{k:'friend-ball',ko:'프렌드볼'},
+    {k:'love-ball',ko:'러브볼'},{k:'heavy-ball',ko:'헤비볼'},{k:'fast-ball',ko:'스피드볼'},{k:'sport-ball',ko:'스포츠볼'},
+    {k:'park-ball',ko:'파크볼'},{k:'dream-ball',ko:'드림볼'},{k:'beast-ball',ko:'비스트볼'}
+  ];
+  var ballState=new Array(6).fill(null), ballTarget=0;
+  var ballMask=document.getElementById('ballMask'), ballResults=document.getElementById('ballResults');
+  function renderBalls(){
+    var stage=party.querySelector('.stage'); if(!stage) return;
+    var row=stage.querySelector('.ball-row');
+    if(!row){row=document.createElement('div');row.className='ball-row';stage.insertBefore(row,stage.firstChild);}
+    row.innerHTML='';
+    for(var i=0;i<6;i++){(function(i){
+      var s=document.createElement('div'); s.className='ball-slot'+(ballState[i]?'':' empty');
+      if(ballState[i]) s.innerHTML='<img src="../balls/'+ballState[i]+'.png" alt="">';
+      s.onclick=function(e){e.stopPropagation();ballTarget=i;ballMask.classList.add('show');};
+      row.appendChild(s);
+    })(i);}
+  }
+  document.getElementById('ballX').onclick=function(){ballMask.classList.remove('show');};
+  ballMask.onclick=function(e){if(e.target===ballMask)ballMask.classList.remove('show');};
+  (function(){
+    var none=document.createElement('div'); none.className='pick';
+    none.innerHTML='<div style="width:64px;height:64px;display:flex;align-items:center;justify-content:center;font-size:26px;color:#c53030">✕</div><span>없음</span>';
+    none.onclick=function(){ballState[ballTarget]=null;renderBalls();ballMask.classList.remove('show');};
+    ballResults.appendChild(none);
+    BALLS.forEach(function(b){
+      var el=document.createElement('div'); el.className='pick';
+      el.innerHTML='<img src="../balls/'+b.k+'.png" alt=""><span>'+b.ko+'</span>';
+      el.onclick=function(){ballState[ballTarget]=b.k;renderBalls();ballMask.classList.remove('show');};
+      ballResults.appendChild(el);
+    });
+  })();
+
   // ---------- chips ----------
   document.querySelectorAll('.chips').forEach(function(group){
     var mode=group.getAttribute('data-mode')||'multi';
@@ -313,24 +400,32 @@
       var fr=new FileReader(); fr.onload=function(){m.dataUrl=fr.result;cb&&cb();}; fr.readAsDataURL(b);
     }).catch(function(){m.dataUrl=null;cb&&cb();});
   }
+  var STAGE_W=700, STAGE_H=172;   // fixed design coordinate space for pokemon placement
   function defaultPos(n){
-    var W=party.clientWidth||520, H=party.clientHeight||162, sw=96;
-    var step=Math.min(sw+4,(W-16)/6);
-    var x=8+n*step; if(x>W-sw-2) x=W-sw-2; if(x<0)x=0;
-    var y=H-128; if(y<4)y=4;
+    var sw=96, step=Math.min(sw+4,(STAGE_W-16)/6);
+    var x=8+n*step; if(x>STAGE_W-sw-2) x=STAGE_W-sw-2; if(x<0)x=0;
+    var y=STAGE_H-128; if(y<4)y=4;
     return {x:x,y:y};
   }
+  // scale the fixed-size stage to fit the actual party width (responsive on any device)
+  function applyScale(){
+    var stage=party.querySelector('.stage'); if(!stage) return;
+    var sc=(party.clientWidth||STAGE_W)/STAGE_W;
+    stage.style.transform='scale('+sc+')';
+    party.style.height=TEAM.length?(STAGE_H*sc)+'px':'110px';
+  }
+  window.addEventListener('resize',applyScale);
   function makeDrag(el,m){
     el.addEventListener('pointerdown',function(e){
       if(e.target.closest('.tb')) return;
       e.preventDefault();
+      var sc=(party.clientWidth||STAGE_W)/STAGE_W;   // pointer px -> design px
       try{el.setPointerCapture(e.pointerId);}catch(_){}
-      var pr=party.getBoundingClientRect(), er=el.getBoundingClientRect();
-      var offx=e.clientX-er.left, offy=e.clientY-er.top, ew=er.width, eh=er.height, oz=el.style.zIndex;
+      var sx=e.clientX, sy=e.clientY, ox=m.x||0, oy=m.y||0, oz=el.style.zIndex;
       el.style.cursor='grabbing'; el.style.zIndex=99;
       function move(ev){
-        var x=ev.clientX-pr.left-offx, y=ev.clientY-pr.top-offy;
-        x=Math.max(0,Math.min(pr.width-ew,x)); y=Math.max(0,Math.min(pr.height-eh,y));
+        var x=ox+(ev.clientX-sx)/sc, y=oy+(ev.clientY-sy)/sc;
+        x=Math.max(0,Math.min(STAGE_W-el.offsetWidth,x)); y=Math.max(0,Math.min(STAGE_H-el.offsetHeight,y));
         el.style.left=x+'px'; el.style.top=y+'px'; m.x=x; m.y=y;
       }
       function up(){ try{el.releasePointerCapture(e.pointerId);}catch(_){} el.removeEventListener('pointermove',move); el.removeEventListener('pointerup',up); el.style.cursor='grab'; el.style.zIndex=oz; }
@@ -338,7 +433,9 @@
     });
   }
   function render(){
-    [].slice.call(party.querySelectorAll('.pmon')).forEach(function(el){el.remove();});
+    var stage=party.querySelector('.stage');
+    if(!stage){stage=document.createElement('div');stage.className='stage';party.appendChild(stage);}
+    [].slice.call(stage.querySelectorAll('.pmon')).forEach(function(el){el.remove();});
     partyHint.style.display=TEAM.length?'none':'flex';
     TEAM.forEach(function(m,idx){
       var el=document.createElement('div'); el.className='pmon';
@@ -349,8 +446,10 @@
       el.querySelector('.tdel').onclick=function(ev){ev.stopPropagation();var i=TEAM.indexOf(m);if(i>=0)TEAM.splice(i,1);render();};
       el.querySelector('.tshine').onclick=function(ev){ev.stopPropagation();m.shiny=!m.shiny;loadSprite(m,render);};
       makeDrag(el,m);
-      party.appendChild(el);
+      stage.appendChild(el);
     });
+    renderBalls();
+    applyScale();
   }
 
   // ---------- picker ----------
@@ -391,6 +490,8 @@
     document.querySelectorAll('#card [contenteditable]').forEach(function(el){el.textContent='';});
     document.querySelectorAll('#card .sec, #card .intro').forEach(function(s){s.classList.remove('hidden');});
     restoreBar.innerHTML='';
+    ribbonSel={}; document.querySelectorAll('.ribbon-opt.on').forEach(function(b){b.classList.remove('on');}); renderRibbons();
+    ballState=new Array(6).fill(null); renderBalls();
     avatar.innerHTML='<div class="ph">프로필 이미지<br>(눌러서 추가)</div>';
   };
 
@@ -403,14 +504,18 @@
     // html-to-image mis-renders on retina (DPR>1) and crops the right/bottom padding.
     var ph=document.createComment('card-here'); card.parentNode.insertBefore(ph,card);
     var holder=document.createElement('div'); holder.style.cssText='position:fixed;left:0;top:0;z-index:-1;background:#ffffff';
-    var savedMargin=card.style.margin; card.style.margin='0';
+    var savedMargin=card.style.margin, savedMaxW=card.style.maxWidth, savedW=card.style.width;
+    card.classList.add('exporting');
+    card.style.margin='0'; card.style.maxWidth='none'; card.style.width='900px';
     holder.appendChild(card); document.body.appendChild(holder);
-    function restore(){ card.style.margin=savedMargin; if(ph.parentNode){ph.parentNode.insertBefore(card,ph);ph.remove();} holder.remove(); }
+    applyScale();   // render party at full (desktop) scale so exports look the same on any device
+    function restore(){ card.classList.remove('exporting'); card.style.margin=savedMargin; card.style.maxWidth=savedMaxW; card.style.width=savedW; if(ph.parentNode){ph.parentNode.insertBefore(card,ph);ph.remove();} holder.remove(); applyScale(); }
     htmlToImage.toPng(card,{pixelRatio:2,cacheBust:true,backgroundColor:'#ffffff',
       filter:function(n){
         if(n.nodeType!==1||!n.classList) return true;
         var c=n.classList;
         if(c.contains('sec-x')||c.contains('leg')||c.contains('hidden')) return false;
+        if(c.contains('ball-slot')&&c.contains('empty')) return false;
         if(c.contains('chip')&&!c.contains('yes')&&!c.contains('no')){
           var g=n.parentElement; if(g&&g.getAttribute('data-mode')==='tri') return false;
         }
