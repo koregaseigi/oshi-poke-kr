@@ -96,6 +96,9 @@
   .chip.no:before{content:'\2715 '}
   .gens .chip{min-width:34px;padding:8px 10px}
   .genlab{font-weight:800;color:#8aa0bf;font-size:11.5px;margin:11px 0 5px}
+  .game-export{display:none;flex-wrap:wrap;gap:7px}
+  #gameSec.exporting-games .game-edit{display:none}
+  #gameSec.exporting-games .game-export{display:flex}
   .leg{font-size:11px;font-weight:600;color:#a7bcd8;margin-left:6px}
   .sec,.intro{position:relative}
   .sec-x{position:absolute;top:-3px;right:0;width:23px;height:23px;border:none;background:#eef2f7;border-radius:7px;
@@ -225,47 +228,53 @@
       </div>
     </div>
 
-    <div class="sec"><span class="lab">게임 시리즈</span>
-      <div class="genlab">1세대</div>
-      <div class="chips" data-mode="multi">
-        <span class="chip">레드적·그린녹</span><span class="chip">블루청</span><span class="chip">피카츄옐로</span>
+    <div class="sec" id="gameSec"><span class="lab">주력 게임 시리즈</span>
+      <div class="game-edit">
+        <div class="chips" data-mode="multi">
+          <span class="chip chip-all">전부</span>
+        </div>
+        <div class="genlab">1세대</div>
+        <div class="chips" data-mode="multi">
+          <span class="chip">레드·그린</span><span class="chip">블루</span><span class="chip">피카츄</span>
+        </div>
+        <div class="genlab">2세대</div>
+        <div class="chips" data-mode="multi">
+          <span class="chip">금·은</span><span class="chip">크리스탈</span>
+        </div>
+        <div class="genlab">3세대</div>
+        <div class="chips" data-mode="multi">
+          <span class="chip">루비·사파이어</span><span class="chip">에메랄드</span><span class="chip">파이어레드·리프그린</span>
+        </div>
+        <div class="genlab">4세대</div>
+        <div class="chips" data-mode="multi">
+          <span class="chip">디아루가(다이아몬드)·펄기아(펄)</span><span class="chip">기라티나(플래티나)</span><span class="chip">하트골드·소울실버</span>
+        </div>
+        <div class="genlab">5세대</div>
+        <div class="chips" data-mode="multi">
+          <span class="chip">블랙·화이트</span><span class="chip">블랙 2·화이트 2</span>
+        </div>
+        <div class="genlab">6세대</div>
+        <div class="chips" data-mode="multi">
+          <span class="chip">X·Y</span><span class="chip">오메가루비·알파사파이어</span>
+        </div>
+        <div class="genlab">7세대</div>
+        <div class="chips" data-mode="multi">
+          <span class="chip">썬·문</span><span class="chip">울트라썬·울트라문</span><span class="chip">레츠고! 피카츄·레츠고! 이브이</span>
+        </div>
+        <div class="genlab">8세대</div>
+        <div class="chips" data-mode="multi">
+          <span class="chip">소드·실드</span><span class="chip">갑옷의 외딴섬+왕관의 설원</span><span class="chip">브릴리언트 다이아몬드·샤이닝 펄</span><span class="chip">Pokémon LEGENDS 아르세우스</span>
+        </div>
+        <div class="genlab">9세대</div>
+        <div class="chips" data-mode="multi">
+          <span class="chip">스칼렛·바이올렛</span><span class="chip">제로의 비보</span><span class="chip">Pokémon LEGENDS Z-A</span>
+        </div>
+        <div class="genlab">10세대</div>
+        <div class="chips" data-mode="multi">
+          <span class="chip">윈드·웨이브</span>
+        </div>
       </div>
-      <div class="genlab">2세대</div>
-      <div class="chips" data-mode="multi">
-        <span class="chip">금·은</span><span class="chip">크리스탈</span>
-      </div>
-      <div class="genlab">3세대</div>
-      <div class="chips" data-mode="multi">
-        <span class="chip">루비·사파이어</span><span class="chip">에메랄드</span><span class="chip">파이어레드·리프그린</span>
-      </div>
-      <div class="genlab">4세대</div>
-      <div class="chips" data-mode="multi">
-        <span class="chip">디아루가다이아몬드·펄기아펄</span><span class="chip">기라티나플래티나</span><span class="chip">하트골드·소울실버</span>
-      </div>
-      <div class="genlab">5세대</div>
-      <div class="chips" data-mode="multi">
-        <span class="chip">블랙·화이트</span><span class="chip">블랙 2·화이트 2</span>
-      </div>
-      <div class="genlab">6세대</div>
-      <div class="chips" data-mode="multi">
-        <span class="chip">X·Y</span><span class="chip">오메가루비·알파사파이어</span>
-      </div>
-      <div class="genlab">7세대</div>
-      <div class="chips" data-mode="multi">
-        <span class="chip">썬·문</span><span class="chip">울트라썬·울트라문</span><span class="chip">레츠고! 피카츄·레츠고! 이브이</span>
-      </div>
-      <div class="genlab">8세대</div>
-      <div class="chips" data-mode="multi">
-        <span class="chip">소드·실드</span><span class="chip">익스팬션 패스(갑옷의 외딴섬+왕관의 설원)</span><span class="chip">브릴리언트 다이아몬드·샤이닝 펄</span><span class="chip">Pokémon LEGENDS 아르세우스</span>
-      </div>
-      <div class="genlab">9세대</div>
-      <div class="chips" data-mode="multi">
-        <span class="chip">스칼렛·바이올렛</span><span class="chip">제로의 비보(벽록의 가면+남청의 원반+수슈수슈 패닉)</span><span class="chip">Pokémon LEGENDS Z-A</span><span class="chip">메가 차원 러시</span>
-      </div>
-      <div class="genlab">10세대</div>
-      <div class="chips" data-mode="multi">
-        <span class="chip">윈드·웨이브</span>
-      </div>
+      <div class="game-export"></div>
     </div>
 
     <div class="sec"><span class="lab">플레이 성향</span>
@@ -419,6 +428,23 @@
       } else chip.classList.toggle('on');
     });
   });
+
+  // ---------- game series: "전부" master toggle + selected sync ----------
+  (function(){
+    var sec=document.getElementById('gameSec'); if(!sec) return;
+    var allChip=sec.querySelector('.chip-all');
+    function games(){ return Array.prototype.slice.call(sec.querySelectorAll('.game-edit .chip')).filter(function(c){return c!==allChip;}); }
+    sec.addEventListener('click',function(e){
+      var chip=e.target.closest('.chip'); if(!chip) return;
+      if(chip===allChip){
+        var on=allChip.classList.contains('on');   // generic handler already toggled it
+        games().forEach(function(c){ c.classList.toggle('on',on); });
+      } else {
+        var g=games(), every=g.length&&g.every(function(c){return c.classList.contains('on');});
+        allChip.classList.toggle('on',every);
+      }
+    });
+  })();
 
   // ---------- section show / hide ----------
   var restoreBar=document.getElementById('restoreBar');
@@ -578,7 +604,21 @@
     card.style.margin='0'; card.style.maxWidth='none'; card.style.width='900px';
     holder.appendChild(card); document.body.appendChild(holder);
     applyScale();   // render party at full (desktop) scale so exports look the same on any device
-    function restore(){ card.classList.remove('exporting'); card.style.margin=savedMargin; card.style.maxWidth=savedMaxW; card.style.width=savedW; if(ph.parentNode){ph.parentNode.insertBefore(card,ph);ph.remove();} holder.remove(); applyScale(); }
+    // game series: on export show only the picked games, flat (no generation dividers)
+    var gameSec=document.getElementById('gameSec');
+    if(gameSec){
+      var gexp=gameSec.querySelector('.game-export'); gexp.innerHTML='';
+      if(gameSec.querySelector('.chip-all').classList.contains('on')){
+        var _ac=document.createElement('span'); _ac.className='chip on'; _ac.textContent='전부'; gexp.appendChild(_ac);
+      } else {
+        gameSec.querySelectorAll('.game-edit .chip.on').forEach(function(ch){
+          if(ch.classList.contains('chip-all')) return;
+          var _c=document.createElement('span'); _c.className='chip on'; _c.textContent=ch.textContent; gexp.appendChild(_c);
+        });
+      }
+      gameSec.classList.add('exporting-games');
+    }
+    function restore(){ card.classList.remove('exporting'); card.style.margin=savedMargin; card.style.maxWidth=savedMaxW; card.style.width=savedW; if(ph.parentNode){ph.parentNode.insertBefore(card,ph);ph.remove();} holder.remove(); applyScale(); if(gameSec){gameSec.classList.remove('exporting-games'); var ge=gameSec.querySelector('.game-export'); if(ge) ge.innerHTML='';} }
     htmlToImage.toPng(card,{pixelRatio:2,cacheBust:true,backgroundColor:'#ffffff',
       filter:function(n){
         if(n.nodeType!==1||!n.classList) return true;
