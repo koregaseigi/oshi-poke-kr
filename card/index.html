@@ -69,6 +69,8 @@
   /* ribbons: keep the desktop right-aligned, on-the-nickname-line placement even on mobile */
   #card.exporting .card-ribbons{position:absolute;right:0;top:-2px;justify-content:flex-end;max-width:56%;margin-top:0}
   #card.exporting .card-ribbons img{width:40px;height:40px}
+  /* no pokemon picked -> export a blank party area, not the editing hint */
+  #card.exporting .party-hint{display:none!important}
   /* drop unselected tri chips from flow BEFORE capture so html-to-image freezes the compact height (no blank rows) */
   #card.exporting .chips[data-mode="tri"] > .chip:not(.yes):not(.no){display:none}
   .party-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#a7bcd8;
@@ -193,7 +195,7 @@
     <div class="info">
       <div class="card-ribbons" id="cardRibbons"></div>
       <div class="row"><span class="lab">닉네임</span><span class="val" contenteditable data-ph="닉네임"></span></div>
-      <div class="row"><span class="lab">친구코드</span><span class="val" contenteditable data-ph="SW-0000-0000-0000" style="min-width:210px"></span></div>
+      <div class="row optrow"><span class="lab">친구코드</span><span class="val" contenteditable data-ph="SW-0000-0000-0000" style="min-width:210px"></span></div>
       <div class="row optrow"><span class="lab">나이</span>
         <span class="chips" data-mode="single"><span class="chip">미성년자</span><span class="chip">성인</span><span class="chip">비공개</span></span>
       </div>
