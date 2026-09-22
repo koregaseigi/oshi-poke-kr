@@ -433,7 +433,8 @@
   var wrap=document.getElementById('stageWrap'), card=document.getElementById('card'), frameImg=document.getElementById('frameImg'), cardScale=1, curW=1427, curH=2000, curFrame='v2';
   function fit(){
     cardScale=(wrap.clientWidth||curW)/curW; card.style.transform='scale('+cardScale+')';
-    if(curFrame==='flat'){ curH=card.offsetHeight; wrap.style.aspectRatio='auto'; wrap.style.height=(curH*cardScale)+'px'; }
+    if(curFrame==='flat') curH=card.offsetHeight;
+    wrap.style.aspectRatio='auto'; wrap.style.height=(curH*cardScale)+'px';   // explicit height (Safari-safe, no aspect-ratio reliance)
   }
   window.addEventListener('resize',fit);
   var FRAMES={
