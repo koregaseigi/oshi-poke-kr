@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>포켓몬 챔피언스 트레이너 카드</title>
+<meta name="description" content="포켓몬 챔피언스용 트레이너 카드를 만들어 이미지로 저장하세요. 파티·배지·실적까지!" />
+<link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+<meta property="og:title" content="포켓몬 챔피언스 트레이너 카드" />
+<meta property="og:description" content="싱글·더블 파티, 배지, 실적을 담은 챔피언스 카드를 만들어보세요!" />
+<style>
+  @font-face{font-family:'neodgm';src:url('../vendor/fonts/neodgm.woff2') format('woff2');font-display:swap}
+  @font-face{font-family:'Galmuri11';src:url('../vendor/fonts/Galmuri11.woff2') format('woff2');font-display:swap}
+  :root{
+    --metal-lo:#c3c9d2; --metal-hi:#f2f4f7; --metal-mid:#d7dce3;
+    --bezel-lo:#8a929d; --bezel-hi:#c9d0d9;
+    --ink:#2b3038; --ink2:#5c6470; --line:#9aa2ad;
+    --blue:#3f74c9; --blue-d:#2a56a0; --gold:#c99a3c;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'neodgm','Galmuri11',"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+    color:#dfe4ec;background:radial-gradient(120% 100% at 50% 0,#2b3140,#12151c 70%);min-height:100vh;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:980px;margin:0 auto;padding:16px}
+  .nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:6px 0 16px}
+  .nav a{padding:9px 15px;border-radius:8px;background:#1c2230;border:1.5px solid #39435a;
+    color:#9fb0cc;text-decoration:none;font-weight:700;font-size:14px}
+  .nav a.active{background:linear-gradient(#4a86e0,#2f62b8);border-color:#5b93e8;color:#fff}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:10px}
+  .btn{padding:11px 16px;border-radius:10px;border:none;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer}
+  .btn-primary{background:linear-gradient(#3a3f4a,#23272f);color:#fff;border:1px solid #4a5160}
+  .btn-ghost{background:#20263180;color:#cdd6e4;border:1.5px solid #3a4459}
+  .btn-badge{background:linear-gradient(#d8a63e,#b6832a);color:#3a2a08;border:1px solid #e6bf6a}
+  .btn:active{transform:translateY(1px)}
+  .fontbar{display:flex;gap:6px;justify-content:center;align-items:center;margin-bottom:10px;font-size:12.5px;color:#8a97ad}
+  .fontbar button{font-family:inherit;padding:6px 12px;border-radius:8px;border:1.5px solid #3a4459;background:#1c2230;color:#9fb0cc;font-weight:700;cursor:pointer;font-size:12.5px}
+  .fontbar button.on{background:linear-gradient(#4a86e0,#2f62b8);border-color:#5b93e8;color:#fff}
+  .hint{text-align:center;color:#8a97ad;font-size:12.5px;margin:0 0 6px;line-height:1.6}
+  .hint b{color:#e7b84e}
+  .savenote{color:#9fb7e6;font-weight:700}
+  #restoreBar{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px 0 14px}
+  #restoreBar:empty{display:none}
+  #restoreBar .rb{padding:6px 12px;border-radius:8px;border:1.5px dashed #4a5468;background:#1c2230;
+    color:#b6c2d6;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
+
+  /* ---- the card: metallic classic trainer card ---- */
+  #card{width:900px;max-width:100%;margin:0 auto;border-radius:20px;
+    background:linear-gradient(150deg,#d7ad5c,#a5762f 55%,#c99a45);
+    padding:9px;box-shadow:0 18px 50px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.5)}
+  .cinner{border-radius:13px;padding:22px 24px 20px;position:relative;overflow:hidden;
+    background:linear-gradient(158deg,#f4f6f9,#d2d7de 48%,#e9ecf1);
+    box-shadow:inset 0 0 0 2px #b9bfc8, inset 0 2px 2px rgba(255,255,255,.7)}
+  /* subtle brushed-metal streak */
+  .cinner:before{content:'';position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.35) 50%,transparent 60%);opacity:.5}
+  .chead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;position:relative}
+  .ctitle{display:inline-block;background:linear-gradient(#4a90d9,#2c63ac);color:#fff;font-weight:800;
+    font-size:22px;letter-spacing:1px;padding:7px 16px;border-radius:7px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 2px 3px rgba(0,0,0,.25);text-shadow:0 1px 0 rgba(0,0,0,.25)}
+  .csub{color:#a8842f;font-weight:800;font-size:15px;letter-spacing:1px;text-align:right;line-height:1.2}
+  .csub b{color:#7a5f1e}
+
+  .cmain{display:flex;gap:18px;align-items:flex-start;position:relative}
+  .cleft{flex:1;display:flex;flex-direction:column;gap:12px;min-width:0}
+  .avatar{width:150px;height:168px;flex:none;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;
+    background:linear-gradient(160deg,#cfd5dd,#aeb6c1);
+    border:3px solid #b98f3f;box-shadow:inset 0 0 0 2px #eef1f5;display:flex;align-items:center;justify-content:center}
+  .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+  .avatar .ph{color:#6b7480;font-size:12px;font-weight:700;text-align:center;padding:8px;line-height:1.6}
+
+  .crow{display:flex;align-items:center;gap:9px;flex-wrap:wrap;position:relative}
+  .lab{font-weight:800;color:#333a44;font-size:14px;min-width:78px;display:flex;align-items:center;gap:5px}
+  .lab:before{content:'';width:9px;height:9px;background:#7f8996;box-shadow:inset -1px -1px 0 rgba(0,0,0,.2);flex:none}
+  .sec>.lab,.ach .lab{margin-bottom:0}
+  .val{min-width:120px;flex:1;border-bottom:2px solid #a9b0ba;padding:2px 4px;font-size:15px;font-weight:700;
+    color:#2b3038;outline:none;font-family:inherit;background:transparent}
+  .val:empty:before{content:attr(data-ph);color:#9aa2ad;font-weight:500}
+  .val.short{flex:none;min-width:150px}
+
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{display:inline-flex;align-items:center;justify-content:center;line-height:1;padding:7px 12px;white-space:nowrap;flex:none;
+    border-radius:7px;background:linear-gradient(#eef1f5,#d3d9e1);border:1.5px solid #a9b1bc;
+    color:#4a5260;font-size:13px;font-weight:800;cursor:pointer;user-select:none;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.7);font-family:inherit}
+  .chip.on{background:linear-gradient(#4a90d9,#2f66b3);border-color:#2f66b3;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.2)}
+
+  .sec{margin-top:18px;position:relative}
+  .sec>.lab{display:inline-flex;margin-bottom:8px}
+  .leg{font-size:11px;font-weight:600;color:#8f98a5;margin-left:6px}
+
+  /* achievements */
+  .ach{display:flex;flex-direction:column;gap:9px}
+  .achrow{display:flex;gap:9px;align-items:stretch}
+  .achtag{flex:none;width:60px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:14px;color:#fff;background:linear-gradient(#5a6472,#3c4552);box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+  .achtag.dbl{background:linear-gradient(#b6842f,#8f6620)}
+  .achbox{flex:1;min-height:44px;border:2px solid #aeb5bf;border-radius:9px;background:#f5f7fa;
+    padding:8px 11px;font-size:14px;line-height:1.6;font-weight:600;color:#2b3038;outline:none;white-space:pre-wrap;font-family:inherit}
+  .achbox:empty:before{content:attr(data-ph);color:#9aa2ad;font-weight:500}
+
+  /* party strips */
+  .party{position:relative;width:100%;border:2px solid #aeb5bf;border-radius:10px;background:#eef1f5;overflow:hidden;min-height:92px}
+  .stage{position:relative;width:700px;height:150px;transform-origin:top left}
+  .party-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#96a0ad;
+    font-size:13px;font-weight:700;text-align:center;padding:0 10px;pointer-events:none}
+  .pmon{position:absolute;cursor:grab;touch-action:none;user-select:none;line-height:0}
+  .pmon img.spr{height:116px;width:auto;image-rendering:pixelated;display:block;pointer-events:none;-webkit-user-drag:none}
+  .pmon .tools{position:absolute;top:0;right:0;display:flex;gap:3px;opacity:0;transition:.1s}
+  .pmon:hover .tools{opacity:1}
+  .tb{width:20px;height:20px;border-radius:6px;border:none;background:rgba(255,255,255,.92);
+    box-shadow:0 1px 4px rgba(0,0,0,.18);cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;font-family:inherit}
+  .tb.on{background:#ffe066}
+
+  /* badges */
+  .badge-row{display:flex;flex-wrap:wrap;gap:8px;min-height:56px;align-content:flex-start;
+    border:2px solid #aeb5bf;border-radius:10px;background:#eef1f5;padding:9px;cursor:pointer}
+  .badge-row .bempty{color:#96a0ad;font-size:13px;font-weight:700;align-self:center;margin:auto}
+  .badge-row img{width:46px;height:46px;object-fit:contain;image-rendering:pixelated}
+
+  .foot{margin-top:16px;text-align:right;color:#9a7b34;font-size:11px;font-weight:700}
+
+  /* removable buttons — a bit prominent (deletability emphasized) */
+  .sec-x,.row-x{position:absolute;top:-2px;right:0;width:22px;height:22px;border:none;border-radius:6px;
+    background:#e2e6ec;color:#8a94a2;font-size:14px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    box-shadow:inset 0 0 0 1.5px #c2c8d1;font-family:inherit}
+  .row-x{position:static;width:20px;height:20px;font-size:12px;margin-left:2px;flex:none}
+  .sec-x:hover,.row-x:hover{background:#f7d9d9;color:#c2453f}
+  .sec.hidden,.crow.hidden{display:none}
+
+  /* during export: always desktop layout + hide chrome */
+  #card.exporting .cmain{flex-direction:row}
+  #card.exporting .party-hint{display:none!important}
+
+  /* modal */
+  .mask{position:fixed;inset:0;background:rgba(8,11,18,.62);display:none;align-items:center;justify-content:center;z-index:9999;padding:16px}
+  .mask.show{display:flex}
+  .modal{background:#fff;border-radius:16px;width:620px;max-width:100%;max-height:86vh;display:flex;flex-direction:column;overflow:hidden;position:relative;color:#26303c}
+  .modal h3{margin:0;padding:15px 18px 9px;font-size:17px}
+  .search{margin:0 18px 10px;display:flex;gap:8px}
+  .search input{flex:1;padding:11px 13px;border-radius:10px;border:1.5px solid #cdd5e0;font-size:15px;outline:none;font-family:inherit}
+  .results{overflow:auto;padding:4px 12px 14px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .pick{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 3px;border-radius:11px;cursor:pointer;border:1.5px solid transparent}
+  .pick:hover{background:#eef3fb;border-color:#cdd8ea}
+  .pick.on{background:#e4efff;border-color:#7aa8ec}
+  .pick img{width:56px;height:56px;image-rendering:pixelated;object-fit:contain}
+  .pick span{font-size:11px;font-weight:700;text-align:center;color:#3a4658;line-height:1.15}
+  .modal .x{position:absolute;top:12px;right:15px;border:none;background:none;font-size:20px;cursor:pointer;color:#7b8595;font-family:inherit}
+  @media(max-width:640px){
+    .cmain{flex-direction:column;align-items:center}
+    .cleft{width:100%}
+    .avatar{width:130px;height:150px}
+    .results{grid-template-columns:repeat(3,1fr)}
+    .cinner{padding:16px 15px}
+    .ctitle{font-size:18px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="../">타입별 최애 메이커</a>
+    <a href="../card/">트레이너 카드</a>
+    <a href="./" class="active">챔피언스 카드</a>
+  </nav>
+
+  <div class="controls">
+    <button class="btn btn-ghost" id="btnReset">전체 초기화</button>
+    <button class="btn btn-badge" id="btnBadges">🏅 배지 선택</button>
+    <button class="btn btn-primary" id="btnSave">카드 이미지 저장</button>
+    <input type="file" id="fileProfile" accept="image/*" hidden />
+  </div>
+  <div class="fontbar">폰트
+    <button data-font="neodgm" class="on">네오둥근모</button>
+    <button data-font="Galmuri11">갈무리</button>
+  </div>
+
+  <div class="hint">칸을 눌러 입력하세요. <b>각 항목·섹션 오른쪽 × 로 지울 수 있어요</b> (되돌리기는 아래 복원 바에서).</div>
+  <div class="hint savenote">💾 저장은 화면 크기와 상관없이 PC 가로 배치(풀사이즈)로 저장돼요.</div>
+  <div id="restoreBar"></div>
+
+  <div id="card">
+   <div class="cinner">
+    <div class="chead">
+      <div class="ctitle">TRAINER CARD</div>
+      <div class="csub">POKéMON<br><b>CHAMPIONS</b></div>
+    </div>
+
+    <div class="cmain">
+      <div class="cleft">
+        <div class="crow"><span class="lab">닉네임</span><span class="val" contenteditable data-ph="닉네임"></span></div>
+        <div class="crow optrow"><span class="lab">친구코드</span><span class="val" contenteditable data-ph="0000-0000-0000"></span></div>
+        <div class="crow optrow"><span class="lab">배틀 시작일</span><span class="val" contenteditable data-ph="처음 실전배틀을 시작한 날"></span></div>
+        <div class="crow optrow"><span class="lab">주력</span>
+          <span class="chips" data-mode="multi"><span class="chip">싱글</span><span class="chip">더블</span></span>
+        </div>
+        <div class="crow optrow"><span class="lab">플레이스타일</span>
+          <span class="chips" data-mode="multi"><span class="chip">빡겜</span><span class="chip">마볼까지만</span><span class="chip">컨셉파티</span></span>
+          <span class="val short" contenteditable data-ph="기타(자유기입)"></span>
+        </div>
+        <div class="crow optrow"><span class="lab">호칭</span><span class="val" contenteditable data-ph="예: 마스카나 박사"></span></div>
+      </div>
+      <div class="avatar" id="avatar"><div class="ph">프로필 이미지<br>(눌러서 추가)</div></div>
+    </div>
+
+    <div class="sec" id="achSec"><span class="lab">챔피언스 실적</span>
+      <div class="ach">
+        <div class="achrow"><span class="achtag">싱글</span><div class="achbox" contenteditable data-ph="예: M-A 시즌1 · 최고 레이팅 1850"></div></div>
+        <div class="achrow"><span class="achtag dbl">더블</span><div class="achbox" contenteditable data-ph="예: [더블] M-A 시즌1 · 마스터볼급"></div></div>
+      </div>
+    </div>
+
+    <div class="sec" id="partySingleSec"><span class="lab">싱글 파티</span>
+      <div class="party" id="partySingle" data-hint="＋ 눌러서 포켓몬을 넣고 끌어서 배치 (최대 6)"></div>
+    </div>
+
+    <div class="sec" id="partyDoubleSec"><span class="lab">더블 파티</span>
+      <div class="party" id="partyDouble" data-hint="＋ 눌러서 포켓몬을 넣고 끌어서 배치 (최대 6)"></div>
+    </div>
+
+    <div class="sec" id="badgeSec"><span class="lab">배지<span class="leg">눌러서 선택 · 여러 개 가능</span></span>
+      <div class="badge-row" id="badgeRow"><span class="bempty">＋ 여기(또는 위 배지 선택 버튼)를 눌러 배지를 추가하세요</span></div>
+    </div>
+
+    <div class="foot">made with 포켓몬 챔피언스 트레이너 카드 메이커</div>
+   </div>
+  </div>
+</div>
+
+<div class="mask" id="badgeMask">
+  <div class="modal">
+    <button class="x" id="badgeX">×</button>
+    <h3>배지 선택</h3>
+    <div class="search"><input id="badgeQ" placeholder="배지 이름 검색 (예: 챔피언, 골드, 물타입)" autocomplete="off" /></div>
+    <div class="results" id="badgeResults"></div>
+  </div>
+</div>
+
+<div class="mask" id="mask">
+  <div class="modal">
+    <button class="x" id="modalX">×</button>
+    <h3>포켓몬 검색</h3>
+    <div class="search"><input id="q" placeholder="한글 이름으로 검색 (예: 마스카나)" autocomplete="off" /></div>
+    <div class="results" id="results"></div>
+  </div>
+</div>
+
+<div class="mask" id="resMask">
+  <div class="modal" style="max-width:600px">
+    <button class="x" id="resX">×</button>
+    <h3>이미지 저장</h3>
+    <div style="padding:0 18px 18px;overflow:auto">
+      <p style="margin:0 0 12px;font-size:13px;line-height:1.6;color:#64748b">이미지를 <b>길게 눌러</b> '사진에 저장'을 선택하세요.<br>안 되면 아래 <b>새 탭에서 열기</b>로 연 뒤 저장하면 돼요.</p>
+      <img id="resImg" alt="저장할 이미지" style="max-width:100%;display:block;margin:0 auto;border-radius:10px;border:1px solid #e5eefb" />
+      <div style="margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <a id="resOpen" target="_blank" rel="noopener" class="btn btn-ghost" style="display:inline-flex;align-items:center;text-decoration:none;color:#26303c;background:#eef2f7;border-color:#cdd5e0">새 탭에서 열기</a>
+        <a id="resDl" class="btn btn-primary" style="display:inline-flex;align-items:center;text-decoration:none">다운로드</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../vendor/html-to-image.js"></script>
+<script>
+(function(){
+  var POKE=[];
+  var BADGES=[
+    {k:'badgecollectorbadge',ko:'배지 수집가'},{k:'bigspenderbadge',ko:'큰손'},{k:'bottomscollectorbadge',ko:'하의 수집가'},
+    {k:'championtierbadge',ko:'챔피언 티어'},{k:'criticalhitbadge',ko:'급소'},
+    {k:'doublebattlemasterbadge',ko:'더블 배틀 마스터'},{k:'extremelyeffectivebadge',ko:'효과 초굉장'},
+    {k:'goldbug-typebadge',ko:'골드 벌레타입'},{k:'goldbugmovebadge',ko:'골드 벌레기술'},
+    {k:'goldcompetitionbadge',ko:'골드 컴피티션'},{k:'golddark-typebadge',ko:'골드 악타입'},
+    {k:'golddarkmovebadge',ko:'골드 악기술'},{k:'golddragon-typebadge',ko:'골드 드래곤타입'},
+    {k:'golddragonmovebadge',ko:'골드 드래곤기술'},{k:'goldelectric-typebadge',ko:'골드 전기타입'},
+    {k:'goldelectricmovebadge',ko:'골드 전기기술'},{k:'goldfairy-typebadge',ko:'골드 페어리타입'},
+    {k:'goldfairymovebadge',ko:'골드 페어리기술'},{k:'goldfighting-typebadge',ko:'골드 격투타입'},
+    {k:'goldfightingmovebadge',ko:'골드 격투기술'},{k:'goldfire-typebadge',ko:'골드 불꽃타입'},
+    {k:'goldfiremovebadge',ko:'골드 불꽃기술'},{k:'goldflying-typebadge',ko:'골드 비행타입'},
+    {k:'goldflyingmovebadge',ko:'골드 비행기술'},{k:'goldghost-typebadge',ko:'골드 고스트타입'},
+    {k:'goldghostmovebadge',ko:'골드 고스트기술'},{k:'goldgrass-typebadge',ko:'골드 풀타입'},
+    {k:'goldgrassmovebadge',ko:'골드 풀기술'},{k:'goldground-typebadge',ko:'골드 땅타입'},
+    {k:'goldgroundmovebadge',ko:'골드 땅기술'},{k:'goldice-typebadge',ko:'골드 얼음타입'},{k:'goldicemovebadge',ko:'골드 얼음기술'},
+    {k:'goldnormal-typebadge',ko:'골드 노말타입'},{k:'goldnormalmovebadge',ko:'골드 노말기술'},
+    {k:'goldpoison-typebadge',ko:'골드 독타입'},{k:'goldpoisonmovebadge',ko:'골드 독기술'},
+    {k:'goldpokeballbadge',ko:'골드 몬스터볼'},{k:'goldpokemonbadge',ko:'골드 포켓몬'},
+    {k:'goldpsychic-typebadge',ko:'골드 에스퍼타입'},{k:'goldpsychicmovebadge',ko:'골드 에스퍼기술'},
+    {k:'goldrock-typebadge',ko:'골드 바위타입'},{k:'goldrockmovebadge',ko:'골드 바위기술'},
+    {k:'goldsteel-typebadge',ko:'골드 강철타입'},{k:'goldsteelmovebadge',ko:'골드 강철기술'},
+    {k:'goldwater-typebadge',ko:'골드 물타입'},{k:'goldwatermovebadge',ko:'골드 물기술'},
+    {k:'iconcollectorbadge',ko:'아이콘 수집가'},{k:'megaevolutionbadge',ko:'메가진화'},
+    {k:'outerwearcollectorbadge',ko:'아우터 수집가'},{k:'platinumchampiontierbadge',ko:'플래티넘 챔피언 티어'},
+    {k:'silverbug-typebadge',ko:'실버 벌레타입'},{k:'silvercompetitionbadge',ko:'실버 컴피티션'},
+    {k:'silverdark-typebadge',ko:'실버 악타입'},{k:'silverdragon-typebadge',ko:'실버 드래곤타입'},
+    {k:'silverelectric-typebadge',ko:'실버 전기타입'},{k:'silverfairy-typebadge',ko:'실버 페어리타입'},
+    {k:'silverfighting-typebadge',ko:'실버 격투타입'},{k:'silverfire-typebadge',ko:'실버 불꽃타입'},
+    {k:'silverflying-typebadge',ko:'실버 비행타입'},{k:'silverghost-typebadge',ko:'실버 고스트타입'},
+    {k:'silvergrass-typebadge',ko:'실버 풀타입'},{k:'silverground-typebadge',ko:'실버 땅타입'},
+    {k:'silverice-typebadge',ko:'실버 얼음타입'},{k:'silvernormal-typebadge',ko:'실버 노말타입'},
+    {k:'silverpoison-typebadge',ko:'실버 독타입'},{k:'silverpokeballbadge',ko:'실버 몬스터볼'},
+    {k:'silverpokemonbadge',ko:'실버 포켓몬'},{k:'silverpsychic-typebadge',ko:'실버 에스퍼타입'},
+    {k:'silverrock-typebadge',ko:'실버 바위타입'},{k:'silversteel-typebadge',ko:'실버 강철타입'},
+    {k:'silverwater-typebadge',ko:'실버 물타입'},{k:'singlebattlemasterbadge',ko:'싱글 배틀 마스터'},
+    {k:'supereffectivebadge',ko:'효과가 굉장'}
+  ];
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  // ---------- font toggle ----------
+  document.querySelectorAll('.fontbar button').forEach(function(b){
+    b.onclick=function(){
+      document.querySelectorAll('.fontbar button').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      var f=b.getAttribute('data-font');
+      document.body.style.fontFamily="'"+f+"','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif";
+      try{localStorage.setItem('champFont',f);}catch(e){}
+    };
+  });
+  try{var sf=localStorage.getItem('champFont'); if(sf){var tb=document.querySelector('.fontbar button[data-font="'+sf+'"]'); if(tb) tb.click();}}catch(e){}
+
+  // ---------- chips ----------
+  document.querySelectorAll('.chips').forEach(function(group){
+    var mode=group.getAttribute('data-mode')||'multi';
+    group.addEventListener('click',function(e){
+      var chip=e.target.closest('.chip'); if(!chip) return;
+      if(mode==='single'){
+        var was=chip.classList.contains('on');
+        group.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});
+        if(!was) chip.classList.add('on');
+      } else chip.classList.toggle('on');
+    });
+  });
+
+  // ---------- sprite loader ----------
+  function loadSprite(m,cb){
+    var url=m.shiny?m.p.front_shiny:m.p.front_default;
+    fetch(url).then(function(r){return r.blob();}).then(function(b){
+      var fr=new FileReader(); fr.onload=function(){m.dataUrl=fr.result;cb&&cb();}; fr.readAsDataURL(b);
+    }).catch(function(){m.dataUrl=null;cb&&cb();});
+  }
+
+  // ---------- party factory (single + double) ----------
+  var STAGE_W=700, STAGE_H=150, allParties=[];
+  var activeCtrl=null;
+  function makeParty(host){
+    var team=[];
+    var hintText=host.getAttribute('data-hint')||'＋ 포켓몬 추가';
+    function ensure(){
+      var st=host.querySelector('.stage');
+      if(!st){st=document.createElement('div');st.className='stage';host.appendChild(st);}
+      if(!host.querySelector('.party-hint')){var h=document.createElement('div');h.className='party-hint';h.textContent=hintText;host.appendChild(h);}
+      return st;
+    }
+    function applyScale(){
+      var st=host.querySelector('.stage'); if(!st) return;
+      var sc=(host.clientWidth||STAGE_W)/STAGE_W;
+      st.style.transform='scale('+sc+')';
+      host.style.height=team.length?(STAGE_H*sc)+'px':'92px';
+    }
+    function defPos(n){var step=Math.min(100,(STAGE_W-16)/6);var x=8+n*step;if(x>STAGE_W-100)x=STAGE_W-100;if(x<0)x=0;var y=STAGE_H-120;if(y<4)y=4;return {x:x,y:y};}
+    function makeDrag(el,m){
+      el.addEventListener('pointerdown',function(e){
+        if(e.target.closest('.tb')) return;
+        e.preventDefault();
+        var sc=(host.clientWidth||STAGE_W)/STAGE_W;
+        try{el.setPointerCapture(e.pointerId);}catch(_){}
+        var sx=e.clientX, sy=e.clientY, ox=m.x||0, oy=m.y||0, oz=el.style.zIndex;
+        el.style.cursor='grabbing'; el.style.zIndex=99;
+        function move(ev){
+          var x=ox+(ev.clientX-sx)/sc, y=oy+(ev.clientY-sy)/sc;
+          x=Math.max(0,Math.min(STAGE_W-el.offsetWidth,x)); y=Math.max(0,Math.min(STAGE_H-el.offsetHeight,y));
+          el.style.left=x+'px'; el.style.top=y+'px'; m.x=x; m.y=y;
+        }
+        function up(){ try{el.releasePointerCapture(e.pointerId);}catch(_){} el.removeEventListener('pointermove',move); el.removeEventListener('pointerup',up); el.style.cursor='grab'; el.style.zIndex=oz; }
+        el.addEventListener('pointermove',move); el.addEventListener('pointerup',up);
+      });
+    }
+    function render(){
+      var st=ensure();
+      [].slice.call(st.querySelectorAll('.pmon')).forEach(function(e){e.remove();});
+      host.querySelector('.party-hint').style.display=team.length?'none':'flex';
+      team.forEach(function(m,idx){
+        var el=document.createElement('div'); el.className='pmon';
+        el.style.left=(m.x||0)+'px'; el.style.top=(m.y||0)+'px'; el.style.zIndex=idx+1;
+        var src=m.dataUrl||(m.shiny?m.p.front_shiny:m.p.front_default);
+        el.innerHTML='<div class="tools"><button class="tb tshine'+(m.shiny?' on':'')+'" title="색이 다른 포켓몬">✨</button>'+
+          '<button class="tb tdel" title="삭제">×</button></div><img class="spr" src="'+src+'" alt="">';
+        el.querySelector('.tdel').onclick=function(ev){ev.stopPropagation();var i=team.indexOf(m);if(i>=0)team.splice(i,1);render();};
+        el.querySelector('.tshine').onclick=function(ev){ev.stopPropagation();m.shiny=!m.shiny;loadSprite(m,render);};
+        makeDrag(el,m);
+        st.appendChild(el);
+      });
+      applyScale();
+    }
+    host.addEventListener('click',function(e){
+      var t=e.target;
+      if(t===host||(t.classList&&(t.classList.contains('stage')||t.classList.contains('party-hint')))) openPicker(ctrl);
+    });
+    var ctrl={team:team,render:render,applyScale:applyScale,
+      add:function(p){var pos=defPos(team.length);var m={p:p,shiny:false,dataUrl:null,x:pos.x,y:pos.y};team.push(m);render();loadSprite(m,render);},
+      reset:function(){team.length=0;render();}};
+    allParties.push(ctrl);
+    render();
+    return ctrl;
+  }
+  var pSingle=makeParty(document.getElementById('partySingle'));
+  var pDouble=makeParty(document.getElementById('partyDouble'));
+  window.addEventListener('resize',function(){allParties.forEach(function(c){c.applyScale();});});
+
+  // ---------- pokemon picker ----------
+  var mask=document.getElementById('mask'), results=document.getElementById('results'), q=document.getElementById('q');
+  function openPicker(ctrl){
+    if(ctrl.team.length>=6){ alert('최대 6마리까지 넣을 수 있어요.'); return; }
+    activeCtrl=ctrl; mask.classList.add('show'); q.value=''; renderResults(''); setTimeout(function(){q.focus();},30);
+  }
+  function closePicker(){mask.classList.remove('show');}
+  document.getElementById('modalX').onclick=closePicker;
+  mask.onclick=function(e){if(e.target===mask)closePicker();};
+  q.oninput=function(){renderResults(q.value.trim());};
+  function renderResults(term){
+    var list;
+    if(!term) list=POKE.slice(0,60);
+    else {var t=term.toLowerCase();list=POKE.filter(function(p){return p.name_ja.indexOf(term)>=0||(p.name_en&&p.name_en.indexOf(t)>=0);}).slice(0,60);}
+    results.innerHTML='';
+    list.forEach(function(p){
+      var d=document.createElement('div'); d.className='pick';
+      d.innerHTML='<img src="'+p.front_default+'" loading="lazy" alt=""><span>'+esc(p.name_ja)+'</span>';
+      d.onclick=function(){ if(!activeCtrl||activeCtrl.team.length>=6){closePicker();return;} activeCtrl.add(p); closePicker(); };
+      results.appendChild(d);
+    });
+    if(!list.length) results.innerHTML='<div style="grid-column:1/-1;text-align:center;color:#a7bcd8;padding:20px">검색 결과 없음</div>';
+  }
+
+  // ---------- badges ----------
+  var badgeSel=[];   // ordered list of selected badge keys
+  var badgeRow=document.getElementById('badgeRow'), badgeMask=document.getElementById('badgeMask'),
+      badgeResults=document.getElementById('badgeResults'), badgeQ=document.getElementById('badgeQ');
+  function renderBadgeRow(){
+    badgeRow.innerHTML='';
+    if(!badgeSel.length){ badgeRow.innerHTML='<span class="bempty">＋ 여기(또는 위 배지 선택 버튼)를 눌러 배지를 추가하세요</span>'; return; }
+    badgeSel.forEach(function(k){ var im=document.createElement('img'); im.src='badges/'+k+'.png'; im.alt=k; badgeRow.appendChild(im); });
+  }
+  function openBadges(){ badgeMask.classList.add('show'); badgeQ.value=''; renderBadgePicks(''); setTimeout(function(){badgeQ.focus();},30); }
+  function closeBadges(){ badgeMask.classList.remove('show'); }
+  document.getElementById('btnBadges').onclick=openBadges;
+  badgeRow.addEventListener('click',openBadges);
+  document.getElementById('badgeX').onclick=closeBadges;
+  badgeMask.onclick=function(e){ if(e.target===badgeMask) closeBadges(); };
+  badgeQ.oninput=function(){ renderBadgePicks(badgeQ.value.trim()); };
+  function renderBadgePicks(term){
+    badgeResults.innerHTML='';
+    BADGES.filter(function(b){ return !term || b.ko.indexOf(term)>=0 || b.k.indexOf(term.toLowerCase())>=0; }).forEach(function(b){
+      var d=document.createElement('div'); d.className='pick'+(badgeSel.indexOf(b.k)>=0?' on':'');
+      d.innerHTML='<img src="badges/'+b.k+'.png" alt=""><span>'+esc(b.ko)+'</span>';
+      d.onclick=function(){
+        var i=badgeSel.indexOf(b.k);
+        if(i>=0) badgeSel.splice(i,1); else badgeSel.push(b.k);
+        d.classList.toggle('on',badgeSel.indexOf(b.k)>=0);
+        renderBadgeRow();
+      };
+      badgeResults.appendChild(d);
+    });
+  }
+  renderBadgeRow();
+
+  // ---------- removable sections / rows ----------
+  var restoreBar=document.getElementById('restoreBar');
+  function addRestore(el,name){
+    var b=document.createElement('button'); b.className='rb'; b.type='button'; b.textContent='＋ '+name;
+    b.onclick=function(){ el.classList.remove('hidden'); b.remove(); };
+    restoreBar.appendChild(b);
+  }
+  document.querySelectorAll('#card .sec').forEach(function(sec){
+    var lab=sec.querySelector('.lab'); if(!lab) return;
+    var name=((lab.firstChild&&lab.firstChild.textContent)||lab.textContent).trim();
+    var x=document.createElement('button'); x.className='sec-x'; x.type='button'; x.textContent='×'; x.title='이 섹션 숨기기';
+    x.onclick=function(){ sec.classList.add('hidden'); addRestore(sec,name); };
+    sec.appendChild(x);
+  });
+  document.querySelectorAll('#card .optrow').forEach(function(row){
+    var lab=row.querySelector('.lab'); if(!lab) return;
+    var name=lab.textContent.trim();
+    var x=document.createElement('button'); x.className='row-x'; x.type='button'; x.textContent='×'; x.title='이 항목 숨기기';
+    x.onclick=function(){ row.classList.add('hidden'); addRestore(row,name); };
+    row.appendChild(x);
+  });
+
+  // ---------- profile ----------
+  var fileP=document.getElementById('fileProfile'), avatar=document.getElementById('avatar');
+  avatar.onclick=function(){fileP.click();};
+  fileP.onchange=function(){
+    var f=fileP.files&&fileP.files[0]; if(!f) return;
+    var r=new FileReader();
+    r.onload=function(){
+      var im=new Image();
+      im.onload=function(){
+        var maxW=460, maxH=560, w=im.naturalWidth||1, h=im.naturalHeight||1;
+        var sc=Math.min(1, maxW/w, maxH/h), cw=Math.max(1,Math.round(w*sc)), ch=Math.max(1,Math.round(h*sc));
+        var cv=document.createElement('canvas'); cv.width=cw; cv.height=ch;
+        cv.getContext('2d').drawImage(im,0,0,cw,ch);
+        var url; try{url=cv.toDataURL('image/jpeg',0.86);}catch(e){url=r.result;}
+        avatar.innerHTML='<img src="'+url+'" alt="profile">';
+      };
+      im.onerror=function(){avatar.innerHTML='<img src="'+r.result+'" alt="profile">';};
+      im.src=r.result;
+    };
+    r.readAsDataURL(f);
+  };
+
+  // ---------- reset ----------
+  document.getElementById('btnReset').onclick=function(){
+    if(!confirm('입력한 내용을 모두 지울까요?')) return;
+    pSingle.reset(); pDouble.reset();
+    document.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});
+    document.querySelectorAll('#card [contenteditable]').forEach(function(el){el.textContent='';});
+    document.querySelectorAll('#card .sec, #card .optrow').forEach(function(s){s.classList.remove('hidden');});
+    restoreBar.innerHTML='';
+    badgeSel=[]; renderBadgeRow();
+    avatar.innerHTML='<div class="ph">프로필 이미지<br>(눌러서 추가)</div>';
+  };
+
+  // ---------- image delivery (download, with in-app / iOS fallback) ----------
+  function isInApp(){ return /KAKAOTALK|Instagram|FBAN|FBAV|FB_IAB|Line\/|NAVER|DaumApps|Snapchat|TwitterAndroid|musical_ly|TikTok|Whale/i.test(navigator.userAgent||''); }
+  function isIOS(){ var ua=navigator.userAgent||''; return /iPhone|iPad|iPod/i.test(ua) || (/Macintosh/.test(ua) && 'ontouchend' in document); }
+  function canDownload(){ var a=document.createElement('a'); return ('download' in a) && !isIOS() && !isInApp(); }
+  function dataURLtoBlob(u){ var arr=u.split(','), mime=(arr[0].match(/:(.*?);/)||[])[1]||'image/png', bin=atob(arr[1]), n=bin.length, u8=new Uint8Array(n); while(n--) u8[n]=bin.charCodeAt(n); return new Blob([u8],{type:mime}); }
+  var resMask=document.getElementById('resMask'), curObjURL=null;
+  function revokeObj(){ if(curObjURL){ try{URL.revokeObjectURL(curObjURL);}catch(e){} curObjURL=null; } }
+  function deliverImage(url, filename){
+    if(canDownload()){ var a=document.createElement('a'); a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove(); return; }
+    revokeObj();
+    var obj=url; try{ obj=URL.createObjectURL(dataURLtoBlob(url)); curObjURL=obj; }catch(e){}
+    document.getElementById('resImg').src=obj;
+    document.getElementById('resOpen').href=obj;
+    var dl=document.getElementById('resDl'); dl.href=url; dl.download=filename;
+    resMask.classList.add('show');
+  }
+  document.getElementById('resX').onclick=function(){ resMask.classList.remove('show'); revokeObj(); };
+  resMask.onclick=function(e){ if(e.target===resMask){ resMask.classList.remove('show'); revokeObj(); } };
+
+  // ---------- export ----------
+  document.getElementById('btnSave').onclick=function(){
+    var btn=this, old=btn.textContent; btn.textContent='저장 중...'; btn.disabled=true;
+    if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
+    var card=document.getElementById('card');
+    var ph=document.createComment('card-here'); card.parentNode.insertBefore(ph,card);
+    var holder=document.createElement('div'); holder.style.cssText='position:fixed;left:0;top:0;z-index:-1;background:#ffffff';
+    var savedMargin=card.style.margin, savedMaxW=card.style.maxWidth, savedW=card.style.width;
+    card.classList.add('exporting');
+    card.style.margin='0'; card.style.maxWidth='none'; card.style.width='900px';
+    holder.appendChild(card); document.body.appendChild(holder);
+    allParties.forEach(function(c){c.applyScale();});
+    function restore(){ card.classList.remove('exporting'); card.style.margin=savedMargin; card.style.maxWidth=savedMaxW; card.style.width=savedW; if(ph.parentNode){ph.parentNode.insertBefore(card,ph);ph.remove();} holder.remove(); allParties.forEach(function(c){c.applyScale();}); }
+    htmlToImage.toPng(card,{pixelRatio:2,cacheBust:true,backgroundColor:'#ffffff',
+      filter:function(n){
+        if(n.nodeType!==1||!n.classList) return true;
+        var c=n.classList;
+        if(c.contains('sec-x')||c.contains('row-x')||c.contains('leg')||c.contains('hidden')||c.contains('bempty')) return false;
+        return true;
+      }})
+    .then(function(url){ deliverImage(url,'champions-card.png'); })
+    .catch(function(e){console.error(e);alert('이미지 저장에 실패했어요. 다시 시도해 주세요.');})
+    .then(function(){restore();btn.textContent=old;btn.disabled=false;});
+  };
+
+  // ---------- data ----------
+  fetch('../pokemon_by_type.json').then(function(r){return r.json();}).then(function(data){
+    var seen={};
+    Object.keys(data).forEach(function(t){data[t].forEach(function(p){if(!seen[p.id]){seen[p.id]=1;POKE.push(p);}});});
+    POKE.sort(function(a,b){return a.id-b.id;});
+  });
+})();
+</script>
+</body>
+</html>
