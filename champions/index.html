@@ -138,7 +138,8 @@
   .slotgrid{position:absolute;left:10px;right:10px;top:38px;bottom:10px;display:grid;grid-template-columns:var(--slotcols,repeat(3,1fr));grid-template-rows:var(--slotrows,repeat(2,1fr));gap:10px}
   .slot{position:relative;border-radius:10px;background:rgba(255,255,255,.34);border:2px solid rgba(120,130,145,.32);display:flex;align-items:center;justify-content:center;cursor:pointer}
   .slot.empty{background:rgba(255,255,255,.14);border-color:rgba(120,130,145,.22)}
-  .slot .spr{width:100%;height:100%;object-fit:cover;object-position:center 22%;image-rendering:pixelated;display:block;touch-action:none;border-radius:8px}
+  .slot .sprwrap{position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;border-radius:9px}
+  .slot .spr{width:100%;height:100%;object-fit:cover;object-position:center 22%;image-rendering:pixelated;display:block;touch-action:none}
   .slot .sball{position:absolute;left:3px;bottom:3px;width:62px;height:62px;image-rendering:pixelated;pointer-events:none;z-index:4;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
   .slot .sitem{position:absolute;right:-5px;bottom:-5px;width:76px;height:76px;border-radius:50%;background:#fff;padding:3px;object-fit:contain;image-rendering:pixelated;pointer-events:none;z-index:5;box-shadow:0 1px 3px rgba(0,0,0,.3),inset 0 0 0 2px #dfe6ef}
   .pmon .pitem{position:absolute;right:-8px;bottom:4px;width:50px;height:50px;border-radius:50%;background:#fff;padding:2px;object-fit:contain;image-rendering:pixelated;pointer-events:none;z-index:3;box-shadow:0 1px 3px rgba(0,0,0,.3),inset 0 0 0 2px #dfe6ef}
@@ -608,7 +609,7 @@
             var ball=m.ball?'<img class="sball" src="../balls/'+m.ball+'.png" alt="">':'';
             var op=(m.slotX!=null?m.slotX:50)+'% '+(m.slotY!=null?m.slotY:22)+'%';
             var item=m.item?'<img class="sitem" src="items/'+m.item+'.png" alt="">':'';
-            slot.innerHTML=tools(m)+'<img class="spr" style="object-position:'+op+'" src="'+src+'" alt="">'+ball+item;
+            slot.innerHTML=tools(m)+'<div class="sprwrap"><img class="spr" style="object-position:'+op+'" src="'+src+'" alt=""></div>'+ball+item;
             wire(slot,m); slotPan(slot.querySelector('.spr'),slot,m);
           } else {
             slot.innerHTML='<span class="splus">＋</span>';
@@ -785,9 +786,12 @@
     var eH=(curFrame==='flat'? card.offsetHeight : curH);
     holder.style.width=curW+'px'; holder.style.height=eH+'px';
     function restore(){ card.classList.remove('exporting'); card.style.transform=savedT; if(ph.parentNode){ph.parentNode.insertBefore(card,ph);ph.remove();} holder.remove(); fit(); }
-    htmlToImage.toPng(card,{pixelRatio:1.4,cacheBust:true,width:curW,height:eH,
+    var opts={pixelRatio:1.4,cacheBust:true,width:curW,height:eH,
       filter:function(n){ if(n.nodeType!==1||!n.classList) return true; var c=n.classList;
-        if(c.contains('zx')||c.contains('tools')||c.contains('bempty')||c.contains('hiddenz')||c.contains('splus')) return false; return true; }})
+        if(c.contains('zx')||c.contains('tools')||c.contains('bempty')||c.contains('hiddenz')||c.contains('splus')) return false; return true; }};
+    // Safari drops background images on the first html-to-image pass; a warm-up render fixes it
+    htmlToImage.toPng(card,opts)
+    .then(function(){ return htmlToImage.toPng(card,opts); })
     .then(function(url){ deliverImage(url,'champions-card.png'); })
     .catch(function(e){console.error(e);alert('이미지 저장에 실패했어요. 다시 시도해 주세요.');})
     .then(function(){restore();btn.textContent=old;btn.disabled=false;});
