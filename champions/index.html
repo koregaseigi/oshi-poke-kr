@@ -4,31 +4,20 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>포켓몬 챔피언스 트레이너 카드</title>
-<meta name="description" content="포켓몬 챔피언스용 트레이너 카드를 만들어 이미지로 저장하세요. 파티·배지·실적까지!" />
+<meta name="description" content="포켓몬 챔피언스용 트레이너 카드를 만들어 이미지로 저장하세요. 파티·볼·배지·실적까지!" />
 <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
 <meta property="og:title" content="포켓몬 챔피언스 트레이너 카드" />
-<meta property="og:description" content="싱글·더블 파티, 배지, 실적을 담은 챔피언스 카드를 만들어보세요!" />
+<meta property="og:description" content="싱글·더블 파티, 볼, 배지, 실적을 담은 챔피언스 카드를 만들어보세요!" />
 <style>
   @font-face{font-family:'neodgm';src:url('../vendor/fonts/neodgm.woff2') format('woff2');font-display:swap}
   @font-face{font-family:'Galmuri11';src:url('../vendor/fonts/Galmuri11.woff2') format('woff2');font-display:swap}
-  :root{
-    --metal-lo:#c3c9d2; --metal-hi:#f2f4f7; --metal-mid:#d7dce3;
-    --bezel-lo:#8a929d; --bezel-hi:#c9d0d9;
-    --ink:#2b3038; --ink2:#5c6470; --line:#9aa2ad;
-    --blue:#3f74c9; --blue-d:#2a56a0; --gold:#c99a3c;
-  }
   *{box-sizing:border-box}
   body{margin:0;font-family:'neodgm','Galmuri11',"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
     color:#dfe4ec;min-height:100vh;-webkit-font-smoothing:antialiased;
-    background:
-      radial-gradient(90% 60% at 50% -8%, rgba(64,132,232,.35), transparent 60%),
-      radial-gradient(70% 50% at 50% 108%, rgba(201,154,60,.16), transparent 60%),
-      repeating-linear-gradient(115deg, rgba(255,255,255,.025) 0 2px, transparent 2px 9px),
-      radial-gradient(120% 100% at 50% 0,#28303f,#0f1218 72%)}
-  .wrap{max-width:980px;margin:0 auto;padding:16px}
-  .nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:6px 0 16px}
-  .nav a{padding:9px 15px;border-radius:8px;background:#1c2230;border:1.5px solid #39435a;
-    color:#9fb0cc;text-decoration:none;font-weight:700;font-size:14px}
+    background:radial-gradient(90% 60% at 50% -8%, rgba(64,132,232,.30), transparent 60%),radial-gradient(120% 100% at 50% 0,#28303f,#0f1218 72%)}
+  .wrap{max-width:760px;margin:0 auto;padding:16px}
+  .nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:6px 0 14px}
+  .nav a{padding:9px 15px;border-radius:8px;background:#1c2230;border:1.5px solid #39435a;color:#9fb0cc;text-decoration:none;font-weight:700;font-size:14px}
   .nav a.active{background:linear-gradient(#4a86e0,#2f62b8);border-color:#5b93e8;color:#fff}
   .controls{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:10px}
   .btn{padding:11px 16px;border-radius:10px;border:none;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer}
@@ -41,117 +30,75 @@
   .fontbar button.on{background:linear-gradient(#4a86e0,#2f62b8);border-color:#5b93e8;color:#fff}
   .hint{text-align:center;color:#8a97ad;font-size:12.5px;margin:0 0 6px;line-height:1.6}
   .hint b{color:#e7b84e}
-  .savenote{color:#9fb7e6;font-weight:700}
   #restoreBar{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px 0 14px}
   #restoreBar:empty{display:none}
-  #restoreBar .rb{padding:6px 12px;border-radius:8px;border:1.5px dashed #4a5468;background:#1c2230;
-    color:#b6c2d6;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
+  #restoreBar .rb{padding:6px 12px;border-radius:8px;border:1.5px dashed #4a5468;background:#1c2230;color:#b6c2d6;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
 
-  /* ---- the card: metallic classic trainer card ---- */
-  #card{width:900px;max-width:100%;margin:0 auto;border-radius:20px;
-    background:linear-gradient(150deg,#e8c983,#a5762f 45%,#7c561f 75%,#d7ad5c);
-    padding:10px;
-    box-shadow:0 22px 60px rgba(0,0,0,.6),
-      inset 0 2px 0 rgba(255,255,255,.75),
-      inset 0 -4px 8px rgba(70,44,10,.55),
-      0 0 0 1px rgba(0,0,0,.25)}
-  .cinner{border-radius:13px;padding:20px 24px 18px;position:relative;overflow:hidden;
-    background:
-      repeating-linear-gradient(112deg, rgba(0,0,0,.022) 0 2px, transparent 2px 7px),
-      linear-gradient(158deg,#f6f8fb 0%,#cbd1da 46%,#dfe4ea 62%,#eef1f5 100%);
-    box-shadow:inset 0 0 0 2px #b6bcc6, inset 0 0 0 4px rgba(255,255,255,.5),
-      inset 0 3px 3px rgba(255,255,255,.75), inset 0 -3px 6px rgba(120,130,145,.3)}
-  /* glossy diagonal sheen across the panel */
-  .cinner:before{content:'';position:absolute;inset:0;pointer-events:none;z-index:2;
-    background:linear-gradient(102deg,transparent 34%,rgba(255,255,255,.55) 48%,rgba(255,255,255,.1) 54%,transparent 66%);opacity:.55;mix-blend-mode:screen}
-  /* champions blue energy wash top, gold glow bottom */
-  .cinner:after{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
-    background:
-      radial-gradient(80% 42% at 22% -6%, rgba(63,116,201,.20), transparent 62%),
-      radial-gradient(70% 40% at 92% 106%, rgba(201,154,60,.20), transparent 60%)}
-  .cinner>*{position:relative;z-index:1}
-  .chead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;padding-bottom:12px;position:relative;
-    border-bottom:3px solid transparent;
-    border-image:linear-gradient(90deg,#2f66b3,#7fb0f0 30%,#c99a3c 70%,#8f6620) 1}
-  .stars{display:flex;gap:3px;font-size:15px;color:#e0b23c;text-shadow:0 1px 0 rgba(0,0,0,.25);align-self:flex-start;margin-top:3px}
-  .ctitle{display:inline-block;background:linear-gradient(#4a90d9,#2c63ac);color:#fff;font-weight:800;
-    font-size:22px;letter-spacing:1px;padding:7px 16px;border-radius:7px;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 2px 3px rgba(0,0,0,.25);text-shadow:0 1px 0 rgba(0,0,0,.25)}
-  .csub{color:#a8842f;font-weight:800;font-size:15px;letter-spacing:1px;text-align:right;line-height:1.2}
-  .csub b{color:#7a5f1e}
+  /* fixed-aspect card: native 1427x2000 scaled to fit */
+  #stageWrap{width:700px;max-width:100%;aspect-ratio:1427/2000;margin:0 auto;position:relative}
+  #card{position:absolute;top:0;left:0;width:1427px;height:2000px;transform-origin:top left;
+    background:url('frame/frame.webp') no-repeat 0 0;background-size:1427px 2000px}
 
-  .cmain{display:flex;gap:18px;align-items:flex-start;position:relative}
-  .cleft{flex:1;display:flex;flex-direction:column;gap:12px;min-width:0}
-  .avatar{width:150px;height:168px;flex:none;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;
-    background:linear-gradient(160deg,#cfd5dd,#aeb6c1);
-    border:3px solid #b98f3f;box-shadow:inset 0 0 0 2px #eef1f5;display:flex;align-items:center;justify-content:center}
+  .z{position:absolute}
+  .fld{display:flex;align-items:center;gap:12px}
+  .flab{font-weight:800;color:#2f3843;font-size:27px;white-space:nowrap;flex:none;display:flex;align-items:center;gap:8px}
+  .flab:before{content:'';width:14px;height:14px;background:#7a8492;box-shadow:inset -2px -2px 0 rgba(0,0,0,.2);flex:none}
+  .fval{flex:1;min-width:60px;border-bottom:3px solid #9aa2ad;padding:2px 6px;font-size:27px;font-weight:700;color:#232a32;outline:none;font-family:inherit;background:transparent}
+  .fval:empty:before{content:attr(data-ph);color:#9aa2ad;font-weight:500}
+  .fval.sm{font-size:24px}
+
+  .chips{display:flex;flex-wrap:wrap;gap:9px}
+  .chip{display:inline-flex;align-items:center;justify-content:center;line-height:1;padding:9px 16px;white-space:nowrap;flex:none;
+    border-radius:8px;background:linear-gradient(#eef1f5,#d3d9e1);border:2px solid #a9b1bc;color:#4a5260;font-size:24px;font-weight:800;cursor:pointer;user-select:none;font-family:inherit}
+  .chip.on{background:linear-gradient(#4a90d9,#2f66b3);border-color:#2f66b3;color:#fff}
+
+  /* name pill */
+  #zName{left:150px;top:250px;width:1150px;height:74px}
+  #zName .flab,#zName .fval{font-size:34px}
+
+  /* main: party (left, two bands) + trainer sprite (right) */
+  #zMain{left:120px;top:352px;width:1200px;height:716px;display:flex;gap:22px}
+  .partycol{flex:1;display:flex;flex-direction:column;gap:12px;min-width:0}
+  .band{position:relative;flex:1;border-radius:10px;background:rgba(255,255,255,.16);box-shadow:inset 0 0 0 2px rgba(120,130,145,.35)}
+  .band>.blabel{position:absolute;left:12px;top:8px;font-size:22px;font-weight:800;color:#41597e;z-index:4;pointer-events:none}
+  .band .party-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#5f6b7a;font-size:23px;font-weight:700;text-align:center;padding:0 14px;pointer-events:none}
+  .avatar{width:352px;flex:none;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;
+    background:rgba(255,255,255,.2);box-shadow:inset 0 0 0 2px rgba(120,130,145,.4);display:flex;align-items:center;justify-content:center}
   .avatar img{width:100%;height:100%;object-fit:cover;display:block}
-  .avatar .ph{color:#6b7480;font-size:12px;font-weight:700;text-align:center;padding:8px;line-height:1.6}
+  .avatar .ph{color:#5f6b7a;font-size:24px;font-weight:700;text-align:center;padding:10px;line-height:1.6}
 
-  .crow{display:flex;align-items:center;gap:9px;flex-wrap:wrap;position:relative}
-  .lab{font-weight:800;color:#333a44;font-size:14px;min-width:78px;display:flex;align-items:center;gap:5px}
-  .lab:before{content:'';width:9px;height:9px;background:#7f8996;box-shadow:inset -1px -1px 0 rgba(0,0,0,.2);flex:none}
-  .sec>.lab,.ach .lab{margin-bottom:0}
-  .val{min-width:120px;flex:1;border-bottom:2px solid #a9b0ba;padding:2px 4px;font-size:15px;font-weight:700;
-    color:#2b3038;outline:none;font-family:inherit;background:transparent}
-  .val:empty:before{content:attr(data-ph);color:#9aa2ad;font-weight:500}
-  .val.short{flex:none;min-width:150px}
-
-  .chips{display:flex;flex-wrap:wrap;gap:6px}
-  .chip{display:inline-flex;align-items:center;justify-content:center;line-height:1;padding:7px 12px;white-space:nowrap;flex:none;
-    border-radius:7px;background:linear-gradient(#eef1f5,#d3d9e1);border:1.5px solid #a9b1bc;
-    color:#4a5260;font-size:13px;font-weight:800;cursor:pointer;user-select:none;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.7);font-family:inherit}
-  .chip.on{background:linear-gradient(#4a90d9,#2f66b3);border-color:#2f66b3;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.2)}
-
-  .sec{margin-top:18px;position:relative}
-  .sec>.lab{display:inline-flex;margin-bottom:8px}
-  .leg{font-size:11px;font-weight:600;color:#8f98a5;margin-left:6px}
-
-  /* achievements */
-  .ach{display:flex;flex-direction:column;gap:9px}
-  .achrow{display:flex;gap:9px;align-items:stretch}
-  .achtag{flex:none;width:60px;border-radius:8px;display:flex;align-items:center;justify-content:center;
-    font-weight:800;font-size:14px;color:#fff;background:linear-gradient(#5a6472,#3c4552);box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
-  .achtag.dbl{background:linear-gradient(#b6842f,#8f6620)}
-  .achbox{flex:1;min-height:44px;border:2px solid #aeb5bf;border-radius:9px;background:#f5f7fa;
-    padding:8px 11px;font-size:14px;line-height:1.6;font-weight:600;color:#2b3038;outline:none;white-space:pre-wrap;font-family:inherit}
-  .achbox:empty:before{content:attr(data-ph);color:#9aa2ad;font-weight:500}
-
-  /* party strips */
-  .party{position:relative;width:100%;border:2px solid #aeb5bf;border-radius:10px;background:#eef1f5;overflow:hidden;min-height:92px}
-  .stage{position:relative;width:700px;height:150px;transform-origin:top left}
-  .party-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#96a0ad;
-    font-size:13px;font-weight:700;text-align:center;padding:0 10px;pointer-events:none}
   .pmon{position:absolute;cursor:grab;touch-action:none;user-select:none;line-height:0}
-  .pmon img.spr{height:116px;width:auto;image-rendering:pixelated;display:block;pointer-events:none;-webkit-user-drag:none}
-  .pmon .tools{position:absolute;top:0;right:0;display:flex;gap:3px;opacity:0;transition:.1s}
+  .pmon img.spr{height:150px;width:auto;image-rendering:pixelated;display:block;pointer-events:none;-webkit-user-drag:none}
+  .pmon .pball{position:absolute;left:-2px;bottom:-2px;width:46px;height:46px;image-rendering:pixelated;pointer-events:none}
+  .pmon .tools{position:absolute;top:0;right:0;display:flex;gap:4px;opacity:0;transition:.1s;z-index:6}
   .pmon:hover .tools{opacity:1}
-  .tb{width:20px;height:20px;border-radius:6px;border:none;background:rgba(255,255,255,.92);
-    box-shadow:0 1px 4px rgba(0,0,0,.18);cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;font-family:inherit}
+  .tb{width:30px;height:30px;border-radius:7px;border:none;background:rgba(255,255,255,.95);box-shadow:0 1px 4px rgba(0,0,0,.25);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;font-family:inherit}
   .tb.on{background:#ffe066}
 
-  /* badges */
-  .badge-row{display:flex;flex-wrap:wrap;gap:8px;min-height:56px;align-content:flex-start;
-    border:2px solid #aeb5bf;border-radius:10px;background:#eef1f5;padding:9px;cursor:pointer}
-  .badge-row .bempty{color:#96a0ad;font-size:13px;font-weight:700;align-self:center;margin:auto}
-  .badge-row img{width:46px;height:46px;object-fit:contain;image-rendering:pixelated}
+  /* text zone (brushed area) */
+  #zText{left:150px;top:1116px;width:1140px;height:575px;display:flex;flex-direction:column;gap:11px}
+  #zText .fld{position:relative}
+  .achrow{display:flex;gap:11px;align-items:stretch}
+  .achtag{flex:none;width:96px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:24px;color:#fff;background:linear-gradient(#5a6472,#3c4552)}
+  .achtag.dbl{background:linear-gradient(#b6842f,#8f6620)}
+  .achbox{flex:1;min-height:58px;border:2px solid #a4abb5;border-radius:9px;background:rgba(255,255,255,.55);padding:9px 13px;font-size:24px;line-height:1.5;font-weight:600;color:#232a32;outline:none;white-space:pre-wrap;font-family:inherit}
+  .achbox:empty:before{content:attr(data-ph);color:#8b93a0;font-weight:500}
 
-  .foot{margin-top:16px;text-align:right;color:#9a7b34;font-size:11px;font-weight:700}
+  /* badges over the blue bar */
+  #zBadge{left:150px;top:1772px;width:1160px;height:118px;display:flex;flex-wrap:wrap;gap:12px;align-content:center}
+  #zBadge img{width:92px;height:92px;object-fit:contain;image-rendering:pixelated}
+  #zBadge .bempty{color:#cfe0ff;font-size:24px;font-weight:700;align-self:center}
 
-  /* removable buttons — a bit prominent (deletability emphasized) */
-  .sec-x,.row-x{position:absolute;top:-2px;right:0;width:22px;height:22px;border:none;border-radius:6px;
-    background:#e2e6ec;color:#8a94a2;font-size:14px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;
-    box-shadow:inset 0 0 0 1.5px #c2c8d1;font-family:inherit}
-  .row-x{position:static;width:20px;height:20px;font-size:12px;margin-left:2px;flex:none}
-  .sec-x:hover,.row-x:hover{background:#f7d9d9;color:#c2453f}
-  .sec.hidden,.crow.hidden{display:none}
-
-  /* during export: always desktop layout + hide chrome */
-  #card.exporting .cmain{flex-direction:row}
+  /* removable × */
+  .zx{position:absolute;border:none;border-radius:7px;background:rgba(230,235,242,.92);color:#8a94a2;line-height:1;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 2px #c2c8d1;font-family:inherit;width:34px;height:34px;font-size:22px;z-index:8}
+  .fld>.zx,.achrow>.zx{position:static;width:30px;height:30px;font-size:19px;flex:none;align-self:center}
+  .achrow{position:relative}
+  .zx:hover{background:#f7d9d9;color:#c2453f}
+  .hiddenz{display:none!important}
   #card.exporting .party-hint{display:none!important}
 
-  /* modal */
+  /* modals */
   .mask{position:fixed;inset:0;background:rgba(8,11,18,.62);display:none;align-items:center;justify-content:center;z-index:9999;padding:16px}
   .mask.show{display:flex}
   .modal{background:#fff;border-radius:16px;width:620px;max-width:100%;max-height:86vh;display:flex;flex-direction:column;overflow:hidden;position:relative;color:#26303c}
@@ -165,14 +112,7 @@
   .pick img{width:56px;height:56px;image-rendering:pixelated;object-fit:contain}
   .pick span{font-size:11px;font-weight:700;text-align:center;color:#3a4658;line-height:1.15}
   .modal .x{position:absolute;top:12px;right:15px;border:none;background:none;font-size:20px;cursor:pointer;color:#7b8595;font-family:inherit}
-  @media(max-width:640px){
-    .cmain{flex-direction:column;align-items:center}
-    .cleft{width:100%}
-    .avatar{width:130px;height:150px}
-    .results{grid-template-columns:repeat(3,1fr)}
-    .cinner{padding:16px 15px}
-    .ctitle{font-size:18px}
-  }
+  @media(max-width:640px){ .results{grid-template-columns:repeat(3,1fr)} }
 </style>
 </head>
 <body>
@@ -193,81 +133,51 @@
     <button data-font="neodgm" class="on">네오둥근모</button>
     <button data-font="Galmuri11">갈무리</button>
   </div>
-
-  <div class="hint">칸을 눌러 입력하세요. <b>각 항목·섹션 오른쪽 × 로 지울 수 있어요</b> (되돌리기는 아래 복원 바에서).</div>
-  <div class="hint savenote">💾 저장은 화면 크기와 상관없이 PC 가로 배치(풀사이즈)로 저장돼요.</div>
+  <div class="hint">칸을 눌러 입력하세요. 포켓몬을 넣고 <b>끌어서 배치</b>, 포켓몬 위 🔴로 <b>볼</b> 지정. <b>× 로 항목을 지울 수 있어요</b> (복원은 아래 바).</div>
   <div id="restoreBar"></div>
 
-  <div id="card">
-   <div class="cinner">
-    <div class="chead">
-      <div class="ctitle">TRAINER CARD</div>
-      <div class="csub">POKéMON<br><b>CHAMPIONS</b></div>
-    </div>
+  <div id="stageWrap">
+   <div id="card">
+    <div class="z fld" id="zName"><span class="flab">닉네임</span><span class="fval" contenteditable data-ph="닉네임"></span></div>
 
-    <div class="sec" id="partySingleSec"><span class="lab">싱글 파티</span>
-      <div class="party" id="partySingle" data-hint="＋ 눌러서 포켓몬을 넣고 끌어서 배치 (최대 6)"></div>
-    </div>
-
-    <div class="sec" id="partyDoubleSec"><span class="lab">더블 파티</span>
-      <div class="party" id="partyDouble" data-hint="＋ 눌러서 포켓몬을 넣고 끌어서 배치 (최대 6)"></div>
-    </div>
-
-    <div class="cmain">
-      <div class="cleft">
-        <div class="crow"><span class="lab">닉네임</span><span class="val" contenteditable data-ph="닉네임"></span></div>
-        <div class="crow optrow"><span class="lab">친구코드</span><span class="val" contenteditable data-ph="0000-0000-0000"></span></div>
-        <div class="crow optrow"><span class="lab">배틀 시작일</span><span class="val" contenteditable data-ph="처음 실전배틀을 시작한 날"></span></div>
-        <div class="crow optrow"><span class="lab">주력</span>
-          <span class="chips" data-mode="multi"><span class="chip">싱글</span><span class="chip">더블</span></span>
-        </div>
-        <div class="crow optrow"><span class="lab">플레이스타일</span>
-          <span class="chips" data-mode="multi"><span class="chip">빡겜</span><span class="chip">마볼까지만</span><span class="chip">컨셉파티</span></span>
-          <span class="val short" contenteditable data-ph="기타(자유기입)"></span>
-        </div>
-        <div class="crow optrow"><span class="lab">호칭</span><span class="val" contenteditable data-ph="예: 마스카나 박사"></span></div>
+    <div class="z" id="zMain">
+      <div class="partycol">
+        <div class="band" id="bandSingle"><span class="blabel">싱글</span></div>
+        <div class="band" id="bandDouble"><span class="blabel">더블</span></div>
       </div>
-      <div class="avatar" id="avatar"><div class="ph">프로필 이미지<br>(눌러서 추가)</div></div>
+      <div class="avatar" id="avatar"><div class="ph">트레이너<br>이미지<br>(눌러서 추가)</div></div>
     </div>
 
-    <div class="sec" id="achSec"><span class="lab">챔피언스 실적</span>
-      <div class="ach">
-        <div class="achrow"><span class="achtag">싱글</span><div class="achbox" contenteditable data-ph="예: M-A 시즌1 · 최고 레이팅 1850"></div></div>
-        <div class="achrow"><span class="achtag dbl">더블</span><div class="achbox" contenteditable data-ph="예: [더블] M-A 시즌1 · 마스터볼급"></div></div>
-      </div>
+    <div class="z" id="zText">
+      <div class="fld optf"><span class="flab">친구코드</span><span class="fval" contenteditable data-ph="0000-0000-0000"></span></div>
+      <div class="fld optf"><span class="flab">배틀 시작일</span><span class="fval" contenteditable data-ph="처음 실전배틀을 시작한 날"></span></div>
+      <div class="fld optf"><span class="flab">주력</span><span class="chips" data-mode="multi"><span class="chip">싱글</span><span class="chip">더블</span></span></div>
+      <div class="fld optf"><span class="flab">플레이스타일</span><span class="chips" data-mode="multi"><span class="chip">빡겜</span><span class="chip">마볼까지만</span><span class="chip">컨셉파티</span></span><span class="fval sm" contenteditable data-ph="기타"></span></div>
+      <div class="fld optf"><span class="flab">호칭</span><span class="fval" contenteditable data-ph="예: 마스카나 박사"></span></div>
+      <div class="achrow optf"><span class="achtag">싱글</span><div class="achbox" contenteditable data-ph="예: M-A 시즌1 · 최고레이팅 1850"></div></div>
+      <div class="achrow optf"><span class="achtag dbl">더블</span><div class="achbox" contenteditable data-ph="예: [더블] M-A 시즌1 · 마스터볼급"></div></div>
     </div>
 
-    <div class="sec" id="badgeSec"><span class="lab">배지<span class="leg">눌러서 선택 · 여러 개 가능</span></span>
-      <div class="badge-row" id="badgeRow"><span class="bempty">＋ 여기(또는 위 배지 선택 버튼)를 눌러 배지를 추가하세요</span></div>
-    </div>
-
-    <div class="foot">made with 포켓몬 챔피언스 트레이너 카드 메이커</div>
+    <div class="z" id="zBadge"><span class="bempty">＋ 위 배지 선택 버튼으로 배지를 추가하세요</span></div>
    </div>
   </div>
 </div>
 
+<div class="mask" id="ballMask">
+  <div class="modal"><button class="x" id="ballX">×</button><h3>이 포켓몬의 볼 선택</h3><div class="results" id="ballResults"></div></div>
+</div>
 <div class="mask" id="badgeMask">
-  <div class="modal">
-    <button class="x" id="badgeX">×</button>
-    <h3>배지 선택</h3>
+  <div class="modal"><button class="x" id="badgeX">×</button><h3>배지 선택</h3>
     <div class="search"><input id="badgeQ" placeholder="배지 이름 검색 (예: 챔피언, 골드, 물타입)" autocomplete="off" /></div>
-    <div class="results" id="badgeResults"></div>
-  </div>
+    <div class="results" id="badgeResults"></div></div>
 </div>
-
 <div class="mask" id="mask">
-  <div class="modal">
-    <button class="x" id="modalX">×</button>
-    <h3>포켓몬 검색</h3>
+  <div class="modal"><button class="x" id="modalX">×</button><h3>포켓몬 검색</h3>
     <div class="search"><input id="q" placeholder="한글 이름으로 검색 (예: 마스카나)" autocomplete="off" /></div>
-    <div class="results" id="results"></div>
-  </div>
+    <div class="results" id="results"></div></div>
 </div>
-
 <div class="mask" id="resMask">
-  <div class="modal" style="max-width:600px">
-    <button class="x" id="resX">×</button>
-    <h3>이미지 저장</h3>
+  <div class="modal" style="max-width:600px"><button class="x" id="resX">×</button><h3>이미지 저장</h3>
     <div style="padding:0 18px 18px;overflow:auto">
       <p style="margin:0 0 12px;font-size:13px;line-height:1.6;color:#64748b">이미지를 <b>길게 눌러</b> '사진에 저장'을 선택하세요.<br>안 되면 아래 <b>새 탭에서 열기</b>로 연 뒤 저장하면 돼요.</p>
       <img id="resImg" alt="저장할 이미지" style="max-width:100%;display:block;margin:0 auto;border-radius:10px;border:1px solid #e5eefb" />
@@ -283,6 +193,15 @@
 <script>
 (function(){
   var POKE=[];
+  var BALLS=[
+    {k:'poke-ball',ko:'몬스터볼'},{k:'great-ball',ko:'슈퍼볼'},{k:'ultra-ball',ko:'하이퍼볼'},{k:'master-ball',ko:'마스터볼'},
+    {k:'premier-ball',ko:'프리미어볼'},{k:'luxury-ball',ko:'럭셔리볼'},{k:'heal-ball',ko:'힐볼'},{k:'net-ball',ko:'네트볼'},
+    {k:'dive-ball',ko:'다이브볼'},{k:'nest-ball',ko:'네스트볼'},{k:'repeat-ball',ko:'리피트볼'},{k:'timer-ball',ko:'타이머볼'},
+    {k:'dusk-ball',ko:'다크볼'},{k:'quick-ball',ko:'퀵볼'},{k:'cherish-ball',ko:'프레셔스볼'},{k:'safari-ball',ko:'사파리볼'},
+    {k:'level-ball',ko:'레벨볼'},{k:'lure-ball',ko:'루어볼'},{k:'moon-ball',ko:'문볼'},{k:'friend-ball',ko:'프렌드볼'},
+    {k:'love-ball',ko:'러브볼'},{k:'heavy-ball',ko:'헤비볼'},{k:'fast-ball',ko:'스피드볼'},{k:'sport-ball',ko:'컴퍼티션볼'},
+    {k:'park-ball',ko:'파크볼'},{k:'dream-ball',ko:'드림볼'},{k:'beast-ball',ko:'울트라볼'},{k:'strange-ball',ko:'스트레인지볼'}
+  ];
   var BADGES=[
     {k:'badgecollectorbadge',ko:'배지 수집가'},{k:'bigspenderbadge',ko:'큰손'},{k:'bottomscollectorbadge',ko:'하의 수집가'},
     {k:'championtierbadge',ko:'챔피언 티어'},{k:'criticalhitbadge',ko:'급소'},
@@ -323,30 +242,26 @@
   ];
   function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 
-  // ---------- font toggle ----------
+  // ---------- fonts ----------
   document.querySelectorAll('.fontbar button').forEach(function(b){
     b.onclick=function(){
       document.querySelectorAll('.fontbar button').forEach(function(x){x.classList.remove('on');});
       b.classList.add('on');
-      var f=b.getAttribute('data-font');
-      document.body.style.fontFamily="'"+f+"','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif";
-      try{localStorage.setItem('champFont',f);}catch(e){}
+      document.body.style.fontFamily="'"+b.getAttribute('data-font')+"','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif";
+      try{localStorage.setItem('champFont',b.getAttribute('data-font'));}catch(e){}
     };
   });
   try{var sf=localStorage.getItem('champFont'); if(sf){var tb=document.querySelector('.fontbar button[data-font="'+sf+'"]'); if(tb) tb.click();}}catch(e){}
 
   // ---------- chips ----------
   document.querySelectorAll('.chips').forEach(function(group){
-    var mode=group.getAttribute('data-mode')||'multi';
-    group.addEventListener('click',function(e){
-      var chip=e.target.closest('.chip'); if(!chip) return;
-      if(mode==='single'){
-        var was=chip.classList.contains('on');
-        group.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});
-        if(!was) chip.classList.add('on');
-      } else chip.classList.toggle('on');
-    });
+    group.addEventListener('click',function(e){ var chip=e.target.closest('.chip'); if(chip) chip.classList.toggle('on'); });
   });
+
+  // ---------- card scale ----------
+  var wrap=document.getElementById('stageWrap'), card=document.getElementById('card'), cardScale=1;
+  function fit(){ cardScale=(wrap.clientWidth||1427)/1427; card.style.transform='scale('+cardScale+')'; }
+  window.addEventListener('resize',fit); fit();
 
   // ---------- sprite loader ----------
   function loadSprite(m,cb){
@@ -356,36 +271,40 @@
     }).catch(function(){m.dataUrl=null;cb&&cb();});
   }
 
-  // ---------- party factory (single + double) ----------
-  var STAGE_W=700, STAGE_H=150, allParties=[];
-  var activeCtrl=null;
+  // ---------- ball picker (per pokemon) ----------
+  var ballMask=document.getElementById('ballMask'), ballResults=document.getElementById('ballResults'), ballTargetMon=null, ballRerender=null;
+  (function(){
+    var none=document.createElement('div'); none.className='pick';
+    none.innerHTML='<div style="width:56px;height:56px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#c53030">✕</div><span>없음</span>';
+    none.onclick=function(){ if(ballTargetMon){ballTargetMon.ball=null;ballRerender&&ballRerender();} ballMask.classList.remove('show'); };
+    ballResults.appendChild(none);
+    BALLS.forEach(function(b){
+      var el=document.createElement('div'); el.className='pick';
+      el.innerHTML='<img src="../balls/'+b.k+'.png" alt=""><span>'+b.ko+'</span>';
+      el.onclick=function(){ if(ballTargetMon){ballTargetMon.ball=b.k;ballRerender&&ballRerender();} ballMask.classList.remove('show'); };
+      ballResults.appendChild(el);
+    });
+  })();
+  document.getElementById('ballX').onclick=function(){ballMask.classList.remove('show');};
+  ballMask.onclick=function(e){if(e.target===ballMask)ballMask.classList.remove('show');};
+
+  // ---------- party factory ----------
+  var allParties=[], activeCtrl=null;
   function makeParty(host){
     var team=[];
-    var hintText=host.getAttribute('data-hint')||'＋ 포켓몬 추가';
-    function ensure(){
-      var st=host.querySelector('.stage');
-      if(!st){st=document.createElement('div');st.className='stage';host.appendChild(st);}
-      if(!host.querySelector('.party-hint')){var h=document.createElement('div');h.className='party-hint';h.textContent=hintText;host.appendChild(h);}
-      return st;
-    }
-    function applyScale(){
-      var st=host.querySelector('.stage'); if(!st) return;
-      var sc=(host.clientWidth||STAGE_W)/STAGE_W;
-      st.style.transform='scale('+sc+')';
-      host.style.height=team.length?(STAGE_H*sc)+'px':'92px';
-    }
-    function defPos(n){var step=Math.min(100,(STAGE_W-16)/6);var x=8+n*step;if(x>STAGE_W-100)x=STAGE_W-100;if(x<0)x=0;var y=STAGE_H-120;if(y<4)y=4;return {x:x,y:y};}
+    if(!host.querySelector('.party-hint')){ var h=document.createElement('div'); h.className='party-hint'; h.textContent='＋ 눌러서 포켓몬 추가'; host.appendChild(h); }
+    function W(){return host.clientWidth;} function H(){return host.clientHeight;}
+    function defPos(n){ var step=Math.min(150,(W()-24)/6); var x=14+n*step; if(x>W()-152)x=W()-152; if(x<6)x=6; var y=H()-158; if(y<6)y=6; return {x:x,y:y}; }
     function makeDrag(el,m){
       el.addEventListener('pointerdown',function(e){
         if(e.target.closest('.tb')) return;
         e.preventDefault();
-        var sc=(host.clientWidth||STAGE_W)/STAGE_W;
         try{el.setPointerCapture(e.pointerId);}catch(_){}
         var sx=e.clientX, sy=e.clientY, ox=m.x||0, oy=m.y||0, oz=el.style.zIndex;
-        el.style.cursor='grabbing'; el.style.zIndex=99;
+        el.style.cursor='grabbing'; el.style.zIndex=50;
         function move(ev){
-          var x=ox+(ev.clientX-sx)/sc, y=oy+(ev.clientY-sy)/sc;
-          x=Math.max(0,Math.min(STAGE_W-el.offsetWidth,x)); y=Math.max(0,Math.min(STAGE_H-el.offsetHeight,y));
+          var x=ox+(ev.clientX-sx)/cardScale, y=oy+(ev.clientY-sy)/cardScale;
+          x=Math.max(0,Math.min(W()-el.offsetWidth,x)); y=Math.max(0,Math.min(H()-el.offsetHeight,y));
           el.style.left=x+'px'; el.style.top=y+'px'; m.x=x; m.y=y;
         }
         function up(){ try{el.releasePointerCapture(e.pointerId);}catch(_){} el.removeEventListener('pointermove',move); el.removeEventListener('pointerup',up); el.style.cursor='grab'; el.style.zIndex=oz; }
@@ -393,43 +312,39 @@
       });
     }
     function render(){
-      var st=ensure();
-      [].slice.call(st.querySelectorAll('.pmon')).forEach(function(e){e.remove();});
+      [].slice.call(host.querySelectorAll('.pmon')).forEach(function(e){e.remove();});
       host.querySelector('.party-hint').style.display=team.length?'none':'flex';
       team.forEach(function(m,idx){
         var el=document.createElement('div'); el.className='pmon';
         el.style.left=(m.x||0)+'px'; el.style.top=(m.y||0)+'px'; el.style.zIndex=idx+1;
         var src=m.dataUrl||(m.shiny?m.p.front_shiny:m.p.front_default);
-        el.innerHTML='<div class="tools"><button class="tb tshine'+(m.shiny?' on':'')+'" title="색이 다른 포켓몬">✨</button>'+
-          '<button class="tb tdel" title="삭제">×</button></div><img class="spr" src="'+src+'" alt="">';
+        var ball=m.ball?'<img class="pball" src="../balls/'+m.ball+'.png" alt="">':'';
+        el.innerHTML='<div class="tools"><button class="tb tball" title="볼 지정">🔴</button>'+
+          '<button class="tb tshine'+(m.shiny?' on':'')+'" title="색이 다른 포켓몬">✨</button>'+
+          '<button class="tb tdel" title="삭제">×</button></div><img class="spr" src="'+src+'" alt="">'+ball;
         el.querySelector('.tdel').onclick=function(ev){ev.stopPropagation();var i=team.indexOf(m);if(i>=0)team.splice(i,1);render();};
         el.querySelector('.tshine').onclick=function(ev){ev.stopPropagation();m.shiny=!m.shiny;loadSprite(m,render);};
+        el.querySelector('.tball').onclick=function(ev){ev.stopPropagation();ballTargetMon=m;ballRerender=render;ballMask.classList.add('show');};
         makeDrag(el,m);
-        st.appendChild(el);
+        host.appendChild(el);
       });
-      applyScale();
     }
     host.addEventListener('click',function(e){
       var t=e.target;
-      if(t===host||(t.classList&&(t.classList.contains('stage')||t.classList.contains('party-hint')))) openPicker(ctrl);
+      if(t===host||(t.classList&&(t.classList.contains('party-hint')||t.classList.contains('blabel')))) openPicker(ctrl);
     });
-    var ctrl={team:team,render:render,applyScale:applyScale,
-      add:function(p){var pos=defPos(team.length);var m={p:p,shiny:false,dataUrl:null,x:pos.x,y:pos.y};team.push(m);render();loadSprite(m,render);},
+    var ctrl={team:team,render:render,
+      add:function(p){var pos=defPos(team.length);team.push({p:p,shiny:false,dataUrl:null,ball:null,x:pos.x,y:pos.y});render();loadSprite(team[team.length-1],render);},
       reset:function(){team.length=0;render();}};
-    allParties.push(ctrl);
-    render();
+    allParties.push(ctrl); render();
     return ctrl;
   }
-  var pSingle=makeParty(document.getElementById('partySingle'));
-  var pDouble=makeParty(document.getElementById('partyDouble'));
-  window.addEventListener('resize',function(){allParties.forEach(function(c){c.applyScale();});});
+  var pSingle=makeParty(document.getElementById('bandSingle'));
+  var pDouble=makeParty(document.getElementById('bandDouble'));
 
   // ---------- pokemon picker ----------
   var mask=document.getElementById('mask'), results=document.getElementById('results'), q=document.getElementById('q');
-  function openPicker(ctrl){
-    if(ctrl.team.length>=6){ alert('최대 6마리까지 넣을 수 있어요.'); return; }
-    activeCtrl=ctrl; mask.classList.add('show'); q.value=''; renderResults(''); setTimeout(function(){q.focus();},30);
-  }
+  function openPicker(ctrl){ if(ctrl.team.length>=6){ alert('최대 6마리까지 넣을 수 있어요.'); return; } activeCtrl=ctrl; mask.classList.add('show'); q.value=''; renderResults(''); setTimeout(function(){q.focus();},30); }
   function closePicker(){mask.classList.remove('show');}
   document.getElementById('modalX').onclick=closePicker;
   mask.onclick=function(e){if(e.target===mask)closePicker();};
@@ -449,58 +364,45 @@
   }
 
   // ---------- badges ----------
-  var badgeSel=[];   // ordered list of selected badge keys
-  var badgeRow=document.getElementById('badgeRow'), badgeMask=document.getElementById('badgeMask'),
-      badgeResults=document.getElementById('badgeResults'), badgeQ=document.getElementById('badgeQ');
+  var badgeSel=[], zBadge=document.getElementById('zBadge'), badgeMask=document.getElementById('badgeMask'), badgeResults=document.getElementById('badgeResults'), badgeQ=document.getElementById('badgeQ');
   function renderBadgeRow(){
-    badgeRow.innerHTML='';
-    if(!badgeSel.length){ badgeRow.innerHTML='<span class="bempty">＋ 여기(또는 위 배지 선택 버튼)를 눌러 배지를 추가하세요</span>'; return; }
-    badgeSel.forEach(function(k){ var im=document.createElement('img'); im.src='badges/'+k+'.png'; im.alt=k; badgeRow.appendChild(im); });
+    zBadge.innerHTML='';
+    if(!badgeSel.length){ zBadge.innerHTML='<span class="bempty">＋ 위 배지 선택 버튼으로 배지를 추가하세요</span>'; return; }
+    badgeSel.forEach(function(k){ var im=document.createElement('img'); im.src='badges/'+k+'.png'; im.alt=k; zBadge.appendChild(im); });
   }
   function openBadges(){ badgeMask.classList.add('show'); badgeQ.value=''; renderBadgePicks(''); setTimeout(function(){badgeQ.focus();},30); }
-  function closeBadges(){ badgeMask.classList.remove('show'); }
   document.getElementById('btnBadges').onclick=openBadges;
-  badgeRow.addEventListener('click',openBadges);
-  document.getElementById('badgeX').onclick=closeBadges;
-  badgeMask.onclick=function(e){ if(e.target===badgeMask) closeBadges(); };
+  zBadge.addEventListener('click',openBadges);
+  document.getElementById('badgeX').onclick=function(){ badgeMask.classList.remove('show'); };
+  badgeMask.onclick=function(e){ if(e.target===badgeMask) badgeMask.classList.remove('show'); };
   badgeQ.oninput=function(){ renderBadgePicks(badgeQ.value.trim()); };
   function renderBadgePicks(term){
     badgeResults.innerHTML='';
     BADGES.filter(function(b){ return !term || b.ko.indexOf(term)>=0 || b.k.indexOf(term.toLowerCase())>=0; }).forEach(function(b){
       var d=document.createElement('div'); d.className='pick'+(badgeSel.indexOf(b.k)>=0?' on':'');
       d.innerHTML='<img src="badges/'+b.k+'.png" alt=""><span>'+esc(b.ko)+'</span>';
-      d.onclick=function(){
-        var i=badgeSel.indexOf(b.k);
-        if(i>=0) badgeSel.splice(i,1); else badgeSel.push(b.k);
-        d.classList.toggle('on',badgeSel.indexOf(b.k)>=0);
-        renderBadgeRow();
-      };
+      d.onclick=function(){ var i=badgeSel.indexOf(b.k); if(i>=0) badgeSel.splice(i,1); else badgeSel.push(b.k); d.classList.toggle('on',badgeSel.indexOf(b.k)>=0); renderBadgeRow(); };
       badgeResults.appendChild(d);
     });
   }
   renderBadgeRow();
 
-  // ---------- removable sections / rows ----------
+  // ---------- removable fields ----------
   var restoreBar=document.getElementById('restoreBar');
-  function addRestore(el,name){
-    var b=document.createElement('button'); b.className='rb'; b.type='button'; b.textContent='＋ '+name;
-    b.onclick=function(){ el.classList.remove('hidden'); b.remove(); };
-    restoreBar.appendChild(b);
-  }
-  document.querySelectorAll('#card .sec').forEach(function(sec){
-    var lab=sec.querySelector('.lab'); if(!lab) return;
-    var name=((lab.firstChild&&lab.firstChild.textContent)||lab.textContent).trim();
-    var x=document.createElement('button'); x.className='sec-x'; x.type='button'; x.textContent='×'; x.title='이 섹션 숨기기';
-    x.onclick=function(){ sec.classList.add('hidden'); addRestore(sec,name); };
-    sec.appendChild(x);
-  });
-  document.querySelectorAll('#card .optrow').forEach(function(row){
-    var lab=row.querySelector('.lab'); if(!lab) return;
-    var name=lab.textContent.trim();
-    var x=document.createElement('button'); x.className='row-x'; x.type='button'; x.textContent='×'; x.title='이 항목 숨기기';
-    x.onclick=function(){ row.classList.add('hidden'); addRestore(row,name); };
+  function addRestore(el,name){ var b=document.createElement('button'); b.className='rb'; b.type='button'; b.textContent='＋ '+name; b.onclick=function(){ el.classList.remove('hiddenz'); b.remove(); }; restoreBar.appendChild(b); }
+  document.querySelectorAll('#zText .optf').forEach(function(row){
+    var lab=row.querySelector('.flab,.achtag'); var name=lab?lab.textContent.trim():'항목';
+    if(row.classList.contains('achrow')) name='실적 '+name;
+    var x=document.createElement('button'); x.className='zx'; x.type='button'; x.textContent='×'; x.title='이 항목 숨기기';
+    x.onclick=function(){ row.classList.add('hiddenz'); addRestore(row,name); };
     row.appendChild(x);
   });
+  (function(){ // badge section removable
+    var x=document.createElement('button'); x.className='zx'; x.type='button'; x.textContent='×'; x.title='배지 숨기기';
+    x.style.right='-6px'; x.style.top='-30px';
+    x.onclick=function(){ zBadge.classList.add('hiddenz'); addRestore(zBadge,'배지'); };
+    zBadge.appendChild(x);
+  })();
 
   // ---------- profile ----------
   var fileP=document.getElementById('fileProfile'), avatar=document.getElementById('avatar');
@@ -511,10 +413,9 @@
     r.onload=function(){
       var im=new Image();
       im.onload=function(){
-        var maxW=460, maxH=560, w=im.naturalWidth||1, h=im.naturalHeight||1;
+        var maxW=520, maxH=760, w=im.naturalWidth||1, h=im.naturalHeight||1;
         var sc=Math.min(1, maxW/w, maxH/h), cw=Math.max(1,Math.round(w*sc)), ch=Math.max(1,Math.round(h*sc));
-        var cv=document.createElement('canvas'); cv.width=cw; cv.height=ch;
-        cv.getContext('2d').drawImage(im,0,0,cw,ch);
+        var cv=document.createElement('canvas'); cv.width=cw; cv.height=ch; cv.getContext('2d').drawImage(im,0,0,cw,ch);
         var url; try{url=cv.toDataURL('image/jpeg',0.86);}catch(e){url=r.result;}
         avatar.innerHTML='<img src="'+url+'" alt="profile">';
       };
@@ -530,13 +431,13 @@
     pSingle.reset(); pDouble.reset();
     document.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});
     document.querySelectorAll('#card [contenteditable]').forEach(function(el){el.textContent='';});
-    document.querySelectorAll('#card .sec, #card .optrow').forEach(function(s){s.classList.remove('hidden');});
+    document.querySelectorAll('.hiddenz').forEach(function(s){s.classList.remove('hiddenz');});
     restoreBar.innerHTML='';
     badgeSel=[]; renderBadgeRow();
-    avatar.innerHTML='<div class="ph">프로필 이미지<br>(눌러서 추가)</div>';
+    avatar.innerHTML='<div class="ph">트레이너<br>이미지<br>(눌러서 추가)</div>';
   };
 
-  // ---------- image delivery (download, with in-app / iOS fallback) ----------
+  // ---------- image delivery (download + iOS/in-app fallback) ----------
   function isInApp(){ return /KAKAOTALK|Instagram|FBAN|FBAV|FB_IAB|Line\/|NAVER|DaumApps|Snapchat|TwitterAndroid|musical_ly|TikTok|Whale/i.test(navigator.userAgent||''); }
   function isIOS(){ var ua=navigator.userAgent||''; return /iPhone|iPad|iPod/i.test(ua) || (/Macintosh/.test(ua) && 'ontouchend' in document); }
   function canDownload(){ var a=document.createElement('a'); return ('download' in a) && !isIOS() && !isInApp(); }
@@ -547,8 +448,7 @@
     if(canDownload()){ var a=document.createElement('a'); a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove(); return; }
     revokeObj();
     var obj=url; try{ obj=URL.createObjectURL(dataURLtoBlob(url)); curObjURL=obj; }catch(e){}
-    document.getElementById('resImg').src=obj;
-    document.getElementById('resOpen').href=obj;
+    document.getElementById('resImg').src=obj; document.getElementById('resOpen').href=obj;
     var dl=document.getElementById('resDl'); dl.href=url; dl.download=filename;
     resMask.classList.add('show');
   }
@@ -559,22 +459,15 @@
   document.getElementById('btnSave').onclick=function(){
     var btn=this, old=btn.textContent; btn.textContent='저장 중...'; btn.disabled=true;
     if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
-    var card=document.getElementById('card');
-    var ph=document.createComment('card-here'); card.parentNode.insertBefore(ph,card);
-    var holder=document.createElement('div'); holder.style.cssText='position:fixed;left:0;top:0;z-index:-1;background:#ffffff';
-    var savedMargin=card.style.margin, savedMaxW=card.style.maxWidth, savedW=card.style.width;
-    card.classList.add('exporting');
-    card.style.margin='0'; card.style.maxWidth='none'; card.style.width='900px';
+    var ph=document.createComment('c'); card.parentNode.insertBefore(ph,card);
+    var holder=document.createElement('div'); holder.style.cssText='position:fixed;left:0;top:0;z-index:-1;background:#ffffff;width:1427px;height:2000px';
+    var savedT=card.style.transform;
+    card.classList.add('exporting'); card.style.transform='none';
     holder.appendChild(card); document.body.appendChild(holder);
-    allParties.forEach(function(c){c.applyScale();});
-    function restore(){ card.classList.remove('exporting'); card.style.margin=savedMargin; card.style.maxWidth=savedMaxW; card.style.width=savedW; if(ph.parentNode){ph.parentNode.insertBefore(card,ph);ph.remove();} holder.remove(); allParties.forEach(function(c){c.applyScale();}); }
-    htmlToImage.toPng(card,{pixelRatio:2,cacheBust:true,backgroundColor:'#ffffff',
-      filter:function(n){
-        if(n.nodeType!==1||!n.classList) return true;
-        var c=n.classList;
-        if(c.contains('sec-x')||c.contains('row-x')||c.contains('leg')||c.contains('hidden')||c.contains('bempty')) return false;
-        return true;
-      }})
+    function restore(){ card.classList.remove('exporting'); card.style.transform=savedT; if(ph.parentNode){ph.parentNode.insertBefore(card,ph);ph.remove();} holder.remove(); fit(); }
+    htmlToImage.toPng(card,{pixelRatio:1.5,cacheBust:true,width:1427,height:2000,
+      filter:function(n){ if(n.nodeType!==1||!n.classList) return true; var c=n.classList;
+        if(c.contains('zx')||c.contains('tools')||c.contains('bempty')||c.contains('hiddenz')) return false; return true; }})
     .then(function(url){ deliverImage(url,'champions-card.png'); })
     .catch(function(e){console.error(e);alert('이미지 저장에 실패했어요. 다시 시도해 주세요.');})
     .then(function(){restore();btn.textContent=old;btn.disabled=false;});
