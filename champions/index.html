@@ -13,56 +13,59 @@
   @font-face{font-family:'Galmuri11';src:url('../vendor/fonts/Galmuri11.woff2') format('woff2');font-display:swap}
   *{box-sizing:border-box}
   body{margin:0;font-family:'neodgm','Galmuri11',"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
-    color:#dfe4ec;min-height:100vh;-webkit-font-smoothing:antialiased;
-    background:radial-gradient(90% 60% at 50% -8%, rgba(64,132,232,.30), transparent 60%),radial-gradient(120% 100% at 50% 0,#28303f,#0f1218 72%)}
+    color:#334155;min-height:100vh;-webkit-font-smoothing:antialiased;
+    background:linear-gradient(160deg,#eef5ff,#f8fbff)}
   .wrap{max-width:760px;margin:0 auto;padding:16px}
   .nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:6px 0 14px}
-  .nav a{padding:9px 15px;border-radius:8px;background:#1c2230;border:1.5px solid #39435a;color:#9fb0cc;text-decoration:none;font-weight:700;font-size:14px}
-  .nav a.active{background:linear-gradient(#4a86e0,#2f62b8);border-color:#5b93e8;color:#fff}
+  .nav a{padding:9px 16px;border-radius:999px;background:#fff;border:1.5px solid #c7ddf7;color:#64748b;text-decoration:none;font-weight:700;font-size:14px}
+  .nav a.active{background:#6890f0;border-color:#6890f0;color:#fff}
   .controls{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:10px}
-  .btn{padding:11px 16px;border-radius:10px;border:none;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer}
-  .btn-primary{background:linear-gradient(#3a3f4a,#23272f);color:#fff;border:1px solid #4a5160}
-  .btn-ghost{background:#20263180;color:#cdd6e4;border:1.5px solid #3a4459}
+  .btn{padding:11px 16px;border-radius:12px;border:none;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer}
+  .btn-primary{background:#141414;color:#fff}
+  .btn-ghost{background:#fff;color:#334155;border:1.5px solid #c9dcf6}
   .btn-badge{background:linear-gradient(#d8a63e,#b6832a);color:#3a2a08;border:1px solid #e6bf6a}
   .btn:active{transform:translateY(1px)}
-  .fontbar{display:flex;gap:6px;justify-content:center;align-items:center;margin-bottom:10px;font-size:12.5px;color:#8a97ad}
-  .fontbar button{font-family:inherit;padding:6px 12px;border-radius:8px;border:1.5px solid #3a4459;background:#1c2230;color:#9fb0cc;font-weight:700;cursor:pointer;font-size:12.5px}
-  .fontbar button.on{background:linear-gradient(#4a86e0,#2f62b8);border-color:#5b93e8;color:#fff}
-  .hint{text-align:center;color:#8a97ad;font-size:12.5px;margin:0 0 6px;line-height:1.6}
-  .hint b{color:#e7b84e}
+  .fontbar{display:flex;gap:6px;justify-content:center;align-items:center;flex-wrap:wrap;margin-bottom:10px;font-size:12.5px;color:#64748b}
+  .fontbar button{font-family:inherit;padding:6px 12px;border-radius:999px;border:1.5px solid #c9dcf6;background:#fff;color:#64748b;font-weight:700;cursor:pointer;font-size:12.5px}
+  .fontbar button.on{background:#6890f0;border-color:#6890f0;color:#fff}
+  .hint{text-align:center;color:#64748b;font-size:12.5px;margin:0 0 6px;line-height:1.6}
+  .hint b{color:#3f63c4}
   #restoreBar{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px 0 14px}
   #restoreBar:empty{display:none}
-  #restoreBar .rb{padding:6px 12px;border-radius:8px;border:1.5px dashed #4a5468;background:#1c2230;color:#b6c2d6;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
+  #restoreBar .rb{padding:6px 12px;border-radius:999px;border:1.5px dashed #c9dcf6;background:#fff;color:#64748b;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
 
   /* fixed-aspect card: native 1427x2000 scaled to fit */
   #stageWrap{width:700px;max-width:100%;aspect-ratio:1427/2000;margin:0 auto;position:relative}
   #card{position:absolute;top:0;left:0;width:1427px;height:2000px;transform-origin:top left}
   #frameImg{position:absolute;left:0;top:0;width:1427px;height:2000px;z-index:0;pointer-events:none;display:none}
   #card.metal #frameImg{display:block}
-  #card.flat{background:#4b8fdb;box-shadow:inset 0 0 0 12px #1f3f68}
+  #card.flat{background:#4b8fdb}
   #card>.z,#card>#flatTitle,#card>#flatBadgeLab{z-index:1}
+  /* flat card outer border as a non-shifting overlay (real border renders reliably on export) */
+  #flatFrame{display:none}
+  #card.flat #flatFrame{display:block;position:absolute;inset:0;border:12px solid #1f3f68;pointer-events:none;z-index:3}
   /* flat-only chrome */
   #flatTitle,#flatBadgeLab{display:none}
   #card.flat #flatTitle{display:block;position:absolute;left:78px;top:74px;font-size:70px;font-weight:800;color:#ffd23f;letter-spacing:3px;text-shadow:5px 5px 0 #16304f}
   #card.flat #flatBadgeLab{display:block;position:absolute;left:44px;top:1706px;font-size:36px;font-weight:800;color:#fff;letter-spacing:3px;text-shadow:3px 3px 0 #16304f}
-  #card.flat #zName{background:#cfe4ff;box-shadow:inset 0 0 0 5px #1f3f68;border-radius:10px;padding-left:26px}
+  #card.flat #zName{background:#cfe4ff;border:5px solid #1f3f68;border-radius:10px;padding-left:26px}
   #card.flat #zName .flab,#card.flat #zName .fval{color:#1f3f68}
   #card.flat #zName .flab:before{background:#4b8fdb}
   #card.flat #zName .fval{border-bottom-color:#7aa6da}
-  #card.flat #zMain{background:#eaf2fc;box-shadow:inset 0 0 0 6px #1f3f68;border-radius:14px;padding:16px}
-  #card.flat .band{background:#fff;box-shadow:inset 0 0 0 3px #9cc0ea;border-radius:8px}
+  #card.flat #zMain{background:#eaf2fc;border:6px solid #1f3f68;border-radius:14px;padding:16px}
+  #card.flat .band{background:#fff;border:3px solid #9cc0ea;border-radius:8px}
   #card.flat .band>.blabel{color:#2c60ab}
-  #card.flat .slot{background:#fff;box-shadow:inset 0 0 0 3px #9cc0ea;border-radius:6px}
+  #card.flat .slot{background:#fff;border:3px solid #9cc0ea;border-radius:6px}
   #card.flat .slot.empty{background:#f1f6fd}
-  #card.flat .avatar{background:#fff;box-shadow:inset 0 0 0 3px #9cc0ea;border-radius:8px}
-  #card.flat #zText{background:#eaf2fc;box-shadow:inset 0 0 0 6px #1f3f68;border-radius:14px;padding:16px 22px}
+  #card.flat .avatar{background:#fff;border:3px solid #9cc0ea;border-radius:8px}
+  #card.flat #zText{background:#eaf2fc;border:6px solid #1f3f68;border-radius:14px;padding:16px 22px}
   #card.flat #zText .flab{color:#25405f}
   #card.flat #zText .flab:before{background:#4b8fdb}
   #card.flat .fval{color:#1f2f42;border-bottom-color:#9cc0ea}
   #card.flat .chip{border-radius:6px}
   #card.flat .achbox{background:#fff;border-color:#9cc0ea}
   #card.flat .achtag{border-radius:6px}
-  #card.flat #zBadge{background:#2f6fc0;box-shadow:inset 0 0 0 5px #1f3f68;border-radius:10px;padding:0 18px}
+  #card.flat #zBadge{background:#2f6fc0;border:5px solid #1f3f68;border-radius:10px;padding:0 18px}
   #card.flat #zBadge .bempty{color:#dbe9ff}
 
   .z{position:absolute}
@@ -89,11 +92,11 @@
   /* main: party (left, two bands) + trainer sprite (right) */
   #zMain{left:120px;top:352px;width:1200px;height:716px;display:flex;gap:22px}
   .partycol{flex:1;display:flex;flex-direction:column;gap:12px;min-width:0}
-  .band{position:relative;flex:1;border-radius:10px;background:rgba(255,255,255,.16);box-shadow:inset 0 0 0 2px rgba(120,130,145,.35)}
+  .band{position:relative;flex:1;border-radius:10px;background:rgba(255,255,255,.16);border:2px solid rgba(120,130,145,.35)}
   .band>.blabel{position:absolute;left:12px;top:8px;font-size:22px;font-weight:800;color:#41597e;z-index:4;pointer-events:none}
   .band .party-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#5f6b7a;font-size:23px;font-weight:700;text-align:center;padding:0 14px;pointer-events:none}
   .avatar{width:352px;height:470px;flex:none;align-self:center;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;
-    background:rgba(255,255,255,.2);box-shadow:inset 0 0 0 2px rgba(120,130,145,.4);display:flex;align-items:center;justify-content:center}
+    background:rgba(255,255,255,.2);border:2px solid rgba(120,130,145,.4);display:flex;align-items:center;justify-content:center}
   .avatar img{width:100%;height:100%;object-fit:cover;display:block}
   .avatar .ph{color:#5f6b7a;font-size:24px;font-weight:700;text-align:center;padding:10px;line-height:1.6}
 
@@ -106,8 +109,8 @@
   .tb.on{background:#ffe066}
   /* slot (grid) style */
   .slotgrid{position:absolute;left:10px;right:10px;top:38px;bottom:10px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:10px}
-  .slot{position:relative;border-radius:10px;background:rgba(255,255,255,.34);box-shadow:inset 0 0 0 2px rgba(120,130,145,.32);display:flex;align-items:center;justify-content:center;cursor:pointer}
-  .slot.empty{background:rgba(255,255,255,.14);box-shadow:inset 0 0 0 2px rgba(120,130,145,.22)}
+  .slot{position:relative;border-radius:10px;background:rgba(255,255,255,.34);border:2px solid rgba(120,130,145,.32);display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .slot.empty{background:rgba(255,255,255,.14);border-color:rgba(120,130,145,.22)}
   .slot .spr{max-width:98%;max-height:98%;width:auto;height:auto;image-rendering:pixelated;display:block;pointer-events:none}
   .slot .sball{position:absolute;left:6px;bottom:6px;width:46px;height:46px;image-rendering:pixelated;pointer-events:none}
   .slot .splus{color:#8390a1;font-size:40px;font-weight:800;pointer-events:none}
@@ -176,9 +179,6 @@
     <span style="margin-left:14px">칸 스타일</span>
     <button data-style="slot" class="on">슬롯형</button>
     <button data-style="free">자유형</button>
-    <span style="margin-left:14px">프레임</span>
-    <button data-frame="flat" class="on">플랫</button>
-    <button data-frame="metal">메탈릭</button>
   </div>
   <div class="hint">칸을 눌러 입력하세요. 포켓몬을 넣고 <b>끌어서 배치</b>, 포켓몬 위 🔴로 <b>볼</b> 지정. <b>× 로 항목을 지울 수 있어요</b> (복원은 아래 바).</div>
   <div id="restoreBar"></div>
@@ -186,6 +186,7 @@
   <div id="stageWrap">
    <div id="card">
     <img id="frameImg" src="frame/frame.png" alt="" />
+    <div id="flatFrame"></div>
     <div id="flatTitle">TRAINER&nbsp;CARD</div>
     <div id="flatBadgeLab">BADGES</div>
     <div class="z" id="zName">
@@ -326,8 +327,7 @@
     try{localStorage.setItem('champFrame',fr);}catch(e){}
   }
   document.querySelectorAll('.fontbar button[data-frame]').forEach(function(b){ b.onclick=function(){ setFrame(b.getAttribute('data-frame')); }; });
-  var fr0='flat'; try{var rf=localStorage.getItem('champFrame'); if(rf==='flat'||rf==='metal')fr0=rf;}catch(e){}
-  setFrame(fr0);
+  setFrame('flat');   // metallic frame retired; flat is the card style (v2 landscape frame coming next)
 
   // ---------- chips ----------
   document.querySelectorAll('.chips').forEach(function(group){
