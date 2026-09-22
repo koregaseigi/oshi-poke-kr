@@ -77,13 +77,14 @@
   #card.flat .z{position:static!important;left:auto!important;top:auto!important}
   #card.flat #zText,#card.flat #zBadge{width:auto;height:auto}
   #card.flat #zParty{flex:1;min-width:0}
-  #card.flat #zProfile{flex:none;width:392px;box-sizing:border-box}
+  #card.flat #profileCol{flex:none;width:392px;display:flex;flex-direction:column;gap:20px}
+  #card.flat #zProfile{width:100%;box-sizing:border-box}
   #card.flat .avatar{height:360px;width:100%;flex:none}
-  #card.flat #zProfile .pfree{flex:1;min-height:80px;width:100%}
-  #card.flat #zProfile .pfbox{width:100%;height:100%;min-height:80px;border:2px solid #a4abb5;border-radius:9px;background:rgba(255,255,255,.6);padding:9px 12px;font-size:22px;line-height:1.5;font-weight:600;color:#232a32;outline:none;white-space:pre-wrap;overflow:auto;box-sizing:border-box}
-  #card.flat #zProfile .pfbox:empty:before{content:attr(data-ph);color:#8b93a0;font-weight:500}
-  #card.v2 .pfree{display:none}
-  #card.flat #topRow{align-items:stretch}
+  #card.flat #zMemo{background:#eaf2fc;border:6px solid #1f3f68;border-radius:14px;padding:14px 16px;position:relative}
+  #card.flat #zMemo .pfbox{width:100%;min-height:120px;font-size:22px;line-height:1.5;font-weight:600;color:#232a32;outline:none;white-space:pre-wrap;font-family:inherit}
+  #card.flat #zMemo .pfbox:empty:before{content:attr(data-ph);color:#8b93a0;font-weight:500}
+  #card.v2 #zMemo{display:none}
+  #card.flat #zMemo>.zx{top:8px;right:8px}
   #card.flat .band{padding:34px 8px 8px;height:auto}
   #card.flat .band>.blabel{top:9px;left:12px}
   #card.flat .slotgrid{position:static;height:auto}
@@ -228,13 +229,15 @@
         </div>
       </div>
 
-      <div class="z" id="zProfile">
-        <div class="avatar" id="avatar"><div class="ph">트레이너<br>이미지<br>(눌러서 추가)</div></div>
-        <div class="idblock">
-          <span class="idtitle" contenteditable data-ph="호칭"></span>
-          <span class="idname" contenteditable data-ph="이름"></span>
+      <div id="profileCol">
+        <div class="z" id="zProfile">
+          <div class="avatar" id="avatar"><div class="ph">트레이너<br>이미지<br>(눌러서 추가)</div></div>
+          <div class="idblock">
+            <span class="idtitle" contenteditable data-ph="호칭"></span>
+            <span class="idname" contenteditable data-ph="이름"></span>
+          </div>
         </div>
-        <div class="pfree optf" data-name="메모"><div class="pfbox" contenteditable data-ph="자유롭게 적어보세요"></div></div>
+        <div class="z optf" id="zMemo" data-name="메모"><div class="pfbox" contenteditable data-ph="자유롭게 적어보세요"></div></div>
       </div>
     </div>
 
@@ -697,7 +700,7 @@
   var restoreBar=document.getElementById('restoreBar');
   function addRestore(el,name){ var b=document.createElement('button'); b.className='rb'; b.type='button'; b.textContent='＋ '+name; b.onclick=function(){ el.classList.remove('hiddenz'); b.remove(); reflowFlat(); }; restoreBar.appendChild(b); }
   document.querySelectorAll('#card .optf').forEach(function(row){
-    var lab=row.querySelector('.flab,.achtag'); var name=lab?lab.textContent.trim():(row.classList.contains('freerow')?'자유발언':'항목');
+    var lab=row.querySelector('.flab,.achtag'); var name=row.getAttribute('data-name')||(lab?lab.textContent.trim():(row.classList.contains('freerow')?'자유발언':'항목'));
     if(row.classList.contains('achrow')) name='실적 '+name;
     var x=document.createElement('button'); x.className='zx'; x.type='button'; x.textContent='×'; x.title='이 항목 숨기기';
     x.onclick=function(){ row.classList.add('hiddenz'); addRestore(row,name); reflowFlat(); };
