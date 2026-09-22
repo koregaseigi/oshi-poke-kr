@@ -82,7 +82,7 @@
 
   /* profile block: photo + 호칭 + name (no labels), positioned per frame */
   #zProfile{display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:flex-start}
-  .idblock{flex:none;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;width:100%}
+  .idblock{flex:none;display:flex;flex-direction:column;align-items:center;gap:15px;text-align:center;width:100%}
   .idtitle{font-size:26px;font-weight:800;color:#2f3843;outline:none;font-family:inherit;line-height:1.15}
   .idname{font-size:38px;font-weight:800;color:#1f2a36;outline:none;font-family:inherit;line-height:1.15}
   .idtitle:empty:before,.idname:empty:before{content:attr(data-ph);color:#9aa2ad;font-weight:600}
@@ -112,7 +112,7 @@
   .slot{position:relative;border-radius:10px;overflow:hidden;background:rgba(255,255,255,.34);border:2px solid rgba(120,130,145,.32);display:flex;align-items:center;justify-content:center;cursor:pointer}
   .slot.empty{background:rgba(255,255,255,.14);border-color:rgba(120,130,145,.22)}
   .slot .spr{width:100%;height:100%;object-fit:cover;object-position:center 22%;image-rendering:pixelated;display:block;pointer-events:none}
-  .slot .sball{position:absolute;left:6px;bottom:6px;width:46px;height:46px;image-rendering:pixelated;pointer-events:none}
+  .slot .sball{position:absolute;left:3px;bottom:3px;width:62px;height:62px;image-rendering:pixelated;pointer-events:none;z-index:4;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
   .slot .splus{color:#8390a1;font-size:40px;font-weight:800;pointer-events:none}
   .slot .tools{position:absolute;top:3px;right:3px;display:flex;gap:4px;opacity:0;transition:.1s;z-index:6}
   .slot:hover .tools{opacity:1}
@@ -183,7 +183,7 @@
     <button data-frame="v2" class="on">가로</button>
     <button data-frame="flat">세로(플랫)</button>
   </div>
-  <div class="hint">칸을 눌러 입력하세요. 포켓몬을 넣고 <b>끌어서 배치</b>, 포켓몬 위 🔴로 <b>볼</b> 지정. <b>× 로 항목을 지울 수 있어요</b> (복원은 아래 바).</div>
+  <div class="hint">칸을 눌러 입력. 슬롯형은 포켓몬을 <b>끌어서 칸 안 위치(보일 부분) 조절</b>, 자유형은 끌어서 자유 배치. 🔴로 <b>볼</b> 지정. <b>× 로 항목 삭제</b> (복원은 아래 바).</div>
   <div id="restoreBar"></div>
 
   <div id="stageWrap">
@@ -337,9 +337,9 @@
     flat:{ w:1427,h:2000, img:null, cols:'repeat(3,1fr)', rows:'repeat(2,1fr)',
       zParty:{l:118,t:238,w:815,h:800}, zProfile:{l:965,t:238,w:352,h:800},
       zText:{l:150,t:1082,w:1140,h:656}, zBadge:{l:150,t:1788,w:1160,h:120} },
-    v2:{ w:2752,h:1536, img:'frame/background-v2.webp', cols:'repeat(6,1fr)', rows:'repeat(1,1fr)',
-      zParty:{l:500,t:300,w:1120,h:505}, zProfile:{l:1700,t:300,w:520,h:505},
-      zText:{l:540,t:872,w:1620,h:442}, zBadge:{l:545,t:1356,w:1600,h:80} }
+    v2:{ w:2752,h:1536, img:'frame/background-v2.jpg', cols:'repeat(6,1fr)', rows:'repeat(1,1fr)',
+      zParty:{l:585,t:305,w:1035,h:498}, zProfile:{l:1700,t:305,w:505,h:498},
+      zText:{l:590,t:874,w:1560,h:438}, zBadge:{l:595,t:1358,w:1545,h:78} }
   };
   function applyFrame(key){
     var f=FRAMES[key]; if(!f) return; curFrame=key; curW=f.w; curH=f.h;
@@ -354,8 +354,22 @@
     document.querySelectorAll('.fontbar button[data-frame]').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-frame')===key);});
     try{localStorage.setItem('champFrame',key);}catch(e){}
     if(typeof allParties!=='undefined') allParties.forEach(function(c){c.render();});
+    if(key==='flat') reflowFlat();
   }
   document.querySelectorAll('.fontbar button[data-frame]').forEach(function(b){ b.onclick=function(){ applyFrame(b.getAttribute('data-frame')); }; });
+  // flat frame flows to content: text panel + badges + card height shrink when items are removed
+  function reflowFlat(){
+    if(curFrame!=='flat') return;
+    var f=FRAMES.flat, zText=document.getElementById('zText'), zBadge=document.getElementById('zBadge'), lab=document.getElementById('flatBadgeLab');
+    zText.style.height='auto';
+    var tTop=f.zText.t, tH=zText.offsetHeight;
+    var labTop=tTop+tH+30; lab.style.top=labTop+'px';
+    var bTop=labTop+56; zBadge.style.top=bTop+'px';
+    zBadge.style.height='auto'; var bH=Math.max(96,zBadge.offsetHeight); zBadge.style.height=bH+'px';
+    var cardH=bTop+bH+46;
+    card.style.height=cardH+'px'; curH=cardH; wrap.style.aspectRatio=curW+' / '+cardH; fit();
+  }
+  window.__reflowFlat=reflowFlat;
 
   // ---------- sprite loader ----------
   function loadSprite(m,cb){
@@ -427,6 +441,23 @@
         el.addEventListener('pointermove',move); el.addEventListener('pointerup',up);
       });
     }
+    function slotPan(img,slot,m){
+      img.style.cursor='move';
+      img.addEventListener('pointerdown',function(e){
+        if(e.target.closest('.tb')) return;
+        e.preventDefault();
+        try{img.setPointerCapture(e.pointerId);}catch(_){}
+        var sx=e.clientX, sy=e.clientY, ox=(m.slotX!=null?m.slotX:50), oy=(m.slotY!=null?m.slotY:22);
+        var rw=Math.max(1,slot.clientWidth*cardScale), rh=Math.max(1,slot.clientHeight*cardScale);
+        function move(ev){
+          var nx=ox-(ev.clientX-sx)/rw*130, ny=oy-(ev.clientY-sy)/rh*130;
+          nx=Math.max(0,Math.min(100,nx)); ny=Math.max(0,Math.min(100,ny));
+          m.slotX=nx; m.slotY=ny; img.style.objectPosition=nx+'% '+ny+'%';
+        }
+        function up(){ try{img.releasePointerCapture(e.pointerId);}catch(_){} img.removeEventListener('pointermove',move); img.removeEventListener('pointerup',up); }
+        img.addEventListener('pointermove',move); img.addEventListener('pointerup',up);
+      });
+    }
     function tools(m){
       return '<div class="tools"><button class="tb tball" title="볼 지정">🔴</button>'+
         '<button class="tb tshine'+(m.shiny?' on':'')+'" title="색이 다른 포켓몬">✨</button>'+
@@ -449,8 +480,9 @@
           if(m){
             var src=m.trimUrl||m.dataUrl||(m.shiny?m.p.front_shiny:m.p.front_default);
             var ball=m.ball?'<img class="sball" src="../balls/'+m.ball+'.png" alt="">':'';
-            slot.innerHTML=tools(m)+'<img class="spr" src="'+src+'" alt="">'+ball;
-            wire(slot,m);
+            var op=(m.slotX!=null?m.slotX:50)+'% '+(m.slotY!=null?m.slotY:22)+'%';
+            slot.innerHTML=tools(m)+'<img class="spr" style="object-position:'+op+'" src="'+src+'" alt="">'+ball;
+            wire(slot,m); slotPan(slot.querySelector('.spr'),slot,m);
           } else {
             slot.innerHTML='<span class="splus">＋</span>';
             slot.onclick=function(){ openPicker(ctrl); };
@@ -518,6 +550,7 @@
     zBadge.innerHTML='';
     if(!badgeSel.length){ zBadge.innerHTML='<span class="bempty">＋ 위 배지 선택 버튼으로 배지를 추가하세요</span>'; return; }
     badgeSel.forEach(function(k){ var im=document.createElement('img'); im.src='badges/'+k+'.png'; im.alt=k; zBadge.appendChild(im); });
+    reflowFlat();
   }
   function openBadges(){ badgeMask.classList.add('show'); badgeQ.value=''; renderBadgePicks(''); setTimeout(function(){badgeQ.focus();},30); }
   document.getElementById('btnBadges').onclick=openBadges;
@@ -538,12 +571,12 @@
 
   // ---------- removable fields ----------
   var restoreBar=document.getElementById('restoreBar');
-  function addRestore(el,name){ var b=document.createElement('button'); b.className='rb'; b.type='button'; b.textContent='＋ '+name; b.onclick=function(){ el.classList.remove('hiddenz'); b.remove(); }; restoreBar.appendChild(b); }
+  function addRestore(el,name){ var b=document.createElement('button'); b.className='rb'; b.type='button'; b.textContent='＋ '+name; b.onclick=function(){ el.classList.remove('hiddenz'); b.remove(); reflowFlat(); }; restoreBar.appendChild(b); }
   document.querySelectorAll('#card .optf').forEach(function(row){
     var lab=row.querySelector('.flab,.achtag'); var name=lab?lab.textContent.trim():'항목';
     if(row.classList.contains('achrow')) name='실적 '+name;
     var x=document.createElement('button'); x.className='zx'; x.type='button'; x.textContent='×'; x.title='이 항목 숨기기';
-    x.onclick=function(){ row.classList.add('hiddenz'); addRestore(row,name); };
+    x.onclick=function(){ row.classList.add('hiddenz'); addRestore(row,name); reflowFlat(); };
     row.appendChild(x);
   });
   (function(){ // badge section removable
