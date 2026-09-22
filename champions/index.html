@@ -62,14 +62,14 @@
   .band{position:relative;flex:1;border-radius:10px;background:rgba(255,255,255,.16);box-shadow:inset 0 0 0 2px rgba(120,130,145,.35)}
   .band>.blabel{position:absolute;left:12px;top:8px;font-size:22px;font-weight:800;color:#41597e;z-index:4;pointer-events:none}
   .band .party-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#5f6b7a;font-size:23px;font-weight:700;text-align:center;padding:0 14px;pointer-events:none}
-  .avatar{width:352px;flex:none;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;
+  .avatar{width:352px;height:470px;flex:none;align-self:center;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;
     background:rgba(255,255,255,.2);box-shadow:inset 0 0 0 2px rgba(120,130,145,.4);display:flex;align-items:center;justify-content:center}
   .avatar img{width:100%;height:100%;object-fit:cover;display:block}
   .avatar .ph{color:#5f6b7a;font-size:24px;font-weight:700;text-align:center;padding:10px;line-height:1.6}
 
   .pmon{position:absolute;cursor:grab;touch-action:none;user-select:none;line-height:0}
   .pmon img.spr{height:150px;width:auto;image-rendering:pixelated;display:block;pointer-events:none;-webkit-user-drag:none}
-  .pmon .pball{position:absolute;left:-2px;bottom:-2px;width:46px;height:46px;image-rendering:pixelated;pointer-events:none}
+  .pmon .pball{position:absolute;left:-2px;bottom:-2px;width:44px;height:44px;image-rendering:pixelated;pointer-events:none;z-index:3}
   .pmon .tools{position:absolute;top:0;right:0;display:flex;gap:4px;opacity:0;transition:.1s;z-index:6}
   .pmon:hover .tools{opacity:1}
   .tb{width:30px;height:30px;border-radius:7px;border:none;background:rgba(255,255,255,.95);box-shadow:0 1px 4px rgba(0,0,0,.25);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;font-family:inherit}
@@ -267,7 +267,24 @@
   function loadSprite(m,cb){
     var url=m.shiny?m.p.front_shiny:m.p.front_default;
     fetch(url).then(function(r){return r.blob();}).then(function(b){
-      var fr=new FileReader(); fr.onload=function(){m.dataUrl=fr.result;cb&&cb();}; fr.readAsDataURL(b);
+      var fr=new FileReader();
+      fr.onload=function(){
+        m.dataUrl=fr.result;
+        var im=new Image();
+        im.onload=function(){
+          try{
+            var c=document.createElement('canvas'); c.width=im.naturalWidth||96; c.height=im.naturalHeight||96;
+            var g=c.getContext('2d'); g.drawImage(im,0,0);
+            var d=g.getImageData(0,0,c.width,c.height).data, x0=c.width,y0=c.height,x1=0,y1=0,f=false,x,y;
+            for(y=0;y<c.height;y++)for(x=0;x<c.width;x++){ if(d[(y*c.width+x)*4+3]>18){f=true; if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y;} }
+            m.bb=f?{x0:x0,y1:y1,W:c.width,H:c.height}:null;
+          }catch(e){ m.bb=null; }
+          cb&&cb();
+        };
+        im.onerror=function(){ m.bb=null; cb&&cb(); };
+        im.src=fr.result;
+      };
+      fr.readAsDataURL(b);
     }).catch(function(){m.dataUrl=null;cb&&cb();});
   }
 
@@ -318,7 +335,12 @@
         var el=document.createElement('div'); el.className='pmon';
         el.style.left=(m.x||0)+'px'; el.style.top=(m.y||0)+'px'; el.style.zIndex=idx+1;
         var src=m.dataUrl||(m.shiny?m.p.front_shiny:m.p.front_default);
-        var ball=m.ball?'<img class="pball" src="../balls/'+m.ball+'.png" alt="">':'';
+        var ball='';
+        if(m.ball){
+          var bs='';
+          if(m.bb){ var s=150/m.bb.H, bl=Math.round(m.bb.x0*s)-14, bt=Math.round(m.bb.y1*s)-30; bs=' style="left:'+bl+'px;top:'+bt+'px;bottom:auto"'; }
+          ball='<img class="pball" src="../balls/'+m.ball+'.png" alt=""'+bs+'>';
+        }
         el.innerHTML='<div class="tools"><button class="tb tball" title="볼 지정">🔴</button>'+
           '<button class="tb tshine'+(m.shiny?' on':'')+'" title="색이 다른 포켓몬">✨</button>'+
           '<button class="tb tdel" title="삭제">×</button></div><img class="spr" src="'+src+'" alt="">'+ball;
@@ -403,6 +425,14 @@
     x.onclick=function(){ zBadge.classList.add('hiddenz'); addRestore(zBadge,'배지'); };
     zBadge.appendChild(x);
   })();
+  // party bands removable (some people play singles only, or doubles only)
+  [['bandSingle','싱글 파티'],['bandDouble','더블 파티']].forEach(function(pair){
+    var band=document.getElementById(pair[0]); if(!band) return;
+    var x=document.createElement('button'); x.className='zx'; x.type='button'; x.textContent='×'; x.title=pair[1]+' 숨기기';
+    x.style.top='8px'; x.style.right='8px';
+    x.onclick=function(ev){ ev.stopPropagation(); band.classList.add('hiddenz'); addRestore(band,pair[1]); };
+    band.appendChild(x);
+  });
 
   // ---------- profile ----------
   var fileP=document.getElementById('fileProfile'), avatar=document.getElementById('avatar');
