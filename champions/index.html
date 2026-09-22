@@ -48,7 +48,14 @@
   #flatTitle,#flatBadgeLab{display:none}
   #card.flat #flatTitle{display:block;position:absolute;left:78px;top:74px;font-size:70px;font-weight:800;color:#ffd23f;letter-spacing:3px;text-shadow:5px 5px 0 #16304f}
   #flatTitle{outline:none}
-  #card.v2 #flatTitle{display:block;position:absolute;left:640px;top:196px;font-size:60px;font-weight:800;color:#efe0a0;letter-spacing:3px;text-shadow:3px 3px 0 rgba(70,50,100,.55);z-index:2}
+  #card.v2 #flatTitle{display:block;position:absolute;left:150px;top:90px;font-size:58px;font-weight:800;color:#efe0a0;letter-spacing:3px;text-shadow:3px 3px 0 rgba(70,50,100,.55);z-index:2}
+  #flatReg{outline:none}
+  #regRow,#regHint{display:none}
+  #card.v2 #regRow{display:block;position:absolute;top:104px;right:190px;text-align:right;z-index:2}
+  #card.v2 #flatReg{font-size:46px;font-weight:800;color:#efe0a0;letter-spacing:2px;text-shadow:3px 3px 0 rgba(70,50,100,.55)}
+  #card.flat #regRow{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px;order:1;margin:-16px 0 0}
+  #card.flat #flatReg{font-size:38px;font-weight:800;color:#ffd23f;letter-spacing:2px;text-shadow:3px 3px 0 #16304f}
+  #card.flat #regHint{display:inline;font-size:22px;font-weight:700;color:#7fb0e6;letter-spacing:0}
   #card.v2 #zBadge{justify-content:flex-end}
   #card.flat #flatBadgeLab{display:block;position:absolute;left:44px;top:1724px;font-size:36px;font-weight:800;color:#fff;letter-spacing:3px;text-shadow:3px 3px 0 #16304f}
   #card.flat #zProfile{background:#eaf2fc;border:6px solid #1f3f68;border-radius:14px;padding:14px}
@@ -223,6 +230,7 @@
     <img id="frameImg" src="frame/frame.png" alt="" />
     <div id="flatFrame"></div>
     <div id="flatTitle" contenteditable>TRAINER CARD</div>
+    <div id="regRow"><span id="flatReg" contenteditable>REGULATION M-C Season 6</span><span id="regHint">← 자유롭게 타이핑하여 수정 가능합니다</span></div>
     <div id="flatBadgeLab">BADGES</div>
     <div id="topRow">
       <div class="z" id="zParty">
@@ -799,6 +807,7 @@
     var opts={pixelRatio:1.4,cacheBust:true,width:curW,height:eH,
       filter:function(n){ if(n.nodeType!==1||!n.classList) return true; var c=n.classList;
         if(c.contains('zx')||c.contains('tools')||c.contains('bempty')||c.contains('hiddenz')||c.contains('splus')) return false;
+        if(n.id==='regHint') return false;   // editing hint, not part of the card
         if(c.contains('chip')&&!c.contains('on')) return false;   // drop unselected options
         if(n.hasAttribute&&n.hasAttribute('contenteditable')&&!(n.textContent||'').trim()) return false;  // drop empty inputs (no placeholder text)
         return true; }};
