@@ -111,8 +111,10 @@
   .band{position:relative;flex:1;border-radius:10px;background:rgba(255,255,255,.16);border:2px solid rgba(120,130,145,.35)}
   .band>.blabel{position:absolute;left:12px;top:8px;font-size:22px;font-weight:800;color:#41597e;z-index:4;pointer-events:none}
   .band .party-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#5f6b7a;font-size:23px;font-weight:700;text-align:center;padding:0 14px;pointer-events:none}
-  .avatar{width:100%;flex:none;aspect-ratio:4/5;max-height:calc(100% - 96px);border-radius:12px;overflow:hidden;cursor:pointer;position:relative;
+  .avatar{width:100%;flex:none;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;
     background:rgba(255,255,255,.2);border:2px solid rgba(120,130,145,.4);display:flex;align-items:center;justify-content:center}
+  #card.flat .avatar{aspect-ratio:4/5}
+  #card.v2 .avatar{flex:1;min-height:0}
   .avatar img{width:100%;height:100%;object-fit:cover;display:block}
   .avatar .ph{color:#5f6b7a;font-size:24px;font-weight:700;text-align:center;padding:10px;line-height:1.6}
 
@@ -129,8 +131,8 @@
   .slot.empty{background:rgba(255,255,255,.14);border-color:rgba(120,130,145,.22)}
   .slot .spr{width:100%;height:100%;object-fit:cover;object-position:center 22%;image-rendering:pixelated;display:block;touch-action:none;border-radius:8px}
   .slot .sball{position:absolute;left:3px;bottom:3px;width:62px;height:62px;image-rendering:pixelated;pointer-events:none;z-index:4;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
-  .slot .sitem{position:absolute;right:-4px;bottom:-4px;width:66px;height:66px;border-radius:50%;background:#fff;padding:8px;object-fit:contain;image-rendering:pixelated;pointer-events:none;z-index:5;box-shadow:0 1px 3px rgba(0,0,0,.3),inset 0 0 0 2px #dfe6ef}
-  .pmon .pitem{position:absolute;right:-8px;bottom:4px;width:46px;height:46px;border-radius:50%;background:#fff;padding:5px;object-fit:contain;image-rendering:pixelated;pointer-events:none;z-index:3;box-shadow:0 1px 3px rgba(0,0,0,.3),inset 0 0 0 2px #dfe6ef}
+  .slot .sitem{position:absolute;right:-5px;bottom:-5px;width:76px;height:76px;border-radius:50%;background:#fff;padding:9px;object-fit:contain;image-rendering:pixelated;pointer-events:none;z-index:5;box-shadow:0 1px 3px rgba(0,0,0,.3),inset 0 0 0 2px #dfe6ef}
+  .pmon .pitem{position:absolute;right:-8px;bottom:4px;width:50px;height:50px;border-radius:50%;background:#fff;padding:6px;object-fit:contain;image-rendering:pixelated;pointer-events:none;z-index:3;box-shadow:0 1px 3px rgba(0,0,0,.3),inset 0 0 0 2px #dfe6ef}
   .slot .splus{color:#8390a1;font-size:40px;font-weight:800;pointer-events:none}
   .slot .tools{position:absolute;top:3px;right:3px;display:flex;gap:4px;opacity:0;transition:.1s;z-index:6}
   .slot:hover .tools{opacity:1}
@@ -234,7 +236,7 @@
       <div class="fld optf"><span class="flab">플레이스타일</span><span class="chips" data-mode="multi"><span class="chip">빡겜</span><span class="chip">마볼까지만</span><span class="chip">컨셉파티</span></span><span class="fval sm" contenteditable data-ph="기타"></span></div>
       <div class="achrow optf"><span class="achtag">싱글</span><div class="achbox" contenteditable data-ph="예: M-A 시즌1 · 최고레이팅 1850"></div></div>
       <div class="achrow optf"><span class="achtag dbl">더블</span><div class="achbox" contenteditable data-ph="예: [더블] M-A 시즌1 · 마스터볼급"></div></div>
-      <div class="fld optf freerow"><span class="flab">자유발언</span><div class="achbox" contenteditable data-ph="자유롭게 한마디 적어보세요!"></div></div>
+      <div class="fld optf freerow"><div class="achbox" contenteditable data-ph="자유롭게 한마디 적어보세요!"></div></div>
     </div>
 
     <div class="z" id="zBadge"><span class="bempty">＋ 위 배지 선택 버튼으로 배지를 추가하세요</span></div>
@@ -299,7 +301,23 @@
     {k:'float-stone',ko:'가벼운돌'},{k:'light-clay',ko:'빛의점토'},{k:'mental-herb',ko:'정신의허브'},
     {k:'white-herb',ko:'하얀허브'},{k:'power-herb',ko:'파워허브'},{k:'eject-button',ko:'탈출버튼'},
     {k:'grassy-seed',ko:'그래스시드'},{k:'electric-seed',ko:'일렉트릭시드'},{k:'misty-seed',ko:'미스트시드'},
-    {k:'psychic-seed',ko:'사이코시드'}];
+    {k:'psychic-seed',ko:'사이코시드'},
+    {k:'venusaurite',ko:'이상해나이트'},{k:'charizardite-x',ko:'리자몽나이트 X'},{k:'charizardite-y',ko:'리자몽나이트 Y'},
+    {k:'blastoisinite',ko:'거북왕나이트'},{k:'alakazite',ko:'후딘나이트'},{k:'gengarite',ko:'팬텀나이트'},
+    {k:'kangaskhanite',ko:'캥카나이트'},{k:'pinsirite',ko:'쁘사이저나이트'},{k:'gyaradosite',ko:'갸라도스나이트'},
+    {k:'aerodactylite',ko:'프테라나이트'},{k:'mewtwonite-x',ko:'뮤츠나이트 X'},{k:'mewtwonite-y',ko:'뮤츠나이트 Y'},
+    {k:'ampharosite',ko:'전룡나이트'},{k:'scizorite',ko:'핫삼나이트'},{k:'heracronite',ko:'헤라크로스나이트'},
+    {k:'houndoominite',ko:'헬가나이트'},{k:'tyranitarite',ko:'마기라스나이트'},{k:'blazikenite',ko:'번치코나이트'},
+    {k:'gardevoirite',ko:'가디안나이트'},{k:'mawilite',ko:'입치트나이트'},{k:'aggronite',ko:'보스로라나이트'},
+    {k:'medichamite',ko:'요가램나이트'},{k:'manectite',ko:'썬더볼트나이트'},{k:'sharpedonite',ko:'샤크니아나이트'},
+    {k:'cameruptite',ko:'폭타나이트'},{k:'altarianite',ko:'파비코리나이트'},{k:'banettite',ko:'다크펫나이트'},
+    {k:'absolite',ko:'앱솔나이트'},{k:'glalitite',ko:'얼음귀신나이트'},{k:'salamencite',ko:'보만다나이트'},
+    {k:'metagrossite',ko:'메타그로스나이트'},{k:'latiasite',ko:'라티아스나이트'},{k:'latiosite',ko:'라티오스나이트'},
+    {k:'lopunnite',ko:'이어롭나이트'},{k:'garchompite',ko:'한카리아스나이트'},{k:'lucarionite',ko:'루카리오나이트'},
+    {k:'abomasite',ko:'눈설왕나이트'},{k:'galladite',ko:'엘레이드나이트'},{k:'audinite',ko:'다부니나이트'},
+    {k:'diancite',ko:'디안시나이트'},{k:'beedrillite',ko:'독침붕나이트'},{k:'pidgeotite',ko:'피죤투나이트'},
+    {k:'slowbronite',ko:'야도란나이트'},{k:'steelixite',ko:'강철톤나이트'},{k:'sceptilite',ko:'나무킹나이트'},
+    {k:'swampertite',ko:'대짱이나이트'},{k:'sablenite',ko:'음번나이트'}];
   var BADGES=[
     {k:'badgecollectorbadge',ko:'배지 수집가'},{k:'bigspenderbadge',ko:'큰손'},{k:'bottomscollectorbadge',ko:'하의 수집가'},
     {k:'championtierbadge',ko:'챔피언 티어'},{k:'criticalhitbadge',ko:'급소'},
@@ -635,7 +653,7 @@
   var restoreBar=document.getElementById('restoreBar');
   function addRestore(el,name){ var b=document.createElement('button'); b.className='rb'; b.type='button'; b.textContent='＋ '+name; b.onclick=function(){ el.classList.remove('hiddenz'); b.remove(); reflowFlat(); }; restoreBar.appendChild(b); }
   document.querySelectorAll('#card .optf').forEach(function(row){
-    var lab=row.querySelector('.flab,.achtag'); var name=lab?lab.textContent.trim():'항목';
+    var lab=row.querySelector('.flab,.achtag'); var name=lab?lab.textContent.trim():(row.classList.contains('freerow')?'자유발언':'항목');
     if(row.classList.contains('achrow')) name='실적 '+name;
     var x=document.createElement('button'); x.className='zx'; x.type='button'; x.textContent='×'; x.title='이 항목 숨기기';
     x.onclick=function(){ row.classList.add('hiddenz'); addRestore(row,name); reflowFlat(); };
