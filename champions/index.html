@@ -64,8 +64,24 @@
   #card.flat .chip{border-radius:6px}
   #card.flat .achbox{background:#fff;border-color:#9cc0ea}
   #card.flat .achtag{border-radius:6px}
-  #card.flat #zBadge{background:#2f6fc0;border:5px solid #1f3f68;border-radius:10px;padding:0 18px}
+  #card.flat #zBadge{background:#2f6fc0;border:5px solid #1f3f68;border-radius:10px;padding:12px 18px}
   #card.flat #zBadge .bempty{color:#dbe9ff}
+  /* FLAT = content-driven flow (heights shrink to content) */
+  #topRow{position:static}
+  #card.flat{display:flex;flex-direction:column;padding:64px 56px 46px;gap:30px;width:1427px;height:auto}
+  #card.flat #flatTitle{position:static;margin:0;order:1}
+  #card.flat #topRow{display:flex;gap:26px;align-items:flex-start;order:2}
+  #card.flat #zText{order:3}
+  #card.flat #flatBadgeLab{position:static;margin:0;order:4}
+  #card.flat #zBadge{order:5}
+  #card.flat .z{position:static!important;left:auto!important;top:auto!important;width:auto!important;height:auto!important}
+  #card.flat #zParty{flex:1;min-width:0}
+  #card.flat #zProfile{flex:none;width:352px}
+  #card.flat .band{padding:34px 8px 8px;height:auto}
+  #card.flat .band>.blabel{top:9px;left:12px}
+  #card.flat .slotgrid{position:static;height:auto}
+  #card.flat .slot{aspect-ratio:1.5/1}
+  #card.flat.freemode .band{min-height:186px}
 
   .z{position:absolute}
   .fld{display:flex;align-items:center;gap:12px}
@@ -109,11 +125,11 @@
   .tb.on{background:#ffe066}
   /* slot (grid) style */
   .slotgrid{position:absolute;left:10px;right:10px;top:38px;bottom:10px;display:grid;grid-template-columns:var(--slotcols,repeat(3,1fr));grid-template-rows:var(--slotrows,repeat(2,1fr));gap:10px}
-  .slot{position:relative;border-radius:10px;overflow:hidden;background:rgba(255,255,255,.34);border:2px solid rgba(120,130,145,.32);display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .slot{position:relative;border-radius:10px;background:rgba(255,255,255,.34);border:2px solid rgba(120,130,145,.32);display:flex;align-items:center;justify-content:center;cursor:pointer}
   .slot.empty{background:rgba(255,255,255,.14);border-color:rgba(120,130,145,.22)}
-  .slot .spr{width:100%;height:100%;object-fit:cover;object-position:center 22%;image-rendering:pixelated;display:block;touch-action:none}
+  .slot .spr{width:100%;height:100%;object-fit:cover;object-position:center 22%;image-rendering:pixelated;display:block;touch-action:none;border-radius:8px}
   .slot .sball{position:absolute;left:3px;bottom:3px;width:62px;height:62px;image-rendering:pixelated;pointer-events:none;z-index:4;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
-  .slot .sitem{position:absolute;right:4px;bottom:4px;width:58px;height:58px;border-radius:50%;background:#fff;padding:7px;object-fit:contain;image-rendering:pixelated;pointer-events:none;z-index:4;box-shadow:0 1px 3px rgba(0,0,0,.3),inset 0 0 0 2px #dfe6ef}
+  .slot .sitem{position:absolute;right:-4px;bottom:-4px;width:66px;height:66px;border-radius:50%;background:#fff;padding:8px;object-fit:contain;image-rendering:pixelated;pointer-events:none;z-index:5;box-shadow:0 1px 3px rgba(0,0,0,.3),inset 0 0 0 2px #dfe6ef}
   .pmon .pitem{position:absolute;right:-8px;bottom:4px;width:46px;height:46px;border-radius:50%;background:#fff;padding:5px;object-fit:contain;image-rendering:pixelated;pointer-events:none;z-index:3;box-shadow:0 1px 3px rgba(0,0,0,.3),inset 0 0 0 2px #dfe6ef}
   .slot .splus{color:#8390a1;font-size:40px;font-weight:800;pointer-events:none}
   .slot .tools{position:absolute;top:3px;right:3px;display:flex;gap:4px;opacity:0;transition:.1s;z-index:6}
@@ -194,18 +210,20 @@
     <div id="flatFrame"></div>
     <div id="flatTitle">TRAINER&nbsp;CARD</div>
     <div id="flatBadgeLab">BADGES</div>
-    <div class="z" id="zParty">
-      <div class="partycol">
-        <div class="band" id="bandSingle"><span class="blabel">싱글</span></div>
-        <div class="band" id="bandDouble"><span class="blabel">더블</span></div>
+    <div id="topRow">
+      <div class="z" id="zParty">
+        <div class="partycol">
+          <div class="band" id="bandSingle"><span class="blabel">싱글</span></div>
+          <div class="band" id="bandDouble"><span class="blabel">더블</span></div>
+        </div>
       </div>
-    </div>
 
-    <div class="z" id="zProfile">
-      <div class="avatar" id="avatar"><div class="ph">트레이너<br>이미지<br>(눌러서 추가)</div></div>
-      <div class="idblock">
-        <span class="idtitle" contenteditable data-ph="호칭"></span>
-        <span class="idname" contenteditable data-ph="이름"></span>
+      <div class="z" id="zProfile">
+        <div class="avatar" id="avatar"><div class="ph">트레이너<br>이미지<br>(눌러서 추가)</div></div>
+        <div class="idblock">
+          <span class="idtitle" contenteditable data-ph="호칭"></span>
+          <span class="idname" contenteditable data-ph="이름"></span>
+        </div>
       </div>
     </div>
 
@@ -340,7 +358,9 @@
       document.querySelectorAll('.fontbar button[data-style]').forEach(function(x){x.classList.remove('on');});
       b.classList.add('on'); cardStyle=b.getAttribute('data-style');
       try{localStorage.setItem('champStyle',cardStyle);}catch(e){}
+      card.classList.toggle('slotmode',cardStyle==='slot'); card.classList.toggle('freemode',cardStyle==='free');
       allParties.forEach(function(c){c.render();});
+      if(curFrame==='flat') fit();
     };
   });
   try{var ss=localStorage.getItem('champStyle'); if(ss==='free'||ss==='slot'){ cardStyle=ss; var sb=document.querySelector('.fontbar button[data-style="'+ss+'"]'); if(sb){document.querySelectorAll('.fontbar button[data-style]').forEach(function(x){x.classList.remove('on');}); sb.classList.add('on');} }}catch(e){}
@@ -352,7 +372,10 @@
 
   // ---------- card scale + per-frame layout ----------
   var wrap=document.getElementById('stageWrap'), card=document.getElementById('card'), frameImg=document.getElementById('frameImg'), cardScale=1, curW=1427, curH=2000, curFrame='v2';
-  function fit(){ cardScale=(wrap.clientWidth||curW)/curW; card.style.transform='scale('+cardScale+')'; }
+  function fit(){
+    cardScale=(wrap.clientWidth||curW)/curW; card.style.transform='scale('+cardScale+')';
+    if(curFrame==='flat'){ wrap.style.aspectRatio='auto'; wrap.style.height=(card.offsetHeight*cardScale)+'px'; }
+  }
   window.addEventListener('resize',fit);
   var FRAMES={
     flat:{ w:1427,h:2000, img:null, cols:'repeat(3,1fr)', rows:'repeat(2,1fr)',
@@ -365,32 +388,27 @@
   function applyFrame(key){
     var f=FRAMES[key]; if(!f) return; curFrame=key; curW=f.w; curH=f.h;
     card.classList.remove('flat','v2','metal'); card.classList.add(key);
-    wrap.style.aspectRatio=f.w+' / '+f.h;
-    card.style.width=f.w+'px'; card.style.height=f.h+'px';
+    card.classList.toggle('slotmode',(typeof cardStyle==='undefined'||cardStyle==='slot'));
+    card.classList.toggle('freemode',(typeof cardStyle!=='undefined'&&cardStyle==='free'));
+    card.style.width=f.w+'px';
     if(f.img){ frameImg.src=f.img; frameImg.style.display='block'; frameImg.style.width=f.w+'px'; frameImg.style.height=f.h+'px'; }
     else { frameImg.style.display='none'; }
-    ['zParty','zProfile','zText','zBadge'].forEach(function(z){ var el=document.getElementById(z),p=f[z]; if(!el)return; el.style.left=p.l+'px';el.style.top=p.t+'px';el.style.width=p.w+'px';el.style.height=p.h+'px'; });
+    if(key==='flat'){
+      card.style.height='auto'; wrap.style.aspectRatio='auto';
+      ['zParty','zProfile','zText','zBadge'].forEach(function(z){ var el=document.getElementById(z); if(!el)return; el.style.left='';el.style.top='';el.style.width='';el.style.height=''; });
+    } else {
+      card.style.height=f.h+'px'; wrap.style.aspectRatio=f.w+' / '+f.h;
+      ['zParty','zProfile','zText','zBadge'].forEach(function(z){ var el=document.getElementById(z),p=f[z]; if(!el)return; el.style.left=p.l+'px';el.style.top=p.t+'px';el.style.width=p.w+'px';el.style.height=p.h+'px'; });
+    }
     card.style.setProperty('--slotcols',f.cols); card.style.setProperty('--slotrows',f.rows);
-    fit();
     document.querySelectorAll('.fontbar button[data-frame]').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-frame')===key);});
     try{localStorage.setItem('champFrame',key);}catch(e){}
     if(typeof allParties!=='undefined') allParties.forEach(function(c){c.render();});
-    if(key==='flat') reflowFlat();
+    fit();
   }
   document.querySelectorAll('.fontbar button[data-frame]').forEach(function(b){ b.onclick=function(){ applyFrame(b.getAttribute('data-frame')); }; });
-  // flat frame flows to content: text panel + badges + card height shrink when items are removed
-  function reflowFlat(){
-    if(curFrame!=='flat') return;
-    var f=FRAMES.flat, zText=document.getElementById('zText'), zBadge=document.getElementById('zBadge'), lab=document.getElementById('flatBadgeLab');
-    zText.style.height='auto';
-    var tTop=f.zText.t, tH=zText.offsetHeight;
-    var labTop=tTop+tH+30; lab.style.top=labTop+'px';
-    var bTop=labTop+56; zBadge.style.top=bTop+'px';
-    zBadge.style.height='auto'; var bH=Math.max(96,zBadge.offsetHeight); zBadge.style.height=bH+'px';
-    var cardH=bTop+bH+46;
-    card.style.height=cardH+'px'; curH=cardH; wrap.style.aspectRatio=curW+' / '+cardH; fit();
-  }
-  window.__reflowFlat=reflowFlat;
+  // flat frame flows to content; just recompute the scaled wrap height after any content change
+  function reflowFlat(){ if(curFrame==='flat') fit(); }
 
   // ---------- sprite loader ----------
   function loadSprite(m,cb){
