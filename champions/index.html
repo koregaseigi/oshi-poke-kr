@@ -78,9 +78,13 @@
     border-radius:8px;background:linear-gradient(#eef1f5,#d3d9e1);border:2px solid #a9b1bc;color:#4a5260;font-size:24px;font-weight:800;cursor:pointer;user-select:none;font-family:inherit}
   .chip.on{background:linear-gradient(#4a90d9,#2f66b3);border-color:#2f66b3;color:#fff}
 
-  /* name pill */
-  #zName{left:150px;top:250px;width:1150px;height:74px}
-  #zName .flab,#zName .fval{font-size:34px}
+  /* name pill (호칭 + 닉네임 stacked) */
+  #zName{left:150px;top:232px;width:1150px;height:100px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+  #zName .flab,#zName .fval{font-size:23px}
+  #zName .fval{border-bottom-width:2px}
+  #zName .nl-name .flab,#zName .nl-name .fval{font-size:31px}
+  .freerow{align-items:flex-start}
+  .freerow .achbox{min-height:70px}
 
   /* main: party (left, two bands) + trainer sprite (right) */
   #zMain{left:120px;top:352px;width:1200px;height:716px;display:flex;gap:22px}
@@ -184,7 +188,10 @@
     <img id="frameImg" src="frame/frame.png" alt="" />
     <div id="flatTitle">TRAINER&nbsp;CARD</div>
     <div id="flatBadgeLab">BADGES</div>
-    <div class="z fld" id="zName"><span class="flab">닉네임</span><span class="fval" contenteditable data-ph="닉네임"></span></div>
+    <div class="z" id="zName">
+      <div class="fld optf nl-title"><span class="flab">호칭</span><span class="fval" contenteditable data-ph="예: 마스카나 박사"></span></div>
+      <div class="fld nl-name"><span class="flab">닉네임</span><span class="fval" contenteditable data-ph="닉네임"></span></div>
+    </div>
 
     <div class="z" id="zMain">
       <div class="partycol">
@@ -199,9 +206,9 @@
       <div class="fld optf"><span class="flab">배틀 시작일</span><span class="fval" contenteditable data-ph="처음 실전배틀을 시작한 날"></span></div>
       <div class="fld optf"><span class="flab">주력</span><span class="chips" data-mode="multi"><span class="chip">싱글</span><span class="chip">더블</span></span></div>
       <div class="fld optf"><span class="flab">플레이스타일</span><span class="chips" data-mode="multi"><span class="chip">빡겜</span><span class="chip">마볼까지만</span><span class="chip">컨셉파티</span></span><span class="fval sm" contenteditable data-ph="기타"></span></div>
-      <div class="fld optf"><span class="flab">호칭</span><span class="fval" contenteditable data-ph="예: 마스카나 박사"></span></div>
       <div class="achrow optf"><span class="achtag">싱글</span><div class="achbox" contenteditable data-ph="예: M-A 시즌1 · 최고레이팅 1850"></div></div>
       <div class="achrow optf"><span class="achtag dbl">더블</span><div class="achbox" contenteditable data-ph="예: [더블] M-A 시즌1 · 마스터볼급"></div></div>
+      <div class="fld optf freerow"><span class="flab">자유발언</span><div class="achbox" contenteditable data-ph="자유롭게 한마디 적어보세요!"></div></div>
     </div>
 
     <div class="z" id="zBadge"><span class="bempty">＋ 위 배지 선택 버튼으로 배지를 추가하세요</span></div>
@@ -512,7 +519,7 @@
   // ---------- removable fields ----------
   var restoreBar=document.getElementById('restoreBar');
   function addRestore(el,name){ var b=document.createElement('button'); b.className='rb'; b.type='button'; b.textContent='＋ '+name; b.onclick=function(){ el.classList.remove('hiddenz'); b.remove(); }; restoreBar.appendChild(b); }
-  document.querySelectorAll('#zText .optf').forEach(function(row){
+  document.querySelectorAll('#card .optf').forEach(function(row){
     var lab=row.querySelector('.flab,.achtag'); var name=lab?lab.textContent.trim():'항목';
     if(row.classList.contains('achrow')) name='실적 '+name;
     var x=document.createElement('button'); x.className='zx'; x.type='button'; x.textContent='×'; x.title='이 항목 숨기기';
