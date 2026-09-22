@@ -76,7 +76,7 @@
   #card.flat #zBadge{order:5}
   #card.flat .z{position:static!important;left:auto!important;top:auto!important;width:auto!important;height:auto!important}
   #card.flat #zParty{flex:1;min-width:0}
-  #card.flat #zProfile{flex:none;width:352px}
+  #card.flat #zProfile{flex:none;width:316px}
   #card.flat .band{padding:34px 8px 8px;height:auto}
   #card.flat .band>.blabel{top:9px;left:12px}
   #card.flat .slotgrid{position:static;height:auto}
@@ -113,7 +113,7 @@
   .band .party-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#5f6b7a;font-size:23px;font-weight:700;text-align:center;padding:0 14px;pointer-events:none}
   .avatar{width:100%;flex:none;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;
     background:rgba(255,255,255,.2);border:2px solid rgba(120,130,145,.4);display:flex;align-items:center;justify-content:center}
-  #card.flat .avatar{aspect-ratio:4/5}
+  #card.flat .avatar{height:352px}
   #card.v2 .avatar{flex:1;min-height:0}
   .avatar img{width:100%;height:100%;object-fit:cover;display:block}
   .avatar .ph{color:#5f6b7a;font-size:24px;font-weight:700;text-align:center;padding:10px;line-height:1.6}
@@ -392,7 +392,7 @@
   var wrap=document.getElementById('stageWrap'), card=document.getElementById('card'), frameImg=document.getElementById('frameImg'), cardScale=1, curW=1427, curH=2000, curFrame='v2';
   function fit(){
     cardScale=(wrap.clientWidth||curW)/curW; card.style.transform='scale('+cardScale+')';
-    if(curFrame==='flat'){ wrap.style.aspectRatio='auto'; wrap.style.height=(card.offsetHeight*cardScale)+'px'; }
+    if(curFrame==='flat'){ curH=card.offsetHeight; wrap.style.aspectRatio='auto'; wrap.style.height=(curH*cardScale)+'px'; }
   }
   window.addEventListener('resize',fit);
   var FRAMES={
@@ -730,12 +730,14 @@
     var btn=this, old=btn.textContent; btn.textContent='저장 중...'; btn.disabled=true;
     if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
     var ph=document.createComment('c'); card.parentNode.insertBefore(ph,card);
-    var holder=document.createElement('div'); holder.style.cssText='position:fixed;left:0;top:0;z-index:-1;background:#ffffff;width:'+curW+'px;height:'+curH+'px';
+    var holder=document.createElement('div'); holder.style.cssText='position:fixed;left:0;top:0;z-index:-1;background:#ffffff';
     var savedT=card.style.transform;
     card.classList.add('exporting'); card.style.transform='none';
     holder.appendChild(card); document.body.appendChild(holder);
+    var eH=(curFrame==='flat'? card.offsetHeight : curH);
+    holder.style.width=curW+'px'; holder.style.height=eH+'px';
     function restore(){ card.classList.remove('exporting'); card.style.transform=savedT; if(ph.parentNode){ph.parentNode.insertBefore(card,ph);ph.remove();} holder.remove(); fit(); }
-    htmlToImage.toPng(card,{pixelRatio:1.4,cacheBust:true,width:curW,height:curH,
+    htmlToImage.toPng(card,{pixelRatio:1.4,cacheBust:true,width:curW,height:eH,
       filter:function(n){ if(n.nodeType!==1||!n.classList) return true; var c=n.classList;
         if(c.contains('zx')||c.contains('tools')||c.contains('bempty')||c.contains('hiddenz')||c.contains('splus')) return false; return true; }})
     .then(function(url){ deliverImage(url,'champions-card.png'); })
