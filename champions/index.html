@@ -47,7 +47,7 @@
   /* flat-only chrome */
   #flatTitle,#flatBadgeLab{display:none}
   #card.flat #flatTitle{display:block;position:absolute;left:78px;top:74px;font-size:70px;font-weight:800;color:#ffd23f;letter-spacing:3px;text-shadow:5px 5px 0 #16304f}
-  #card.flat #flatBadgeLab{display:block;position:absolute;left:44px;top:1706px;font-size:36px;font-weight:800;color:#fff;letter-spacing:3px;text-shadow:3px 3px 0 #16304f}
+  #card.flat #flatBadgeLab{display:block;position:absolute;left:44px;top:1724px;font-size:36px;font-weight:800;color:#fff;letter-spacing:3px;text-shadow:3px 3px 0 #16304f}
   #card.flat #zProfile{background:#eaf2fc;border:6px solid #1f3f68;border-radius:14px;padding:14px}
   #card.flat .idtitle{color:#2c60ab}
   #card.flat .idname{color:#16304f}
@@ -81,8 +81,8 @@
   .chip.on{background:linear-gradient(#4a90d9,#2f66b3);border-color:#2f66b3;color:#fff}
 
   /* profile block: photo + 호칭 + name (no labels), positioned per frame */
-  #zProfile{display:flex;flex-direction:column;gap:10px;align-items:center}
-  .idblock{flex:none;display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;width:100%}
+  #zProfile{display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:flex-start}
+  .idblock{flex:none;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;width:100%}
   .idtitle{font-size:26px;font-weight:800;color:#2f3843;outline:none;font-family:inherit;line-height:1.15}
   .idname{font-size:38px;font-weight:800;color:#1f2a36;outline:none;font-family:inherit;line-height:1.15}
   .idtitle:empty:before,.idname:empty:before{content:attr(data-ph);color:#9aa2ad;font-weight:600}
@@ -95,13 +95,13 @@
   .band{position:relative;flex:1;border-radius:10px;background:rgba(255,255,255,.16);border:2px solid rgba(120,130,145,.35)}
   .band>.blabel{position:absolute;left:12px;top:8px;font-size:22px;font-weight:800;color:#41597e;z-index:4;pointer-events:none}
   .band .party-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#5f6b7a;font-size:23px;font-weight:700;text-align:center;padding:0 14px;pointer-events:none}
-  .avatar{width:100%;flex:1;min-height:0;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;
+  .avatar{width:100%;flex:none;aspect-ratio:4/5;max-height:calc(100% - 96px);border-radius:12px;overflow:hidden;cursor:pointer;position:relative;
     background:rgba(255,255,255,.2);border:2px solid rgba(120,130,145,.4);display:flex;align-items:center;justify-content:center}
   .avatar img{width:100%;height:100%;object-fit:cover;display:block}
   .avatar .ph{color:#5f6b7a;font-size:24px;font-weight:700;text-align:center;padding:10px;line-height:1.6}
 
   .pmon{position:absolute;cursor:grab;touch-action:none;user-select:none;line-height:0}
-  .pmon img.spr{height:210px;width:auto;image-rendering:pixelated;display:block;pointer-events:none;-webkit-user-drag:none}
+  .pmon img.spr{height:150px;width:auto;image-rendering:pixelated;display:block;pointer-events:none;-webkit-user-drag:none}
   .pmon .pball{position:absolute;left:-2px;bottom:-2px;width:44px;height:44px;image-rendering:pixelated;pointer-events:none;z-index:3}
   .pmon .tools{position:absolute;top:0;right:0;display:flex;gap:4px;opacity:0;transition:.1s;z-index:6}
   .pmon:hover .tools{opacity:1}
@@ -109,9 +109,9 @@
   .tb.on{background:#ffe066}
   /* slot (grid) style */
   .slotgrid{position:absolute;left:10px;right:10px;top:38px;bottom:10px;display:grid;grid-template-columns:var(--slotcols,repeat(3,1fr));grid-template-rows:var(--slotrows,repeat(2,1fr));gap:10px}
-  .slot{position:relative;border-radius:10px;background:rgba(255,255,255,.34);border:2px solid rgba(120,130,145,.32);display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .slot{position:relative;border-radius:10px;overflow:hidden;background:rgba(255,255,255,.34);border:2px solid rgba(120,130,145,.32);display:flex;align-items:center;justify-content:center;cursor:pointer}
   .slot.empty{background:rgba(255,255,255,.14);border-color:rgba(120,130,145,.22)}
-  .slot .spr{max-width:98%;max-height:98%;width:auto;height:auto;image-rendering:pixelated;display:block;pointer-events:none}
+  .slot .spr{width:100%;height:100%;object-fit:cover;object-position:center 22%;image-rendering:pixelated;display:block;pointer-events:none}
   .slot .sball{position:absolute;left:6px;bottom:6px;width:46px;height:46px;image-rendering:pixelated;pointer-events:none}
   .slot .splus{color:#8390a1;font-size:40px;font-weight:800;pointer-events:none}
   .slot .tools{position:absolute;top:3px;right:3px;display:flex;gap:4px;opacity:0;transition:.1s;z-index:6}
@@ -335,11 +335,11 @@
   window.addEventListener('resize',fit);
   var FRAMES={
     flat:{ w:1427,h:2000, img:null, cols:'repeat(3,1fr)', rows:'repeat(2,1fr)',
-      zParty:{l:118,t:352,w:815,h:716}, zProfile:{l:965,t:352,w:352,h:716},
-      zText:{l:150,t:1116,w:1140,h:560}, zBadge:{l:150,t:1772,w:1160,h:118} },
-    v2:{ w:2752,h:1536, img:'frame/background-v2.png', cols:'repeat(6,1fr)', rows:'repeat(1,1fr)',
-      zParty:{l:498,t:300,w:1140,h:512}, zProfile:{l:1690,t:300,w:555,h:512},
-      zText:{l:520,t:868,w:1710,h:448}, zBadge:{l:520,t:1352,w:1690,h:86} }
+      zParty:{l:118,t:238,w:815,h:800}, zProfile:{l:965,t:238,w:352,h:800},
+      zText:{l:150,t:1082,w:1140,h:656}, zBadge:{l:150,t:1788,w:1160,h:120} },
+    v2:{ w:2752,h:1536, img:'frame/background-v2.webp', cols:'repeat(6,1fr)', rows:'repeat(1,1fr)',
+      zParty:{l:500,t:300,w:1120,h:505}, zProfile:{l:1700,t:300,w:520,h:505},
+      zText:{l:540,t:872,w:1620,h:442}, zBadge:{l:545,t:1356,w:1600,h:80} }
   };
   function applyFrame(key){
     var f=FRAMES[key]; if(!f) return; curFrame=key; curW=f.w; curH=f.h;
@@ -467,7 +467,7 @@
           var ball='';
           if(m.ball){
             var bs='';
-            if(m.bb){ var s=210/m.bb.H, bl=Math.round(m.bb.x0*s)-16, bt=Math.round(m.bb.y1*s)-38; bs=' style="left:'+bl+'px;top:'+bt+'px;bottom:auto"'; }
+            if(m.bb){ var s=150/m.bb.H, bl=Math.round(m.bb.x0*s)-14, bt=Math.round(m.bb.y1*s)-30; bs=' style="left:'+bl+'px;top:'+bt+'px;bottom:auto"'; }
             ball='<img class="pball" src="../balls/'+m.ball+'.png" alt=""'+bs+'>';
           }
           el.innerHTML=tools(m)+'<img class="spr" src="'+src+'" alt="">'+ball;
