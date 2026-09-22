@@ -68,19 +68,30 @@
   .avatar .ph{color:#5f6b7a;font-size:24px;font-weight:700;text-align:center;padding:10px;line-height:1.6}
 
   .pmon{position:absolute;cursor:grab;touch-action:none;user-select:none;line-height:0}
-  .pmon img.spr{height:150px;width:auto;image-rendering:pixelated;display:block;pointer-events:none;-webkit-user-drag:none}
+  .pmon img.spr{height:210px;width:auto;image-rendering:pixelated;display:block;pointer-events:none;-webkit-user-drag:none}
   .pmon .pball{position:absolute;left:-2px;bottom:-2px;width:44px;height:44px;image-rendering:pixelated;pointer-events:none;z-index:3}
   .pmon .tools{position:absolute;top:0;right:0;display:flex;gap:4px;opacity:0;transition:.1s;z-index:6}
   .pmon:hover .tools{opacity:1}
   .tb{width:30px;height:30px;border-radius:7px;border:none;background:rgba(255,255,255,.95);box-shadow:0 1px 4px rgba(0,0,0,.25);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;font-family:inherit}
   .tb.on{background:#ffe066}
+  /* slot (grid) style */
+  .slotgrid{position:absolute;left:10px;right:10px;top:38px;bottom:10px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:10px}
+  .slot{position:relative;border-radius:10px;background:rgba(255,255,255,.34);box-shadow:inset 0 0 0 2px rgba(120,130,145,.32);display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .slot.empty{background:rgba(255,255,255,.14);box-shadow:inset 0 0 0 2px rgba(120,130,145,.22)}
+  .slot .spr{max-width:86%;max-height:86%;width:auto;height:auto;image-rendering:pixelated;display:block;pointer-events:none}
+  .slot .sball{position:absolute;left:6px;bottom:6px;width:46px;height:46px;image-rendering:pixelated;pointer-events:none}
+  .slot .splus{color:#8390a1;font-size:40px;font-weight:800;pointer-events:none}
+  .slot .tools{position:absolute;top:3px;right:3px;display:flex;gap:4px;opacity:0;transition:.1s;z-index:6}
+  .slot:hover .tools{opacity:1}
 
   /* text zone (brushed area) */
   #zText{left:150px;top:1116px;width:1140px;height:575px;display:flex;flex-direction:column;gap:11px}
   #zText .fld{position:relative}
   .achrow{display:flex;gap:11px;align-items:stretch}
-  .achtag{flex:none;width:96px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:24px;color:#fff;background:linear-gradient(#5a6472,#3c4552)}
-  .achtag.dbl{background:linear-gradient(#b6842f,#8f6620)}
+  .achtag{flex:none;width:100px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:25px;color:#fff;
+    background:linear-gradient(#4f93da,#2c60ab);text-shadow:0 1px 0 rgba(0,0,0,.28);
+    box-shadow:inset 0 2px 0 rgba(255,255,255,.45),inset 0 -3px 6px rgba(0,0,0,.22),0 1px 2px rgba(0,0,0,.2)}
+  .achtag.dbl{background:linear-gradient(#eabf5e,#bd8b2b);color:#4a3208;text-shadow:0 1px 0 rgba(255,255,255,.35)}
   .achbox{flex:1;min-height:58px;border:2px solid #a4abb5;border-radius:9px;background:rgba(255,255,255,.55);padding:9px 13px;font-size:24px;line-height:1.5;font-weight:600;color:#232a32;outline:none;white-space:pre-wrap;font-family:inherit}
   .achbox:empty:before{content:attr(data-ph);color:#8b93a0;font-weight:500}
 
@@ -132,6 +143,9 @@
   <div class="fontbar">폰트
     <button data-font="neodgm" class="on">네오둥근모</button>
     <button data-font="Galmuri11">갈무리</button>
+    <span style="margin-left:14px">칸 스타일</span>
+    <button data-style="slot" class="on">슬롯형</button>
+    <button data-style="free">자유형</button>
   </div>
   <div class="hint">칸을 눌러 입력하세요. 포켓몬을 넣고 <b>끌어서 배치</b>, 포켓몬 위 🔴로 <b>볼</b> 지정. <b>× 로 항목을 지울 수 있어요</b> (복원은 아래 바).</div>
   <div id="restoreBar"></div>
@@ -253,6 +267,18 @@
   });
   try{var sf=localStorage.getItem('champFont'); if(sf){var tb=document.querySelector('.fontbar button[data-font="'+sf+'"]'); if(tb) tb.click();}}catch(e){}
 
+  // ---------- card style (slot / free) ----------
+  var cardStyle='slot';
+  document.querySelectorAll('.fontbar button[data-style]').forEach(function(b){
+    b.onclick=function(){
+      document.querySelectorAll('.fontbar button[data-style]').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on'); cardStyle=b.getAttribute('data-style');
+      try{localStorage.setItem('champStyle',cardStyle);}catch(e){}
+      allParties.forEach(function(c){c.render();});
+    };
+  });
+  try{var ss=localStorage.getItem('champStyle'); if(ss==='free'||ss==='slot'){ cardStyle=ss; var sb=document.querySelector('.fontbar button[data-style="'+ss+'"]'); if(sb){document.querySelectorAll('.fontbar button[data-style]').forEach(function(x){x.classList.remove('on');}); sb.classList.add('on');} }}catch(e){}
+
   // ---------- chips ----------
   document.querySelectorAll('.chips').forEach(function(group){
     group.addEventListener('click',function(e){ var chip=e.target.closest('.chip'); if(chip) chip.classList.toggle('on'); });
@@ -328,28 +354,54 @@
         el.addEventListener('pointermove',move); el.addEventListener('pointerup',up);
       });
     }
+    function tools(m){
+      return '<div class="tools"><button class="tb tball" title="볼 지정">🔴</button>'+
+        '<button class="tb tshine'+(m.shiny?' on':'')+'" title="색이 다른 포켓몬">✨</button>'+
+        '<button class="tb tdel" title="삭제">×</button></div>';
+    }
+    function wire(el,m){
+      el.querySelector('.tdel').onclick=function(ev){ev.stopPropagation();var i=team.indexOf(m);if(i>=0)team.splice(i,1);render();};
+      el.querySelector('.tshine').onclick=function(ev){ev.stopPropagation();m.shiny=!m.shiny;loadSprite(m,render);};
+      el.querySelector('.tball').onclick=function(ev){ev.stopPropagation();ballTargetMon=m;ballRerender=render;ballMask.classList.add('show');};
+    }
     function render(){
-      [].slice.call(host.querySelectorAll('.pmon')).forEach(function(e){e.remove();});
-      host.querySelector('.party-hint').style.display=team.length?'none':'flex';
-      team.forEach(function(m,idx){
-        var el=document.createElement('div'); el.className='pmon';
-        el.style.left=(m.x||0)+'px'; el.style.top=(m.y||0)+'px'; el.style.zIndex=idx+1;
-        var src=m.dataUrl||(m.shiny?m.p.front_shiny:m.p.front_default);
-        var ball='';
-        if(m.ball){
-          var bs='';
-          if(m.bb){ var s=150/m.bb.H, bl=Math.round(m.bb.x0*s)-14, bt=Math.round(m.bb.y1*s)-30; bs=' style="left:'+bl+'px;top:'+bt+'px;bottom:auto"'; }
-          ball='<img class="pball" src="../balls/'+m.ball+'.png" alt=""'+bs+'>';
-        }
-        el.innerHTML='<div class="tools"><button class="tb tball" title="볼 지정">🔴</button>'+
-          '<button class="tb tshine'+(m.shiny?' on':'')+'" title="색이 다른 포켓몬">✨</button>'+
-          '<button class="tb tdel" title="삭제">×</button></div><img class="spr" src="'+src+'" alt="">'+ball;
-        el.querySelector('.tdel').onclick=function(ev){ev.stopPropagation();var i=team.indexOf(m);if(i>=0)team.splice(i,1);render();};
-        el.querySelector('.tshine').onclick=function(ev){ev.stopPropagation();m.shiny=!m.shiny;loadSprite(m,render);};
-        el.querySelector('.tball').onclick=function(ev){ev.stopPropagation();ballTargetMon=m;ballRerender=render;ballMask.classList.add('show');};
-        makeDrag(el,m);
-        host.appendChild(el);
-      });
+      [].slice.call(host.querySelectorAll('.pmon,.slotgrid')).forEach(function(e){e.remove();});
+      var hint=host.querySelector('.party-hint');
+      if(cardStyle==='slot'){
+        hint.style.display='none';
+        var grid=document.createElement('div'); grid.className='slotgrid';
+        for(var i=0;i<6;i++){(function(i){
+          var slot=document.createElement('div'); slot.className='slot'+(team[i]?'':' empty');
+          var m=team[i];
+          if(m){
+            var src=m.dataUrl||(m.shiny?m.p.front_shiny:m.p.front_default);
+            var ball=m.ball?'<img class="sball" src="../balls/'+m.ball+'.png" alt="">':'';
+            slot.innerHTML=tools(m)+'<img class="spr" src="'+src+'" alt="">'+ball;
+            wire(slot,m);
+          } else {
+            slot.innerHTML='<span class="splus">＋</span>';
+            slot.onclick=function(){ openPicker(ctrl); };
+          }
+          grid.appendChild(slot);
+        })(i);}
+        host.appendChild(grid);
+      } else {
+        hint.style.display=team.length?'none':'flex';
+        team.forEach(function(m,idx){
+          var el=document.createElement('div'); el.className='pmon';
+          el.style.left=(m.x||0)+'px'; el.style.top=(m.y||0)+'px'; el.style.zIndex=idx+1;
+          var src=m.dataUrl||(m.shiny?m.p.front_shiny:m.p.front_default);
+          var ball='';
+          if(m.ball){
+            var bs='';
+            if(m.bb){ var s=210/m.bb.H, bl=Math.round(m.bb.x0*s)-16, bt=Math.round(m.bb.y1*s)-38; bs=' style="left:'+bl+'px;top:'+bt+'px;bottom:auto"'; }
+            ball='<img class="pball" src="../balls/'+m.ball+'.png" alt=""'+bs+'>';
+          }
+          el.innerHTML=tools(m)+'<img class="spr" src="'+src+'" alt="">'+ball;
+          wire(el,m); makeDrag(el,m);
+          host.appendChild(el);
+        });
+      }
     }
     host.addEventListener('click',function(e){
       var t=e.target;
@@ -497,7 +549,7 @@
     function restore(){ card.classList.remove('exporting'); card.style.transform=savedT; if(ph.parentNode){ph.parentNode.insertBefore(card,ph);ph.remove();} holder.remove(); fit(); }
     htmlToImage.toPng(card,{pixelRatio:1.5,cacheBust:true,width:1427,height:2000,
       filter:function(n){ if(n.nodeType!==1||!n.classList) return true; var c=n.classList;
-        if(c.contains('zx')||c.contains('tools')||c.contains('bempty')||c.contains('hiddenz')) return false; return true; }})
+        if(c.contains('zx')||c.contains('tools')||c.contains('bempty')||c.contains('hiddenz')||c.contains('splus')) return false; return true; }})
     .then(function(url){ deliverImage(url,'champions-card.png'); })
     .catch(function(e){console.error(e);alert('이미지 저장에 실패했어요. 다시 시도해 주세요.');})
     .then(function(){restore();btn.textContent=old;btn.disabled=false;});
