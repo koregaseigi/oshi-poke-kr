@@ -74,9 +74,16 @@
   #card.flat #zText{order:3}
   #card.flat #flatBadgeLab{position:static;margin:0;order:4}
   #card.flat #zBadge{order:5}
-  #card.flat .z{position:static!important;left:auto!important;top:auto!important;width:auto!important;height:auto!important}
+  #card.flat .z{position:static!important;left:auto!important;top:auto!important}
+  #card.flat #zText,#card.flat #zBadge{width:auto;height:auto}
   #card.flat #zParty{flex:1;min-width:0}
-  #card.flat #zProfile{flex:none;width:316px}
+  #card.flat #zProfile{flex:none;width:392px;box-sizing:border-box}
+  #card.flat .avatar{height:360px;width:100%;flex:none}
+  #card.flat #zProfile .pfree{flex:1;min-height:80px;width:100%}
+  #card.flat #zProfile .pfbox{width:100%;height:100%;min-height:80px;border:2px solid #a4abb5;border-radius:9px;background:rgba(255,255,255,.6);padding:9px 12px;font-size:22px;line-height:1.5;font-weight:600;color:#232a32;outline:none;white-space:pre-wrap;overflow:auto;box-sizing:border-box}
+  #card.flat #zProfile .pfbox:empty:before{content:attr(data-ph);color:#8b93a0;font-weight:500}
+  #card.v2 .pfree{display:none}
+  #card.flat #topRow{align-items:stretch}
   #card.flat .band{padding:34px 8px 8px;height:auto}
   #card.flat .band>.blabel{top:9px;left:12px}
   #card.flat .slotgrid{position:static;height:auto}
@@ -132,8 +139,8 @@
   .slot.empty{background:rgba(255,255,255,.14);border-color:rgba(120,130,145,.22)}
   .slot .spr{width:100%;height:100%;object-fit:cover;object-position:center 22%;image-rendering:pixelated;display:block;touch-action:none;border-radius:8px}
   .slot .sball{position:absolute;left:3px;bottom:3px;width:62px;height:62px;image-rendering:pixelated;pointer-events:none;z-index:4;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
-  .slot .sitem{position:absolute;right:-5px;bottom:-5px;width:76px;height:76px;border-radius:50%;background:#fff;padding:9px;object-fit:contain;image-rendering:pixelated;pointer-events:none;z-index:5;box-shadow:0 1px 3px rgba(0,0,0,.3),inset 0 0 0 2px #dfe6ef}
-  .pmon .pitem{position:absolute;right:-8px;bottom:4px;width:50px;height:50px;border-radius:50%;background:#fff;padding:6px;object-fit:contain;image-rendering:pixelated;pointer-events:none;z-index:3;box-shadow:0 1px 3px rgba(0,0,0,.3),inset 0 0 0 2px #dfe6ef}
+  .slot .sitem{position:absolute;right:-5px;bottom:-5px;width:76px;height:76px;border-radius:50%;background:#fff;padding:3px;object-fit:contain;image-rendering:pixelated;pointer-events:none;z-index:5;box-shadow:0 1px 3px rgba(0,0,0,.3),inset 0 0 0 2px #dfe6ef}
+  .pmon .pitem{position:absolute;right:-8px;bottom:4px;width:50px;height:50px;border-radius:50%;background:#fff;padding:2px;object-fit:contain;image-rendering:pixelated;pointer-events:none;z-index:3;box-shadow:0 1px 3px rgba(0,0,0,.3),inset 0 0 0 2px #dfe6ef}
   .slot .splus{color:#8390a1;font-size:40px;font-weight:800;pointer-events:none}
   .slot .tools{position:absolute;top:3px;right:3px;display:flex;gap:4px;opacity:0;transition:.1s;z-index:6}
   .slot:hover .tools{opacity:1}
@@ -227,6 +234,7 @@
           <span class="idtitle" contenteditable data-ph="호칭"></span>
           <span class="idname" contenteditable data-ph="이름"></span>
         </div>
+        <div class="pfree optf" data-name="메모"><div class="pfbox" contenteditable data-ph="자유롭게 적어보세요"></div></div>
       </div>
     </div>
 
@@ -295,7 +303,7 @@
     {k:'black-sludge',ko:'검은해감'},{k:'sitrus-berry',ko:'자뭉열매'},{k:'lum-berry',ko:'리샘열매'},
     {k:'weakness-policy',ko:'약점보험'},{k:'expert-belt',ko:'달인의띠'},{k:'wide-lens',ko:'넓은렌즈'},
     {k:'scope-lens',ko:'초점렌즈'},{k:'muscle-band',ko:'근력의머리띠'},{k:'wise-glasses',ko:'지식안경'},
-    {k:'quick-claw',ko:'순간의발톱'},{k:'kings-rock',ko:'왕의징표석'},{k:'razor-claw',ko:'예리한손톱'},
+    {k:'quick-claw',ko:'선제공격손톱'},{k:'kings-rock',ko:'왕의징표석'},{k:'razor-claw',ko:'예리한손톱'},
     {k:'razor-fang',ko:'예리한이빨'},{k:'air-balloon',ko:'풍선'},{k:'red-card',ko:'레드카드'},
     {k:'safety-goggles',ko:'방진고글'},{k:'protective-pads',ko:'방호패드'},{k:'shell-bell',ko:'조가비방울'},
     {k:'focus-band',ko:'기합의머리띠'},{k:'toxic-orb',ko:'맹독구슬'},{k:'flame-orb',ko:'화염구슬'},{k:'iron-ball',ko:'무거운쇠구슬'},
@@ -318,7 +326,33 @@
     {k:'abomasite',ko:'눈설왕나이트'},{k:'galladite',ko:'엘레이드나이트'},{k:'audinite',ko:'다부니나이트'},
     {k:'diancite',ko:'디안시나이트'},{k:'beedrillite',ko:'독침붕나이트'},{k:'pidgeotite',ko:'피죤투나이트'},
     {k:'slowbronite',ko:'야도란나이트'},{k:'steelixite',ko:'강철톤나이트'},{k:'sceptilite',ko:'나무킹나이트'},
-    {k:'swampertite',ko:'대짱이나이트'},{k:'sablenite',ko:'음번나이트'}];
+    {k:'swampertite',ko:'대짱이나이트'},{k:'sablenite',ko:'음번나이트'},
+    {k:'occa-berry',ko:'오카열매'},{k:'passho-berry',ko:'꼬시개열매'},{k:'wacan-berry',ko:'로플열매'},
+    {k:'rindo-berry',ko:'린드열매'},{k:'yache-berry',ko:'야시열매'},{k:'chople-berry',ko:'초플열매'},
+    {k:'kebia-berry',ko:'케이열매'},{k:'shuca-berry',ko:'슈캇열매'},{k:'coba-berry',ko:'바코열매'},
+    {k:'payapa-berry',ko:'뿌시열매'},{k:'tanga-berry',ko:'스탕열매'},{k:'charti-berry',ko:'처리열매'},
+    {k:'kasib-berry',ko:'캇시열매'},{k:'haban-berry',ko:'하반열매'},{k:'colbur-berry',ko:'콜버열매'},
+    {k:'babiri-berry',ko:'바비열매'},{k:'chilan-berry',ko:'치라열매'},{k:'roseli-berry',ko:'로젤열매'},
+    {k:'liechi-berry',ko:'치리열매'},{k:'ganlon-berry',ko:'용아열매'},{k:'salac-berry',ko:'카리열매'},
+    {k:'petaya-berry',ko:'야타비열매'},{k:'apicot-berry',ko:'규속열매'},{k:'starf-berry',ko:'스타열매'},
+    {k:'lansat-berry',ko:'랑사열매'},{k:'micle-berry',ko:'미크르열매'},{k:'custap-berry',ko:'크리비열매'},
+    {k:'jaboca-berry',ko:'자포카열매'},{k:'rowap-berry',ko:'로파열매'},{k:'enigma-berry',ko:'수수께끼열매'},
+    {k:'cheri-berry',ko:'체리열매'},{k:'chesto-berry',ko:'체스트열매'},{k:'pecha-berry',ko:'복슝아열매'},
+    {k:'rawst-berry',ko:'초콜열매'},{k:'aspear-berry',ko:'스파열매'},{k:'persim-berry',ko:'감마열매'},
+    {k:'leppa-berry',ko:'사과열매'},{k:'oran-berry',ko:'오랭열매'},{k:'aguav-berry',ko:'아위아열매'},
+    {k:'figy-berry',ko:'무롯열매'},{k:'iapapa-berry',ko:'이아파열매'},{k:'mago-berry',ko:'초미열매'},
+    {k:'wiki-berry',ko:'위키열매'},{k:'bright-powder',ko:'밝은가루'},{k:'metronome',ko:'메트로놈'},
+    {k:'absorb-bulb',ko:'흡수구슬'},{k:'cell-battery',ko:'충전지'},{k:'luminous-moss',ko:'반짝이는이끼'},
+    {k:'snowball',ko:'눈덩이'},{k:'adrenaline-orb',ko:'아드레날린오브'},{k:'sticky-barb',ko:'끈끈밤송이'},
+    {k:'grip-claw',ko:'끈질긴갈고리손톱'},{k:'binding-band',ko:'조이는띠'},{k:'zoom-lens',ko:'줌렌즈'},
+    {k:'lax-incense',ko:'방심의향로'},{k:'full-incense',ko:'여유의향로'},{k:'lagging-tail',ko:'느림보꼬리'},
+    {k:'ring-target',ko:'타깃링'},{k:'destiny-knot',ko:'붉은실'},{k:'black-belt',ko:'검은띠'},{k:'charcoal',ko:'숯'},
+    {k:'mystic-water',ko:'신비의물방울'},{k:'miracle-seed',ko:'기적의씨앗'},{k:'magnet',ko:'자석'},
+    {k:'twisted-spoon',ko:'휘어진스푼'},{k:'never-melt-ice',ko:'녹지않는얼음'},{k:'black-glasses',ko:'검은안경'},
+    {k:'silk-scarf',ko:'실크스카프'},{k:'spell-tag',ko:'저주의부적'},{k:'hard-stone',ko:'단단한돌'},
+    {k:'sharp-beak',ko:'날카로운부리'},{k:'poison-barb',ko:'독가시'},{k:'dragon-fang',ko:'용의송곳니'},
+    {k:'metal-coat',ko:'금속코트'},{k:'soft-sand',ko:'부드러운모래'},{k:'silver-powder',ko:'은가루'},
+    {k:'pixie-plate',ko:'요정판'},{k:'big-root',ko:'큰뿌리'},{k:'normal-gem',ko:'노말젬'}];
   var BADGES=[
     {k:'badgecollectorbadge',ko:'배지 수집가'},{k:'bigspenderbadge',ko:'큰손'},{k:'bottomscollectorbadge',ko:'하의 수집가'},
     {k:'championtierbadge',ko:'챔피언 티어'},{k:'criticalhitbadge',ko:'급소'},
