@@ -36,8 +36,34 @@
 
   /* fixed-aspect card: native 1427x2000 scaled to fit */
   #stageWrap{width:700px;max-width:100%;aspect-ratio:1427/2000;margin:0 auto;position:relative}
-  #card{position:absolute;top:0;left:0;width:1427px;height:2000px;transform-origin:top left;
-    background:url('frame/frame.webp') no-repeat 0 0;background-size:1427px 2000px}
+  #card{position:absolute;top:0;left:0;width:1427px;height:2000px;transform-origin:top left}
+  #frameImg{position:absolute;left:0;top:0;width:1427px;height:2000px;z-index:0;pointer-events:none;display:none}
+  #card.metal #frameImg{display:block}
+  #card.flat{background:#4b8fdb;box-shadow:inset 0 0 0 12px #1f3f68}
+  #card>.z,#card>#flatTitle,#card>#flatBadgeLab{z-index:1}
+  /* flat-only chrome */
+  #flatTitle,#flatBadgeLab{display:none}
+  #card.flat #flatTitle{display:block;position:absolute;left:78px;top:74px;font-size:70px;font-weight:800;color:#ffd23f;letter-spacing:3px;text-shadow:5px 5px 0 #16304f}
+  #card.flat #flatBadgeLab{display:block;position:absolute;left:44px;top:1706px;font-size:36px;font-weight:800;color:#fff;letter-spacing:3px;text-shadow:3px 3px 0 #16304f}
+  #card.flat #zName{background:#cfe4ff;box-shadow:inset 0 0 0 5px #1f3f68;border-radius:10px;padding-left:26px}
+  #card.flat #zName .flab,#card.flat #zName .fval{color:#1f3f68}
+  #card.flat #zName .flab:before{background:#4b8fdb}
+  #card.flat #zName .fval{border-bottom-color:#7aa6da}
+  #card.flat #zMain{background:#eaf2fc;box-shadow:inset 0 0 0 6px #1f3f68;border-radius:14px;padding:16px}
+  #card.flat .band{background:#fff;box-shadow:inset 0 0 0 3px #9cc0ea;border-radius:8px}
+  #card.flat .band>.blabel{color:#2c60ab}
+  #card.flat .slot{background:#fff;box-shadow:inset 0 0 0 3px #9cc0ea;border-radius:6px}
+  #card.flat .slot.empty{background:#f1f6fd}
+  #card.flat .avatar{background:#fff;box-shadow:inset 0 0 0 3px #9cc0ea;border-radius:8px}
+  #card.flat #zText{background:#eaf2fc;box-shadow:inset 0 0 0 6px #1f3f68;border-radius:14px;padding:16px 22px}
+  #card.flat #zText .flab{color:#25405f}
+  #card.flat #zText .flab:before{background:#4b8fdb}
+  #card.flat .fval{color:#1f2f42;border-bottom-color:#9cc0ea}
+  #card.flat .chip{border-radius:6px}
+  #card.flat .achbox{background:#fff;border-color:#9cc0ea}
+  #card.flat .achtag{border-radius:6px}
+  #card.flat #zBadge{background:#2f6fc0;box-shadow:inset 0 0 0 5px #1f3f68;border-radius:10px;padding:0 18px}
+  #card.flat #zBadge .bempty{color:#dbe9ff}
 
   .z{position:absolute}
   .fld{display:flex;align-items:center;gap:12px}
@@ -78,7 +104,7 @@
   .slotgrid{position:absolute;left:10px;right:10px;top:38px;bottom:10px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:10px}
   .slot{position:relative;border-radius:10px;background:rgba(255,255,255,.34);box-shadow:inset 0 0 0 2px rgba(120,130,145,.32);display:flex;align-items:center;justify-content:center;cursor:pointer}
   .slot.empty{background:rgba(255,255,255,.14);box-shadow:inset 0 0 0 2px rgba(120,130,145,.22)}
-  .slot .spr{max-width:86%;max-height:86%;width:auto;height:auto;image-rendering:pixelated;display:block;pointer-events:none}
+  .slot .spr{max-width:98%;max-height:98%;width:auto;height:auto;image-rendering:pixelated;display:block;pointer-events:none}
   .slot .sball{position:absolute;left:6px;bottom:6px;width:46px;height:46px;image-rendering:pixelated;pointer-events:none}
   .slot .splus{color:#8390a1;font-size:40px;font-weight:800;pointer-events:none}
   .slot .tools{position:absolute;top:3px;right:3px;display:flex;gap:4px;opacity:0;transition:.1s;z-index:6}
@@ -146,12 +172,18 @@
     <span style="margin-left:14px">칸 스타일</span>
     <button data-style="slot" class="on">슬롯형</button>
     <button data-style="free">자유형</button>
+    <span style="margin-left:14px">프레임</span>
+    <button data-frame="flat" class="on">플랫</button>
+    <button data-frame="metal">메탈릭</button>
   </div>
   <div class="hint">칸을 눌러 입력하세요. 포켓몬을 넣고 <b>끌어서 배치</b>, 포켓몬 위 🔴로 <b>볼</b> 지정. <b>× 로 항목을 지울 수 있어요</b> (복원은 아래 바).</div>
   <div id="restoreBar"></div>
 
   <div id="stageWrap">
    <div id="card">
+    <img id="frameImg" src="frame/frame.png" alt="" />
+    <div id="flatTitle">TRAINER&nbsp;CARD</div>
+    <div id="flatBadgeLab">BADGES</div>
     <div class="z fld" id="zName"><span class="flab">닉네임</span><span class="fval" contenteditable data-ph="닉네임"></span></div>
 
     <div class="z" id="zMain">
@@ -279,6 +311,17 @@
   });
   try{var ss=localStorage.getItem('champStyle'); if(ss==='free'||ss==='slot'){ cardStyle=ss; var sb=document.querySelector('.fontbar button[data-style="'+ss+'"]'); if(sb){document.querySelectorAll('.fontbar button[data-style]').forEach(function(x){x.classList.remove('on');}); sb.classList.add('on');} }}catch(e){}
 
+  // ---------- frame skin (flat / metal) ----------
+  var cardEl=document.getElementById('card');
+  function setFrame(fr){
+    cardEl.classList.remove('flat','metal'); cardEl.classList.add(fr);
+    document.querySelectorAll('.fontbar button[data-frame]').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-frame')===fr);});
+    try{localStorage.setItem('champFrame',fr);}catch(e){}
+  }
+  document.querySelectorAll('.fontbar button[data-frame]').forEach(function(b){ b.onclick=function(){ setFrame(b.getAttribute('data-frame')); }; });
+  var fr0='flat'; try{var rf=localStorage.getItem('champFrame'); if(rf==='flat'||rf==='metal')fr0=rf;}catch(e){}
+  setFrame(fr0);
+
   // ---------- chips ----------
   document.querySelectorAll('.chips').forEach(function(group){
     group.addEventListener('click',function(e){ var chip=e.target.closest('.chip'); if(chip) chip.classList.toggle('on'); });
@@ -303,7 +346,12 @@
             var g=c.getContext('2d'); g.drawImage(im,0,0);
             var d=g.getImageData(0,0,c.width,c.height).data, x0=c.width,y0=c.height,x1=0,y1=0,f=false,x,y;
             for(y=0;y<c.height;y++)for(x=0;x<c.width;x++){ if(d[(y*c.width+x)*4+3]>18){f=true; if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y;} }
-            m.bb=f?{x0:x0,y1:y1,W:c.width,H:c.height}:null;
+            m.bb=f?{x0:x0,y0:y0,x1:x1,y1:y1,W:c.width,H:c.height}:null;
+            if(f){ // trimmed sprite (no transparent padding) so it can fill a slot
+              var cw=x1-x0+1, ch=y1-y0+1, tc=document.createElement('canvas'); tc.width=cw; tc.height=ch;
+              tc.getContext('2d').drawImage(c,x0,y0,cw,ch,0,0,cw,ch);
+              try{ m.trimUrl=tc.toDataURL('image/png'); }catch(e){ m.trimUrl=null; }
+            }
           }catch(e){ m.bb=null; }
           cb&&cb();
         };
@@ -374,7 +422,7 @@
           var slot=document.createElement('div'); slot.className='slot'+(team[i]?'':' empty');
           var m=team[i];
           if(m){
-            var src=m.dataUrl||(m.shiny?m.p.front_shiny:m.p.front_default);
+            var src=m.trimUrl||m.dataUrl||(m.shiny?m.p.front_shiny:m.p.front_default);
             var ball=m.ball?'<img class="sball" src="../balls/'+m.ball+'.png" alt="">':'';
             slot.innerHTML=tools(m)+'<img class="spr" src="'+src+'" alt="">'+ball;
             wire(slot,m);
