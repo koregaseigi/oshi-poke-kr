@@ -48,7 +48,7 @@
   #flatTitle,#flatBadgeLab{display:none}
   #card.flat #flatTitle{display:block;position:absolute;left:78px;top:74px;font-size:70px;font-weight:800;color:#ffd23f;letter-spacing:3px;text-shadow:5px 5px 0 #16304f}
   #flatTitle{outline:none}
-  #card.v2 #flatTitle{display:block;position:absolute;left:560px;top:150px;width:1660px;text-align:center;font-size:72px;font-weight:800;color:#6a4fa0;letter-spacing:4px;text-shadow:2px 2px 0 rgba(255,255,255,.55);z-index:2}
+  #card.v2 #flatTitle{display:block;position:absolute;left:640px;top:196px;font-size:60px;font-weight:800;color:#efe0a0;letter-spacing:3px;text-shadow:3px 3px 0 rgba(70,50,100,.55);z-index:2}
   #card.v2 #zBadge{justify-content:flex-end}
   #card.flat #flatBadgeLab{display:block;position:absolute;left:44px;top:1724px;font-size:36px;font-weight:800;color:#fff;letter-spacing:3px;text-shadow:3px 3px 0 #16304f}
   #card.flat #zProfile{background:#eaf2fc;border:6px solid #1f3f68;border-radius:14px;padding:14px}
@@ -202,7 +202,6 @@
 
   <div class="controls">
     <button class="btn btn-ghost" id="btnReset">전체 초기화</button>
-    <button class="btn btn-badge" id="btnBadges">🏅 배지 선택</button>
     <button class="btn btn-primary" id="btnSave">카드 이미지 저장</button>
     <input type="file" id="fileProfile" accept="image/*" hidden />
   </div>
@@ -255,7 +254,7 @@
       <div class="fld optf freerow"><div class="achbox" contenteditable data-ph="자유롭게 한마디 적어보세요!"></div></div>
     </div>
 
-    <div class="z" id="zBadge"><span class="bempty">＋ 위 배지 선택 버튼으로 배지를 추가하세요</span></div>
+    <div class="z" id="zBadge"><span class="bempty">＋ 눌러서 배지 추가</span></div>
    </div>
   </div>
 </div>
@@ -689,12 +688,11 @@
   var badgeSel=[], zBadge=document.getElementById('zBadge'), badgeMask=document.getElementById('badgeMask'), badgeResults=document.getElementById('badgeResults'), badgeQ=document.getElementById('badgeQ');
   function renderBadgeRow(){
     zBadge.innerHTML='';
-    if(!badgeSel.length){ zBadge.innerHTML='<span class="bempty">＋ 위 배지 선택 버튼으로 배지를 추가하세요</span>'; return; }
+    if(!badgeSel.length){ zBadge.innerHTML='<span class="bempty">＋ 눌러서 배지 추가</span>'; return; }
     badgeSel.forEach(function(k){ var im=document.createElement('img'); im.src='badges/'+k+'.png'; im.alt=k; zBadge.appendChild(im); });
     reflowFlat();
   }
   function openBadges(){ badgeMask.classList.add('show'); badgeQ.value=''; renderBadgePicks(''); setTimeout(function(){badgeQ.focus();},30); }
-  document.getElementById('btnBadges').onclick=openBadges;
   zBadge.addEventListener('click',openBadges);
   document.getElementById('badgeX').onclick=function(){ badgeMask.classList.remove('show'); };
   badgeMask.onclick=function(e){ if(e.target===badgeMask) badgeMask.classList.remove('show'); };
