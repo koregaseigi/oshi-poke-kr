@@ -47,6 +47,9 @@
   /* flat-only chrome */
   #flatTitle,#flatBadgeLab{display:none}
   #card.flat #flatTitle{display:block;position:absolute;left:78px;top:74px;font-size:70px;font-weight:800;color:#ffd23f;letter-spacing:3px;text-shadow:5px 5px 0 #16304f}
+  #flatTitle{outline:none}
+  #card.v2 #flatTitle{display:block;position:absolute;left:300px;top:118px;font-size:66px;font-weight:800;color:#efe0a0;letter-spacing:3px;text-shadow:3px 3px 0 rgba(70,50,100,.5);z-index:2}
+  #card.v2 #zBadge{justify-content:flex-end}
   #card.flat #flatBadgeLab{display:block;position:absolute;left:44px;top:1724px;font-size:36px;font-weight:800;color:#fff;letter-spacing:3px;text-shadow:3px 3px 0 #16304f}
   #card.flat #zProfile{background:#eaf2fc;border:6px solid #1f3f68;border-radius:14px;padding:14px}
   #card.flat .idtitle{color:#2c60ab}
@@ -220,7 +223,7 @@
    <div id="card">
     <img id="frameImg" src="frame/frame.png" alt="" />
     <div id="flatFrame"></div>
-    <div id="flatTitle">TRAINER&nbsp;CARD</div>
+    <div id="flatTitle" contenteditable>TRAINER CARD</div>
     <div id="flatBadgeLab">BADGES</div>
     <div id="topRow">
       <div class="z" id="zParty">
@@ -797,7 +800,10 @@
     function restore(){ card.classList.remove('exporting'); card.style.transform=savedT; if(ph.parentNode){ph.parentNode.insertBefore(card,ph);ph.remove();} holder.remove(); fit(); }
     var opts={pixelRatio:1.4,cacheBust:true,width:curW,height:eH,
       filter:function(n){ if(n.nodeType!==1||!n.classList) return true; var c=n.classList;
-        if(c.contains('zx')||c.contains('tools')||c.contains('bempty')||c.contains('hiddenz')||c.contains('splus')) return false; return true; }};
+        if(c.contains('zx')||c.contains('tools')||c.contains('bempty')||c.contains('hiddenz')||c.contains('splus')) return false;
+        if(c.contains('chip')&&!c.contains('on')) return false;   // drop unselected options
+        if(n.hasAttribute&&n.hasAttribute('contenteditable')&&!(n.textContent||'').trim()) return false;  // drop empty inputs (no placeholder text)
+        return true; }};
     // Safari drops background images on the first html-to-image pass; a warm-up render fixes it
     htmlToImage.toPng(card,opts)
     .then(function(){ return htmlToImage.toPng(card,opts); })
