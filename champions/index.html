@@ -15,7 +15,7 @@
   body{margin:0;font-family:'neodgm','Galmuri11',"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
     color:#334155;min-height:100vh;-webkit-font-smoothing:antialiased;
     background:linear-gradient(160deg,#eef5ff,#f8fbff)}
-  .wrap{max-width:760px;margin:0 auto;padding:16px}
+  .wrap{max-width:1040px;margin:0 auto;padding:16px}
   .nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:6px 0 14px}
   .nav a{padding:9px 16px;border-radius:999px;background:#fff;border:1.5px solid #c7ddf7;color:#64748b;text-decoration:none;font-weight:700;font-size:14px}
   .nav a.active{background:#6890f0;border-color:#6890f0;color:#fff}
@@ -35,7 +35,7 @@
   #restoreBar .rb{padding:6px 12px;border-radius:999px;border:1.5px dashed #c9dcf6;background:#fff;color:#64748b;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
 
   /* fixed-aspect card: native 1427x2000 scaled to fit */
-  #stageWrap{width:700px;max-width:100%;aspect-ratio:1427/2000;margin:0 auto;position:relative}
+  #stageWrap{width:100%;max-width:640px;margin:0 auto;position:relative}
   #card{position:absolute;top:0;left:0;width:1427px;height:2000px;transform-origin:top left}
   #frameImg{position:absolute;left:0;top:0;width:1427px;height:2000px;z-index:0;pointer-events:none;display:none}
   #card.metal #frameImg{display:block}
@@ -400,11 +400,12 @@
       zParty:{l:150,t:238,w:788,h:800}, zProfile:{l:966,t:238,w:324,h:800},
       zText:{l:150,t:1082,w:1140,h:656}, zBadge:{l:150,t:1788,w:1140,h:120} },
     v2:{ w:2752,h:1536, img:'frame/background-v2.jpg', cols:'repeat(6,1fr)', rows:'repeat(1,1fr)',
-      zParty:{l:585,t:305,w:1035,h:498}, zProfile:{l:1700,t:305,w:505,h:498},
+      zParty:{l:585,t:305,w:1010,h:498}, zProfile:{l:1628,t:305,w:505,h:498},
       zText:{l:590,t:874,w:1560,h:438}, zBadge:{l:595,t:1358,w:1545,h:78} }
   };
   function applyFrame(key){
     var f=FRAMES[key]; if(!f) return; curFrame=key; curW=f.w; curH=f.h;
+    wrap.style.maxWidth=(key==='v2'?'1000px':'640px');
     card.classList.remove('flat','v2','metal'); card.classList.add(key);
     card.classList.toggle('slotmode',(typeof cardStyle==='undefined'||cardStyle==='slot'));
     card.classList.toggle('freemode',(typeof cardStyle!=='undefined'&&cardStyle==='free'));
