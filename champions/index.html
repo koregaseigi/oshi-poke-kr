@@ -111,8 +111,10 @@
   .slotgrid{position:absolute;left:10px;right:10px;top:38px;bottom:10px;display:grid;grid-template-columns:var(--slotcols,repeat(3,1fr));grid-template-rows:var(--slotrows,repeat(2,1fr));gap:10px}
   .slot{position:relative;border-radius:10px;overflow:hidden;background:rgba(255,255,255,.34);border:2px solid rgba(120,130,145,.32);display:flex;align-items:center;justify-content:center;cursor:pointer}
   .slot.empty{background:rgba(255,255,255,.14);border-color:rgba(120,130,145,.22)}
-  .slot .spr{width:100%;height:100%;object-fit:cover;object-position:center 22%;image-rendering:pixelated;display:block;pointer-events:none}
+  .slot .spr{width:100%;height:100%;object-fit:cover;object-position:center 22%;image-rendering:pixelated;display:block;touch-action:none}
   .slot .sball{position:absolute;left:3px;bottom:3px;width:62px;height:62px;image-rendering:pixelated;pointer-events:none;z-index:4;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+  .slot .sitem{position:absolute;right:3px;bottom:3px;width:54px;height:54px;image-rendering:pixelated;pointer-events:none;z-index:4;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+  .pmon .pitem{position:absolute;right:-6px;bottom:6px;width:42px;height:42px;image-rendering:pixelated;pointer-events:none;z-index:3;filter:drop-shadow(0 1px 2px rgba(0,0,0,.3))}
   .slot .splus{color:#8390a1;font-size:40px;font-weight:800;pointer-events:none}
   .slot .tools{position:absolute;top:3px;right:3px;display:flex;gap:4px;opacity:0;transition:.1s;z-index:6}
   .slot:hover .tools{opacity:1}
@@ -225,6 +227,11 @@
 <div class="mask" id="ballMask">
   <div class="modal"><button class="x" id="ballX">×</button><h3>이 포켓몬의 볼 선택</h3><div class="results" id="ballResults"></div></div>
 </div>
+<div class="mask" id="itemMask">
+  <div class="modal"><button class="x" id="itemX">×</button><h3>이 포켓몬의 지닌 물건</h3>
+    <div class="search"><input id="itemQ" placeholder="도구 이름 검색 (예: 구애, 기합의띠)" autocomplete="off" /></div>
+    <div class="results" id="itemResults"></div></div>
+</div>
 <div class="mask" id="badgeMask">
   <div class="modal"><button class="x" id="badgeX">×</button><h3>배지 선택</h3>
     <div class="search"><input id="badgeQ" placeholder="배지 이름 검색 (예: 챔피언, 골드, 물타입)" autocomplete="off" /></div>
@@ -261,6 +268,20 @@
     {k:'love-ball',ko:'러브볼'},{k:'heavy-ball',ko:'헤비볼'},{k:'fast-ball',ko:'스피드볼'},{k:'sport-ball',ko:'컴퍼티션볼'},
     {k:'park-ball',ko:'파크볼'},{k:'dream-ball',ko:'드림볼'},{k:'beast-ball',ko:'울트라볼'},{k:'strange-ball',ko:'스트레인지볼'}
   ];
+  var ITEMS=[{k:'leftovers',ko:'먹다남은음식'},{k:'life-orb',ko:'생명의구슬'},{k:'choice-band',ko:'구애머리띠'},
+    {k:'choice-specs',ko:'구애안경'},{k:'choice-scarf',ko:'구애스카프'},{k:'focus-sash',ko:'기합의띠'},
+    {k:'assault-vest',ko:'돌격조끼'},{k:'rocky-helmet',ko:'까칠한헬멧'},{k:'eviolite',ko:'진화의휘석'},
+    {k:'black-sludge',ko:'검은해감'},{k:'sitrus-berry',ko:'자뭉열매'},{k:'lum-berry',ko:'리샘열매'},
+    {k:'weakness-policy',ko:'약점보험'},{k:'expert-belt',ko:'달인의띠'},{k:'wide-lens',ko:'넓은렌즈'},
+    {k:'scope-lens',ko:'초점렌즈'},{k:'muscle-band',ko:'근력의머리띠'},{k:'wise-glasses',ko:'지식안경'},
+    {k:'quick-claw',ko:'순간의발톱'},{k:'kings-rock',ko:'왕의징표석'},{k:'razor-claw',ko:'예리한손톱'},
+    {k:'razor-fang',ko:'예리한이빨'},{k:'air-balloon',ko:'풍선'},{k:'red-card',ko:'레드카드'},
+    {k:'safety-goggles',ko:'방진고글'},{k:'protective-pads',ko:'방호패드'},{k:'shell-bell',ko:'조가비방울'},
+    {k:'focus-band',ko:'기합의머리띠'},{k:'toxic-orb',ko:'맹독구슬'},{k:'flame-orb',ko:'화염구슬'},{k:'iron-ball',ko:'무거운쇠구슬'},
+    {k:'float-stone',ko:'가벼운돌'},{k:'light-clay',ko:'빛의점토'},{k:'mental-herb',ko:'정신의허브'},
+    {k:'white-herb',ko:'하얀허브'},{k:'power-herb',ko:'파워허브'},{k:'eject-button',ko:'탈출버튼'},
+    {k:'grassy-seed',ko:'그래스시드'},{k:'electric-seed',ko:'일렉트릭시드'},{k:'misty-seed',ko:'미스트시드'},
+    {k:'psychic-seed',ko:'사이코시드'}];
   var BADGES=[
     {k:'badgecollectorbadge',ko:'배지 수집가'},{k:'bigspenderbadge',ko:'큰손'},{k:'bottomscollectorbadge',ko:'하의 수집가'},
     {k:'championtierbadge',ko:'챔피언 티어'},{k:'criticalhitbadge',ko:'급소'},
@@ -335,8 +356,8 @@
   window.addEventListener('resize',fit);
   var FRAMES={
     flat:{ w:1427,h:2000, img:null, cols:'repeat(3,1fr)', rows:'repeat(2,1fr)',
-      zParty:{l:118,t:238,w:815,h:800}, zProfile:{l:965,t:238,w:352,h:800},
-      zText:{l:150,t:1082,w:1140,h:656}, zBadge:{l:150,t:1788,w:1160,h:120} },
+      zParty:{l:150,t:238,w:788,h:800}, zProfile:{l:966,t:238,w:324,h:800},
+      zText:{l:150,t:1082,w:1140,h:656}, zBadge:{l:150,t:1788,w:1140,h:120} },
     v2:{ w:2752,h:1536, img:'frame/background-v2.jpg', cols:'repeat(6,1fr)', rows:'repeat(1,1fr)',
       zParty:{l:585,t:305,w:1035,h:498}, zProfile:{l:1700,t:305,w:505,h:498},
       zText:{l:590,t:874,w:1560,h:438}, zBadge:{l:595,t:1358,w:1545,h:78} }
@@ -418,6 +439,25 @@
   document.getElementById('ballX').onclick=function(){ballMask.classList.remove('show');};
   ballMask.onclick=function(e){if(e.target===ballMask)ballMask.classList.remove('show');};
 
+  // ---------- item picker (per pokemon held item) ----------
+  var itemMask=document.getElementById('itemMask'), itemResults=document.getElementById('itemResults'), itemQ=document.getElementById('itemQ'), itemTargetMon=null, itemRerender=null;
+  function renderItemPicks(term){
+    itemResults.innerHTML='';
+    var none=document.createElement('div'); none.className='pick';
+    none.innerHTML='<div style="width:56px;height:56px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#c53030">✕</div><span>없음</span>';
+    none.onclick=function(){ if(itemTargetMon){itemTargetMon.item=null;itemRerender&&itemRerender();} itemMask.classList.remove('show'); };
+    itemResults.appendChild(none);
+    ITEMS.filter(function(it){ return !term || it.ko.indexOf(term)>=0 || it.k.indexOf(term.toLowerCase())>=0; }).forEach(function(it){
+      var el=document.createElement('div'); el.className='pick';
+      el.innerHTML='<img src="items/'+it.k+'.png" alt=""><span>'+it.ko+'</span>';
+      el.onclick=function(){ if(itemTargetMon){itemTargetMon.item=it.k;itemRerender&&itemRerender();} itemMask.classList.remove('show'); };
+      itemResults.appendChild(el);
+    });
+  }
+  document.getElementById('itemX').onclick=function(){itemMask.classList.remove('show');};
+  itemMask.onclick=function(e){if(e.target===itemMask)itemMask.classList.remove('show');};
+  itemQ.oninput=function(){renderItemPicks(itemQ.value.trim());};
+
   // ---------- party factory ----------
   var allParties=[], activeCtrl=null;
   function makeParty(host){
@@ -460,6 +500,7 @@
     }
     function tools(m){
       return '<div class="tools"><button class="tb tball" title="볼 지정">🔴</button>'+
+        '<button class="tb titem" title="지닌 물건">🎒</button>'+
         '<button class="tb tshine'+(m.shiny?' on':'')+'" title="색이 다른 포켓몬">✨</button>'+
         '<button class="tb tdel" title="삭제">×</button></div>';
     }
@@ -467,6 +508,7 @@
       el.querySelector('.tdel').onclick=function(ev){ev.stopPropagation();var i=team.indexOf(m);if(i>=0)team.splice(i,1);render();};
       el.querySelector('.tshine').onclick=function(ev){ev.stopPropagation();m.shiny=!m.shiny;loadSprite(m,render);};
       el.querySelector('.tball').onclick=function(ev){ev.stopPropagation();ballTargetMon=m;ballRerender=render;ballMask.classList.add('show');};
+      el.querySelector('.titem').onclick=function(ev){ev.stopPropagation();itemTargetMon=m;itemRerender=render;itemMask.classList.add('show');renderItemPicks('');itemQ.value='';setTimeout(function(){itemQ.focus();},30);};
     }
     function render(){
       [].slice.call(host.querySelectorAll('.pmon,.slotgrid')).forEach(function(e){e.remove();});
@@ -481,7 +523,8 @@
             var src=m.trimUrl||m.dataUrl||(m.shiny?m.p.front_shiny:m.p.front_default);
             var ball=m.ball?'<img class="sball" src="../balls/'+m.ball+'.png" alt="">':'';
             var op=(m.slotX!=null?m.slotX:50)+'% '+(m.slotY!=null?m.slotY:22)+'%';
-            slot.innerHTML=tools(m)+'<img class="spr" style="object-position:'+op+'" src="'+src+'" alt="">'+ball;
+            var item=m.item?'<img class="sitem" src="items/'+m.item+'.png" alt="">':'';
+            slot.innerHTML=tools(m)+'<img class="spr" style="object-position:'+op+'" src="'+src+'" alt="">'+ball+item;
             wire(slot,m); slotPan(slot.querySelector('.spr'),slot,m);
           } else {
             slot.innerHTML='<span class="splus">＋</span>';
@@ -502,7 +545,8 @@
             if(m.bb){ var s=150/m.bb.H, bl=Math.round(m.bb.x0*s)-14, bt=Math.round(m.bb.y1*s)-30; bs=' style="left:'+bl+'px;top:'+bt+'px;bottom:auto"'; }
             ball='<img class="pball" src="../balls/'+m.ball+'.png" alt=""'+bs+'>';
           }
-          el.innerHTML=tools(m)+'<img class="spr" src="'+src+'" alt="">'+ball;
+          var item2=m.item?'<img class="pitem" src="items/'+m.item+'.png" alt="">':'';
+          el.innerHTML=tools(m)+'<img class="spr" src="'+src+'" alt="">'+ball+item2;
           wire(el,m); makeDrag(el,m);
           host.appendChild(el);
         });
