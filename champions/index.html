@@ -48,11 +48,10 @@
   #flatTitle,#flatBadgeLab{display:none}
   #card.flat #flatTitle{display:block;position:absolute;left:78px;top:74px;font-size:70px;font-weight:800;color:#ffd23f;letter-spacing:3px;text-shadow:5px 5px 0 #16304f}
   #card.flat #flatBadgeLab{display:block;position:absolute;left:44px;top:1706px;font-size:36px;font-weight:800;color:#fff;letter-spacing:3px;text-shadow:3px 3px 0 #16304f}
-  #card.flat #zName{background:#cfe4ff;border:5px solid #1f3f68;border-radius:10px;padding-left:26px}
-  #card.flat #zName .flab,#card.flat #zName .fval{color:#1f3f68}
-  #card.flat #zName .flab:before{background:#4b8fdb}
-  #card.flat #zName .fval{border-bottom-color:#7aa6da}
-  #card.flat #zMain{background:#eaf2fc;border:6px solid #1f3f68;border-radius:14px;padding:16px}
+  #card.flat #zProfile{background:#eaf2fc;border:6px solid #1f3f68;border-radius:14px;padding:14px}
+  #card.flat .idtitle{color:#2c60ab}
+  #card.flat .idname{color:#16304f}
+  #card.flat #zParty{background:#eaf2fc;border:6px solid #1f3f68;border-radius:14px;padding:16px}
   #card.flat .band{background:#fff;border:3px solid #9cc0ea;border-radius:8px}
   #card.flat .band>.blabel{color:#2c60ab}
   #card.flat .slot{background:#fff;border:3px solid #9cc0ea;border-radius:6px}
@@ -81,21 +80,22 @@
     border-radius:8px;background:linear-gradient(#eef1f5,#d3d9e1);border:2px solid #a9b1bc;color:#4a5260;font-size:24px;font-weight:800;cursor:pointer;user-select:none;font-family:inherit}
   .chip.on{background:linear-gradient(#4a90d9,#2f66b3);border-color:#2f66b3;color:#fff}
 
-  /* name pill (호칭 + 닉네임 stacked) */
-  #zName{left:150px;top:232px;width:1150px;height:100px;display:flex;flex-direction:column;justify-content:center;gap:2px}
-  #zName .flab,#zName .fval{font-size:23px}
-  #zName .fval{border-bottom-width:2px}
-  #zName .nl-name .flab,#zName .nl-name .fval{font-size:31px}
+  /* profile block: photo + 호칭 + name (no labels), positioned per frame */
+  #zProfile{display:flex;flex-direction:column;gap:10px;align-items:center}
+  .idblock{flex:none;display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;width:100%}
+  .idtitle{font-size:26px;font-weight:800;color:#2f3843;outline:none;font-family:inherit;line-height:1.15}
+  .idname{font-size:38px;font-weight:800;color:#1f2a36;outline:none;font-family:inherit;line-height:1.15}
+  .idtitle:empty:before,.idname:empty:before{content:attr(data-ph);color:#9aa2ad;font-weight:600}
   .freerow{align-items:flex-start}
   .freerow .achbox{min-height:70px}
 
-  /* main: party (left, two bands) + trainer sprite (right) */
-  #zMain{left:120px;top:352px;width:1200px;height:716px;display:flex;gap:22px}
-  .partycol{flex:1;display:flex;flex-direction:column;gap:12px;min-width:0}
+  /* party area (positioned per frame) */
+  #zParty{display:flex}
+  .partycol{flex:1;display:flex;flex-direction:column;gap:14px;min-width:0}
   .band{position:relative;flex:1;border-radius:10px;background:rgba(255,255,255,.16);border:2px solid rgba(120,130,145,.35)}
   .band>.blabel{position:absolute;left:12px;top:8px;font-size:22px;font-weight:800;color:#41597e;z-index:4;pointer-events:none}
   .band .party-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#5f6b7a;font-size:23px;font-weight:700;text-align:center;padding:0 14px;pointer-events:none}
-  .avatar{width:352px;height:470px;flex:none;align-self:center;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;
+  .avatar{width:100%;flex:1;min-height:0;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;
     background:rgba(255,255,255,.2);border:2px solid rgba(120,130,145,.4);display:flex;align-items:center;justify-content:center}
   .avatar img{width:100%;height:100%;object-fit:cover;display:block}
   .avatar .ph{color:#5f6b7a;font-size:24px;font-weight:700;text-align:center;padding:10px;line-height:1.6}
@@ -108,7 +108,7 @@
   .tb{width:30px;height:30px;border-radius:7px;border:none;background:rgba(255,255,255,.95);box-shadow:0 1px 4px rgba(0,0,0,.25);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;font-family:inherit}
   .tb.on{background:#ffe066}
   /* slot (grid) style */
-  .slotgrid{position:absolute;left:10px;right:10px;top:38px;bottom:10px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:10px}
+  .slotgrid{position:absolute;left:10px;right:10px;top:38px;bottom:10px;display:grid;grid-template-columns:var(--slotcols,repeat(3,1fr));grid-template-rows:var(--slotrows,repeat(2,1fr));gap:10px}
   .slot{position:relative;border-radius:10px;background:rgba(255,255,255,.34);border:2px solid rgba(120,130,145,.32);display:flex;align-items:center;justify-content:center;cursor:pointer}
   .slot.empty{background:rgba(255,255,255,.14);border-color:rgba(120,130,145,.22)}
   .slot .spr{max-width:98%;max-height:98%;width:auto;height:auto;image-rendering:pixelated;display:block;pointer-events:none}
@@ -118,7 +118,7 @@
   .slot:hover .tools{opacity:1}
 
   /* text zone (brushed area) */
-  #zText{left:150px;top:1116px;width:1140px;height:575px;display:flex;flex-direction:column;gap:11px}
+  #zText{display:flex;flex-direction:column;gap:11px}
   #zText .fld{position:relative}
   .achrow{display:flex;gap:11px;align-items:stretch}
   .achtag{flex:none;width:100px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:25px;color:#fff;
@@ -129,7 +129,7 @@
   .achbox:empty:before{content:attr(data-ph);color:#8b93a0;font-weight:500}
 
   /* badges over the blue bar */
-  #zBadge{left:150px;top:1772px;width:1160px;height:118px;display:flex;flex-wrap:wrap;gap:12px;align-content:center}
+  #zBadge{display:flex;flex-wrap:wrap;gap:12px;align-content:center}
   #zBadge img{width:92px;height:92px;object-fit:contain;image-rendering:pixelated}
   #zBadge .bempty{color:#cfe0ff;font-size:24px;font-weight:700;align-self:center}
 
@@ -179,6 +179,9 @@
     <span style="margin-left:14px">칸 스타일</span>
     <button data-style="slot" class="on">슬롯형</button>
     <button data-style="free">자유형</button>
+    <span style="margin-left:14px">프레임</span>
+    <button data-frame="v2" class="on">가로</button>
+    <button data-frame="flat">세로(플랫)</button>
   </div>
   <div class="hint">칸을 눌러 입력하세요. 포켓몬을 넣고 <b>끌어서 배치</b>, 포켓몬 위 🔴로 <b>볼</b> 지정. <b>× 로 항목을 지울 수 있어요</b> (복원은 아래 바).</div>
   <div id="restoreBar"></div>
@@ -189,17 +192,19 @@
     <div id="flatFrame"></div>
     <div id="flatTitle">TRAINER&nbsp;CARD</div>
     <div id="flatBadgeLab">BADGES</div>
-    <div class="z" id="zName">
-      <div class="fld optf nl-title"><span class="flab">호칭</span><span class="fval" contenteditable data-ph="예: 마스카나 박사"></span></div>
-      <div class="fld nl-name"><span class="flab">닉네임</span><span class="fval" contenteditable data-ph="닉네임"></span></div>
-    </div>
-
-    <div class="z" id="zMain">
+    <div class="z" id="zParty">
       <div class="partycol">
         <div class="band" id="bandSingle"><span class="blabel">싱글</span></div>
         <div class="band" id="bandDouble"><span class="blabel">더블</span></div>
       </div>
+    </div>
+
+    <div class="z" id="zProfile">
       <div class="avatar" id="avatar"><div class="ph">트레이너<br>이미지<br>(눌러서 추가)</div></div>
+      <div class="idblock">
+        <span class="idtitle" contenteditable data-ph="호칭"></span>
+        <span class="idname" contenteditable data-ph="이름"></span>
+      </div>
     </div>
 
     <div class="z" id="zText">
@@ -319,25 +324,38 @@
   });
   try{var ss=localStorage.getItem('champStyle'); if(ss==='free'||ss==='slot'){ cardStyle=ss; var sb=document.querySelector('.fontbar button[data-style="'+ss+'"]'); if(sb){document.querySelectorAll('.fontbar button[data-style]').forEach(function(x){x.classList.remove('on');}); sb.classList.add('on');} }}catch(e){}
 
-  // ---------- frame skin (flat / metal) ----------
-  var cardEl=document.getElementById('card');
-  function setFrame(fr){
-    cardEl.classList.remove('flat','metal'); cardEl.classList.add(fr);
-    document.querySelectorAll('.fontbar button[data-frame]').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-frame')===fr);});
-    try{localStorage.setItem('champFrame',fr);}catch(e){}
-  }
-  document.querySelectorAll('.fontbar button[data-frame]').forEach(function(b){ b.onclick=function(){ setFrame(b.getAttribute('data-frame')); }; });
-  setFrame('flat');   // metallic frame retired; flat is the card style (v2 landscape frame coming next)
-
   // ---------- chips ----------
   document.querySelectorAll('.chips').forEach(function(group){
     group.addEventListener('click',function(e){ var chip=e.target.closest('.chip'); if(chip) chip.classList.toggle('on'); });
   });
 
-  // ---------- card scale ----------
-  var wrap=document.getElementById('stageWrap'), card=document.getElementById('card'), cardScale=1;
-  function fit(){ cardScale=(wrap.clientWidth||1427)/1427; card.style.transform='scale('+cardScale+')'; }
-  window.addEventListener('resize',fit); fit();
+  // ---------- card scale + per-frame layout ----------
+  var wrap=document.getElementById('stageWrap'), card=document.getElementById('card'), frameImg=document.getElementById('frameImg'), cardScale=1, curW=1427, curH=2000, curFrame='v2';
+  function fit(){ cardScale=(wrap.clientWidth||curW)/curW; card.style.transform='scale('+cardScale+')'; }
+  window.addEventListener('resize',fit);
+  var FRAMES={
+    flat:{ w:1427,h:2000, img:null, cols:'repeat(3,1fr)', rows:'repeat(2,1fr)',
+      zParty:{l:118,t:352,w:815,h:716}, zProfile:{l:965,t:352,w:352,h:716},
+      zText:{l:150,t:1116,w:1140,h:560}, zBadge:{l:150,t:1772,w:1160,h:118} },
+    v2:{ w:2752,h:1536, img:'frame/background-v2.png', cols:'repeat(6,1fr)', rows:'repeat(1,1fr)',
+      zParty:{l:498,t:300,w:1140,h:512}, zProfile:{l:1690,t:300,w:555,h:512},
+      zText:{l:520,t:868,w:1710,h:448}, zBadge:{l:520,t:1352,w:1690,h:86} }
+  };
+  function applyFrame(key){
+    var f=FRAMES[key]; if(!f) return; curFrame=key; curW=f.w; curH=f.h;
+    card.classList.remove('flat','v2','metal'); card.classList.add(key);
+    wrap.style.aspectRatio=f.w+' / '+f.h;
+    card.style.width=f.w+'px'; card.style.height=f.h+'px';
+    if(f.img){ frameImg.src=f.img; frameImg.style.display='block'; frameImg.style.width=f.w+'px'; frameImg.style.height=f.h+'px'; }
+    else { frameImg.style.display='none'; }
+    ['zParty','zProfile','zText','zBadge'].forEach(function(z){ var el=document.getElementById(z),p=f[z]; if(!el)return; el.style.left=p.l+'px';el.style.top=p.t+'px';el.style.width=p.w+'px';el.style.height=p.h+'px'; });
+    card.style.setProperty('--slotcols',f.cols); card.style.setProperty('--slotrows',f.rows);
+    fit();
+    document.querySelectorAll('.fontbar button[data-frame]').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-frame')===key);});
+    try{localStorage.setItem('champFrame',key);}catch(e){}
+    if(typeof allParties!=='undefined') allParties.forEach(function(c){c.render();});
+  }
+  document.querySelectorAll('.fontbar button[data-frame]').forEach(function(b){ b.onclick=function(){ applyFrame(b.getAttribute('data-frame')); }; });
 
   // ---------- sprite loader ----------
   function loadSprite(m,cb){
@@ -470,6 +488,8 @@
   }
   var pSingle=makeParty(document.getElementById('bandSingle'));
   var pDouble=makeParty(document.getElementById('bandDouble'));
+  var _f0='v2'; try{var rf=localStorage.getItem('champFrame'); if(rf==='v2'||rf==='flat')_f0=rf;}catch(e){}
+  applyFrame(_f0);
 
   // ---------- pokemon picker ----------
   var mask=document.getElementById('mask'), results=document.getElementById('results'), q=document.getElementById('q');
@@ -597,12 +617,12 @@
     var btn=this, old=btn.textContent; btn.textContent='저장 중...'; btn.disabled=true;
     if(document.activeElement&&document.activeElement.blur) document.activeElement.blur();
     var ph=document.createComment('c'); card.parentNode.insertBefore(ph,card);
-    var holder=document.createElement('div'); holder.style.cssText='position:fixed;left:0;top:0;z-index:-1;background:#ffffff;width:1427px;height:2000px';
+    var holder=document.createElement('div'); holder.style.cssText='position:fixed;left:0;top:0;z-index:-1;background:#ffffff;width:'+curW+'px;height:'+curH+'px';
     var savedT=card.style.transform;
     card.classList.add('exporting'); card.style.transform='none';
     holder.appendChild(card); document.body.appendChild(holder);
     function restore(){ card.classList.remove('exporting'); card.style.transform=savedT; if(ph.parentNode){ph.parentNode.insertBefore(card,ph);ph.remove();} holder.remove(); fit(); }
-    htmlToImage.toPng(card,{pixelRatio:1.5,cacheBust:true,width:1427,height:2000,
+    htmlToImage.toPng(card,{pixelRatio:1.4,cacheBust:true,width:curW,height:curH,
       filter:function(n){ if(n.nodeType!==1||!n.classList) return true; var c=n.classList;
         if(c.contains('zx')||c.contains('tools')||c.contains('bempty')||c.contains('hiddenz')||c.contains('splus')) return false; return true; }})
     .then(function(url){ deliverImage(url,'champions-card.png'); })
