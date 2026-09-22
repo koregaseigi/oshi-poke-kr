@@ -139,7 +139,7 @@
   .slot{position:relative;border-radius:10px;background:rgba(255,255,255,.34);border:2px solid rgba(120,130,145,.32);display:flex;align-items:center;justify-content:center;cursor:pointer}
   .slot.empty{background:rgba(255,255,255,.14);border-color:rgba(120,130,145,.22)}
   .slot .sprwrap{position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;border-radius:9px}
-  .slot .spr{width:100%;height:100%;object-fit:cover;object-position:center 22%;image-rendering:pixelated;display:block;touch-action:none}
+  .slot .spr{width:100%;height:100%;object-fit:contain;image-rendering:pixelated;display:block;touch-action:none;transform-origin:center;cursor:move}
   .slot .sball{position:absolute;left:3px;bottom:3px;width:62px;height:62px;image-rendering:pixelated;pointer-events:none;z-index:4;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
   .slot .sitem{position:absolute;right:-5px;bottom:-5px;width:76px;height:76px;border-radius:50%;background:#fff;padding:3px;object-fit:contain;image-rendering:pixelated;pointer-events:none;z-index:5;box-shadow:0 1px 3px rgba(0,0,0,.3),inset 0 0 0 2px #dfe6ef}
   .pmon .pitem{position:absolute;right:-8px;bottom:4px;width:50px;height:50px;border-radius:50%;background:#fff;padding:2px;object-fit:contain;image-rendering:pixelated;pointer-events:none;z-index:3;box-shadow:0 1px 3px rgba(0,0,0,.3),inset 0 0 0 2px #dfe6ef}
@@ -213,7 +213,7 @@
     <button data-frame="v2" class="on">가로</button>
     <button data-frame="flat">세로(플랫)</button>
   </div>
-  <div class="hint">칸을 눌러 입력. 슬롯형은 포켓몬을 <b>끌어서 칸 안 위치(보일 부분) 조절</b>, 자유형은 끌어서 자유 배치. 🔴로 <b>볼</b> 지정. <b>× 로 항목 삭제</b> (복원은 아래 바).</div>
+  <div class="hint">칸을 눌러 입력. 슬롯형은 포켓몬을 <b>끌어서 이동 · 휠/두 손가락으로 크기 조절</b>, 자유형은 끌어서 자유 배치. 🔴 볼 · 🎒 지닌물건. <b>× 로 항목 삭제</b> (복원은 아래 바).</div>
   <div id="restoreBar"></div>
 
   <div id="stageWrap">
@@ -567,21 +567,31 @@
       });
     }
     function slotPan(img,slot,m){
-      img.style.cursor='move';
+      function apply(){ img.style.transform='translate('+(m.slotX||0)+'px,'+(m.slotY||0)+'px) scale('+(m.slotScale||1)+')'; }
+      apply();
+      var pts={};
       img.addEventListener('pointerdown',function(e){
         if(e.target.closest('.tb')) return;
         e.preventDefault();
         try{img.setPointerCapture(e.pointerId);}catch(_){}
-        var sx=e.clientX, sy=e.clientY, ox=(m.slotX!=null?m.slotX:50), oy=(m.slotY!=null?m.slotY:22);
-        var rw=Math.max(1,slot.clientWidth*cardScale), rh=Math.max(1,slot.clientHeight*cardScale);
+        pts[e.pointerId]={x:e.clientX,y:e.clientY};
+        var ids=Object.keys(pts);
+        var sx=e.clientX, sy=e.clientY, ox=m.slotX||0, oy=m.slotY||0, oscale=m.slotScale||1, pinch0=0;
+        if(ids.length===2){ var a=pts[ids[0]],b=pts[ids[1]]; pinch0=Math.hypot(a.x-b.x,a.y-b.y); }
         function move(ev){
-          var nx=ox-(ev.clientX-sx)/rw*130, ny=oy-(ev.clientY-sy)/rh*130;
-          nx=Math.max(0,Math.min(100,nx)); ny=Math.max(0,Math.min(100,ny));
-          m.slotX=nx; m.slotY=ny; img.style.objectPosition=nx+'% '+ny+'%';
+          if(pts[ev.pointerId]) pts[ev.pointerId]={x:ev.clientX,y:ev.clientY};
+          var k=Object.keys(pts);
+          if(k.length>=2){ // pinch zoom
+            var a=pts[k[0]],b=pts[k[1]], d=Math.hypot(a.x-b.x,a.y-b.y);
+            if(pinch0>0){ m.slotScale=Math.max(0.5,Math.min(2.6,oscale*d/pinch0)); apply(); }
+          } else { // pan
+            m.slotX=ox+(ev.clientX-sx)/cardScale; m.slotY=oy+(ev.clientY-sy)/cardScale; apply();
+          }
         }
-        function up(){ try{img.releasePointerCapture(e.pointerId);}catch(_){} img.removeEventListener('pointermove',move); img.removeEventListener('pointerup',up); }
-        img.addEventListener('pointermove',move); img.addEventListener('pointerup',up);
+        function up(ev){ delete pts[ev.pointerId]; try{img.releasePointerCapture(ev.pointerId);}catch(_){} if(!Object.keys(pts).length){ img.removeEventListener('pointermove',move); img.removeEventListener('pointerup',up); img.removeEventListener('pointercancel',up);} }
+        img.addEventListener('pointermove',move); img.addEventListener('pointerup',up); img.addEventListener('pointercancel',up);
       });
+      slot.addEventListener('wheel',function(e){ e.preventDefault(); m.slotScale=Math.max(0.5,Math.min(2.6,(m.slotScale||1)+(e.deltaY<0?0.1:-0.1))); apply(); },{passive:false});
     }
     function tools(m){
       return '<div class="tools"><button class="tb tball" title="볼 지정">🔴</button>'+
@@ -607,9 +617,8 @@
           if(m){
             var src=m.trimUrl||m.dataUrl||(m.shiny?m.p.front_shiny:m.p.front_default);
             var ball=m.ball?'<img class="sball" src="../balls/'+m.ball+'.png" alt="">':'';
-            var op=(m.slotX!=null?m.slotX:50)+'% '+(m.slotY!=null?m.slotY:22)+'%';
             var item=m.item?'<img class="sitem" src="items/'+m.item+'.png" alt="">':'';
-            slot.innerHTML=tools(m)+'<div class="sprwrap"><img class="spr" style="object-position:'+op+'" src="'+src+'" alt=""></div>'+ball+item;
+            slot.innerHTML=tools(m)+'<div class="sprwrap"><img class="spr" src="'+src+'" alt=""></div>'+ball+item;
             wire(slot,m); slotPan(slot.querySelector('.spr'),slot,m);
           } else {
             slot.innerHTML='<span class="splus">＋</span>';
