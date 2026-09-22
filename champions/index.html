@@ -519,7 +519,12 @@
     none.innerHTML='<div style="width:56px;height:56px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#c53030">✕</div><span>없음</span>';
     none.onclick=function(){ if(itemTargetMon){itemTargetMon.item=null;itemRerender&&itemRerender();} itemMask.classList.remove('show'); };
     itemResults.appendChild(none);
-    ITEMS.filter(function(it){ return !term || it.ko.indexOf(term)>=0 || it.k.indexOf(term.toLowerCase())>=0; }).forEach(function(it){
+    ITEMS.filter(function(it){
+      if(!term) return true;
+      if(it.ko.indexOf(term)>=0 || it.k.indexOf(term.toLowerCase())>=0) return true;
+      if(/나이트$/.test(it.ko) && (term.indexOf('메가')>=0||term.indexOf('스톤')>=0)) return true;
+      return false;
+    }).forEach(function(it){
       var el=document.createElement('div'); el.className='pick';
       el.innerHTML='<img src="items/'+it.k+'.png" alt=""><span>'+it.ko+'</span>';
       el.onclick=function(){ if(itemTargetMon){itemTargetMon.item=it.k;itemRerender&&itemRerender();} itemMask.classList.remove('show'); };
